@@ -2,6 +2,7 @@ package router
 
 import (
 	"github.com/gofiber/fiber/v2"
+	
 	api "tritan.dev/image-uploader/handlers/api"
 	ui "tritan.dev/image-uploader/handlers/ui"
 )
