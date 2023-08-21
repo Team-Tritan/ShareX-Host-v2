@@ -42,7 +42,7 @@ func GetUploadsByToken(c *fiber.Ctx) error {
 	for _, log := range importedLogs {
 		if log.Key == key {
 			dir := config.AppConfigInstance.Dirs[rand.Intn(len(config.AppConfigInstance.Dirs))]
-			log.FileName = fmt.Sprintf("%s/%s", dir, log.FileName)
+			log.FileName = fmt.Sprintf("/%s/%s", dir, log.FileName)
 			matchingLogs = append(matchingLogs, log)
 		}
 	}
