@@ -146,7 +146,7 @@
                     linksList.empty();
                     
                     data.forEach(function (upload) {
-                      const domain = domains[Math.floor(Math.random() * domains.length)] + "/";
+                      const domain = domains[Math.floor(Math.random() * domains.length)];
                       const name = `${upload.file_name}`;
                       const link = `<a style="text-decoration: none; color: white;" href="${domain}/${name}">${domain}/${name}</a>`;
                       const timestamp = new Date(upload.timestamp).toLocaleString();
@@ -198,7 +198,7 @@
               },
 
               success: function (data) {
-                const domain = domains[Math.floor(Math.random() * domains.length)] + "/";
+                const domain = domains[Math.floor(Math.random() * domains.length)];
                 const url = domain + data.url;
                 let link = `<a style="text-decoration: none; color: white;" href="${url}">${url}</a>`;
                 linksList.append(`${link} (Just now) <br />`);
