@@ -13,16 +13,16 @@
     ></script>
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:image" content="/api/content/raw/{{.Name}}" />
+    <meta name="twitter:image" content="/api/content/raw/{{.Data.Name}}" />
     <meta
       name="twitter:image:src"
-      content="/api/content/raw/{{.Name}}{{.Ext}}"
+      content="/api/content/raw/{{.Data.Name}}"
     />
-    <meta property="og:image" content="/api/content/raw/{{.Name}}" />
+    <meta property="og:image" content="/api/content/raw/{{.Data.Name}}" />
     <meta name="theme-color" content="#7c00d7" />
-    <meta property="og:title" content="{{.Name}}" />
+    <meta property="og:title" content="{{.Data.Name}}" />
     <meta property="og:author" content="Sussy File Uploader" />
-    <meta name="twitter:title" content="{{.Name}}" />
+    <meta name="twitter:title" content="{{.Data.Name}}" />
     <meta
       name="twitter:description"
       content="Uploaded with a poggers file upload service."
@@ -31,7 +31,7 @@
       property="og:description"
       content="Uploaded with a poggers file upload service."
     />
-    <link type="application/json+oembed" href="/api/content/raw/{{.Name}}" />
+    <link type="application/json+oembed" href="/api/content/raw/{{.Data.Name}}" />
   </head>
   <style>
     body {
@@ -102,7 +102,7 @@
             <center>
               <a
                 style="text-decoration: none; color: #5865f2"
-                href="mailto:netops@tritan.dev?subject=REPORT: <%=name%>&body=Hi, I'd like to report <%=name%> which was uploaded onto your sharex image host."
+                href="mailto:netops@tritan.dev?subject=REPORT: {{.Data.Name}}&body=Hi, I'd like to report {{.Data.Name}} which was uploaded onto your sharex image host."
                 >Report</a
               >
             </center>
