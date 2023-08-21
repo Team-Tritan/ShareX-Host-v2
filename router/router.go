@@ -14,6 +14,7 @@ func SetupRoutes(app *fiber.App) error {
 	app.Post("/api/upload", api.Upload)
 	app.Post("/api/create-key", api.CreateKey)
 	app.Post("/api/sharex-config", api.GetShareXConfig)
+	app.Post("/api/uploads", api.GetUploadsByToken)
 
 	app.Static("/api/content/raw", "./uploads")
 

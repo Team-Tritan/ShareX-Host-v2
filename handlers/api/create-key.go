@@ -6,7 +6,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 
-	"tritan.dev/image-uploader/functions"
+	keys "tritan.dev/image-uploader/functions"
 )
 
 func CreateKey(c *fiber.Ctx) error {
@@ -15,14 +15,14 @@ func CreateKey(c *fiber.Ctx) error {
 		ip = c.IP()
 	}
 
-	allKeys := functions.LoadKeysFromFile("./data/keys.json")
+	allKeys := keys.LoadKeysFromFile("./data/keys.json")
 
 	newKey := struct {
 		Key       string `json:"key"`
 		CreatedAt string `json:"created_at"`
 		IP        string `json:"ip"`
 	}{
-		Key:       functions.GenerateRandomKey(10),
+		Key:       keys.GenerateRandomKey(10),
 		CreatedAt: time.Now().Format(time.RFC3339),
 		IP:        ip,
 	}

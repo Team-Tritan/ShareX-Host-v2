@@ -14,7 +14,7 @@
       }
 
       #dropzone {
-        width: 75vw;
+        width: 50vw;
         height: 50vh;
         border: 2px dashed rgb(46, 54, 99);
         padding: 20px;
@@ -43,6 +43,26 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
+      }
+
+      #links-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      #links-list li {
+        background-color: #333;
+        padding: 10px;
+        margin: 10px;
+        border-radius: 5px;
+        display: flex;
+        justify-content: space-between;
+      }
+
+      #links-list li a {
+        color: white;
+        text-decoration: none;
       }
     </style>
   </head>
@@ -77,17 +97,20 @@
         href="https://github.com/Team-Tritan/Lazy-File-Host/tree/main/uploader_files"
         >Other uploader examples →</a
       >
+      <br />
+      <br />
+      <h4 style="margin-top: 30px; color: white">Your Uploads:</h4>
+      <ul id="links-list"></ul>
     </div>
-
-    <div id="link" style="margin-top: 50px"></div>
 
     <script>
       $(document).ready(function () {
         const login = $("#login");
         const dropzone = $("#dropzone");
         const dropzoneText = $("#dropzone-text");
+        const linksList = $("#links-list");
         const domains = {{.DomainsJSON}};
-        
+
         let apiKey = localStorage.getItem("uploader_apiKey") || "";
         let key = $("#key-input").val(apiKey);
 
@@ -111,6 +134,32 @@
           login.hide();
           dropzone.show();
           dropzoneText.show();
+
+          if (dropzone.is(":visible") && apiKey) {
+                $.ajax({
+                  url: "/api/uploads",
+                  type: "POST",
+                  headers: {
+                    key: apiKey,
+                  },
+                  success: function (data) {
+                    linksList.empty();
+
+                    data.forEach(function (upload) {
+                      const domain = domains[Math.floor(Math.random() * domains.length)];
+                      const name = `${upload.file_name}`;
+                      const link = `<a style="text-decoration: none; color: white;" href="${domain}/${name}">${domain}/${name}</a>`;
+                      const timestamp = new Date(upload.timestamp).toLocaleString();
+
+                      linksList.append(`${link} (${timestamp}) <br />`);
+
+                    });
+                  },
+                  error: function (xhr, status, error) {
+                    alert(`Error fetching links: ${error}`);
+                  },
+                });
+          }
         });
 
         $("#request-key-link").click(function () {
@@ -151,12 +200,10 @@
               },
 
               success: function (data) {
-                const domain =
-                  domains[Math.floor(Math.random() * domains.length)];
-
-                const link = domain + data.url;
-
-                $("#link").append(`<a href="${link}">${link}</a><br>`);
+                const domain = domains[Math.floor(Math.random() * domains.length)];
+                const url = domain + data.url;
+                let link = `<a style="text-decoration: none; color: white;" href="${url}">${url}</a>`;
+                linksList.append(`${link} (Just now) <br />`);
               },
 
               error: function (xhr, status, error) {
@@ -182,11 +229,10 @@
                 },
 
                 success: function (data) {
-                  const domain =
-                    domains[Math.floor(Math.random() * domains.length)];
-                  const link = `${domain}/${data.url}`;
-
-                  $("#link").append(`<a href="${link}">${link}</a><br>`);
+                  const domain = domains[Math.floor(Math.random() * domains.length)];
+                  const url = domain + data.url;
+                  let link = `<a style="text-decoration: none; color: white;" href="${url}">${url}</a>`;
+                  linksList.append(`${link} (Just now) <br />`);
                 },
 
                 error: function (xhr, status, error) {

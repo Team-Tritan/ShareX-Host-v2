@@ -1,9 +1,7 @@
 package handlers
 
 import (
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"math/rand"
 	"path"
@@ -12,24 +10,18 @@ import (
 	"github.com/gofiber/fiber/v2"
 
 	"tritan.dev/image-uploader/config"
-	"tritan.dev/image-uploader/functions"
+	keys "tritan.dev/image-uploader/functions"
+	logs "tritan.dev/image-uploader/functions"
 )
 
 type Key struct {
 	Key string `json:"key"`
 }
 
-type LogEntry struct {
-	IP        string    `json:"ip"`
-	Key       string    `json:"key"`
-	FileName  string    `json:"file_name"`
-	Timestamp time.Time `json:"timestamp"`
-}
-
 func Upload(c *fiber.Ctx) error {
 	key := c.Get("key")
 
-	validKeys := functions.LoadKeysFromFile("./data/keys.json")
+	validKeys := keys.LoadKeysFromFile("./data/keys.json")
 
 	found := false
 	for _, k := range validKeys.Keys {
@@ -55,7 +47,7 @@ func Upload(c *fiber.Ctx) error {
 	}
 
 	ext := path.Ext(sharex.Filename)
-	name := functions.GenerateRandomKey(10)
+	name := keys.GenerateRandomKey(10)
 
 	dir := config.AppConfigInstance.Dirs[rand.Intn(len(config.AppConfigInstance.Dirs))]
 	ip := c.Get("x-forwarded-for")
@@ -73,17 +65,17 @@ func Upload(c *fiber.Ctx) error {
 
 	log.Printf("%s just uploaded %s from %s.\n", key, name+ext, ip)
 
-	logEntry := LogEntry{
+	logEntry := logs.LogEntry{
 		IP:        ip,
 		Key:       key,
 		FileName:  name + ext,
 		Timestamp: time.Now(),
 	}
 
-	existingLogs := loadLogsFromFile("./data/logs.json")
+	existingLogs := logs.LoadLogsFromFile("./data/logs.json")
 	existingLogs = append(existingLogs, logEntry)
 
-	if err := saveLogsToFile("./data/logs.json", existingLogs); err != nil {
+	if err := logs.SaveLogsToFile("./data/logs.json", existingLogs); err != nil {
 		log.Printf("Error saving log entry: %v\n", err)
 	}
 
@@ -92,36 +84,4 @@ func Upload(c *fiber.Ctx) error {
 		"message": "File just got uploaded!",
 		"url":     fmt.Sprintf("%s/%s", dir, name),
 	})
-}
-
-func loadLogsFromFile(filename string) []LogEntry {
-	var logs []LogEntry
-
-	data, err := ioutil.ReadFile(filename)
-	if err != nil {
-		log.Printf("Error reading log file: %v\n", err)
-		return logs
-	}
-
-	if err := json.Unmarshal(data, &logs); err != nil {
-		log.Printf("Error unmarshaling log data: %v\n", err)
-		return logs
-	}
-
-	return logs
-}
-
-func saveLogsToFile(filename string, logs []LogEntry) error {
-	data, err := json.MarshalIndent(logs, "", "  ")
-	if err != nil {
-		log.Printf("Error marshaling log data: %v\n", err)
-		return err
-	}
-
-	if err := ioutil.WriteFile(filename, data, 0644); err != nil {
-		log.Printf("Error writing log file: %v\n", err)
-		return err
-	}
-
-	return nil
 }

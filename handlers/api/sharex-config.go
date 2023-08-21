@@ -3,7 +3,8 @@ package handlers
 import (
 	"github.com/gofiber/fiber/v2"
 
-	"tritan.dev/image-uploader/functions"
+	functions "tritan.dev/image-uploader/functions"
+	sharex "tritan.dev/image-uploader/functions"
 )
 
 func GetShareXConfig(c *fiber.Ctx) error {
@@ -33,9 +34,9 @@ func GetShareXConfig(c *fiber.Ctx) error {
 		})
 	}
 
-	config := functions.GenerateShareXConfig(key)
+	config := sharex.GenerateShareXConfig(key)
 
-	functions.SendShareXConfig(c, config)
+	sharex.SendShareXConfig(c, config)
 
 	return nil
 }
