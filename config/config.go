@@ -1,9 +1,10 @@
 package config
 
 type AppConfig struct {
-	Port    int
-	Dirs    []string
-	Domains []string
+	Port       int
+	Dirs       []string
+	Domains    []string
+	Sentry_DSN string
 }
 
 var AppConfigInstance = AppConfig{
@@ -30,4 +31,5 @@ var AppConfigInstance = AppConfig{
 		"https://img.stoner.host",
 		"https://img.onlycats.ong",
 	},
+	Sentry_DSN: "https://82c2d5853bb3bbd20124cec5bf3fa86e@sentry.tritan.dev/12",
 }
