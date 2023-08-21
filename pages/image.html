@@ -11,13 +11,9 @@
       integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns"
       crossorigin="anonymous"
     ></script>
-
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:image" content="/api/content/raw/{{.Data.Name}}" />
-    <meta
-      name="twitter:image:src"
-      content="/api/content/raw/{{.Data.Name}}"
-    />
+    <meta name="twitter:image:src" content="/api/content/raw/{{.Data.Name}}" />
     <meta property="og:image" content="/api/content/raw/{{.Data.Name}}" />
     <meta name="theme-color" content="#7c00d7" />
     <meta property="og:title" content="{{.Data.Name}}" />
@@ -31,15 +27,23 @@
       property="og:description"
       content="Uploaded with a poggers file upload service."
     />
-    <link type="application/json+oembed" href="/api/content/raw/{{.Data.Name}}" />
+    <link
+      type="application/json+oembed"
+      href="/api/content/raw/{{.Data.Name}}"
+    />
   </head>
   <style>
     body {
       color: white;
       text-align: center;
       font-family: Helvetica, Arial, sans-serif;
-      margin-top: 10%;
       background: #04010a;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
     }
 
     body.bg-dark {
@@ -80,6 +84,7 @@
       color: #5865f2 !important;
     }
   </style>
+
   <body class="bg-dark">
     <div class="row mt-5 no-gutters">
       <div class="col-md-3"></div>
