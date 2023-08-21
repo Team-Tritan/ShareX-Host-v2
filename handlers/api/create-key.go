@@ -15,7 +15,7 @@ func CreateKey(c *fiber.Ctx) error {
 		ip = c.IP()
 	}
 
-	allKeys := functions.LoadKeysFromFile("keys.json")
+	allKeys := functions.LoadKeysFromFile("./data/keys.json")
 
 	newKey := struct {
 		Key       string `json:"key"`
@@ -29,7 +29,7 @@ func CreateKey(c *fiber.Ctx) error {
 
 	allKeys.AddKey(newKey)
 
-	if err := allKeys.SaveKeysToFile("keys.json"); err != nil {
+	if err := allKeys.SaveKeysToFile("./data/keys.json"); err != nil {
 		log.Printf("Failed to save keys: %v\n", err)
 		return c.Status(500).JSON(fiber.Map{
 			"status":  500,

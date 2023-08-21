@@ -17,5 +17,12 @@ func SetupRoutes(app *fiber.App) error {
 
 	app.Static("/api/content/raw", "./uploads")
 
+	app.Use(func(c *fiber.Ctx) error {
+		return c.Status(404).JSON(fiber.Map{
+			"status":  404,
+			"message": "Content not found.",
+		})
+	})
+
 	return nil
 }

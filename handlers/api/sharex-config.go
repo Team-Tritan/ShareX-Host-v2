@@ -2,14 +2,14 @@ package handlers
 
 import (
 	"github.com/gofiber/fiber/v2"
-	
+
 	"tritan.dev/image-uploader/functions"
 )
 
 func GetShareXConfig(c *fiber.Ctx) error {
 	key := c.Get("key")
 
-	validKeys := functions.LoadKeysFromFile("keys.json")
+	validKeys := functions.LoadKeysFromFile("./data/keys.json")
 
 	found := false
 	for _, k := range validKeys.Keys {

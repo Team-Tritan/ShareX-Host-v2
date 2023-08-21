@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"path"
 	"strings"
 
@@ -17,11 +18,18 @@ func DisplayImage(c *fiber.Ctx) error {
 
 	fileWithoutExtension, err := functions.FindFileWithoutExtension(file, uploadsDir)
 	if err != nil {
-		return c.Status(500).SendString("Internal Server Error")
+		fmt.Println(err)
+		return c.Status(500).JSON(fiber.Map{
+			"status":  500,
+			"message": "Internal server error",
+		})
 	}
 
 	if !isValidDir(dir) || fileWithoutExtension == "" {
-		return c.Status(404).SendString("Content not found.")
+		return c.Status(404).JSON(fiber.Map{
+			"status":  404,
+			"message": "Content not found.",
+		})
 	}
 
 	if fileWithoutExtension != "" {
@@ -35,7 +43,10 @@ func DisplayImage(c *fiber.Ctx) error {
 		return c.Render("./pages/image.html", data)
 	}
 
-	return c.Status(404).SendString("Content not found.")
+	return c.Status(404).JSON(fiber.Map{
+		"status":  404,
+		"message": "Content not found.",
+	})
 }
 
 func isValidDir(dir string) bool {

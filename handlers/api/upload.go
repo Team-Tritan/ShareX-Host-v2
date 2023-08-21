@@ -10,7 +10,7 @@ import (
 	"time"
 
 	"github.com/gofiber/fiber/v2"
-	
+
 	"tritan.dev/image-uploader/config"
 	"tritan.dev/image-uploader/functions"
 )
@@ -29,7 +29,7 @@ type LogEntry struct {
 func Upload(c *fiber.Ctx) error {
 	key := c.Get("key")
 
-	validKeys := functions.LoadKeysFromFile("keys.json")
+	validKeys := functions.LoadKeysFromFile("./data/keys.json")
 
 	found := false
 	for _, k := range validKeys.Keys {
@@ -80,10 +80,10 @@ func Upload(c *fiber.Ctx) error {
 		Timestamp: time.Now(),
 	}
 
-	existingLogs := loadLogsFromFile("logs.json")
+	existingLogs := loadLogsFromFile("./data/logs.json")
 	existingLogs = append(existingLogs, logEntry)
 
-	if err := saveLogsToFile("logs.json", existingLogs); err != nil {
+	if err := saveLogsToFile("./data/logs.json", existingLogs); err != nil {
 		log.Printf("Error saving log entry: %v\n", err)
 	}
 

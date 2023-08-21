@@ -13,7 +13,10 @@ func LoadUploaderPage(c *fiber.Ctx) error {
 	domainsJSON, err := json.Marshal(config.AppConfigInstance.Domains)
 	if err != nil {
 		log.Printf("Error marshaling data: %v\n", err)
-		return c.SendStatus(fiber.StatusInternalServerError)
+		return c.Status(500).JSON(fiber.Map{
+			"status":  500,
+			"message": "Internal server error",
+		})
 	}
 
 	data := fiber.Map{
