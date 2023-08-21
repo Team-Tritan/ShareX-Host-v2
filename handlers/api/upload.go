@@ -63,7 +63,7 @@ func Upload(c *fiber.Ctx) error {
 		ip = c.IP()
 	}
 
-	if err := c.SaveFile(sharex, fmt.Sprintf("./data/uploads/%s%s", name, ext)); err != nil {
+	if err := c.SaveFile(sharex, fmt.Sprintf("./uploads/%s%s", name, ext)); err != nil {
 		return c.Status(500).JSON(fiber.Map{
 			"status":  500,
 			"message": "Failed to upload the file.",
