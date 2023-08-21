@@ -1,8 +1,11 @@
 package handlers
 
 import (
-	"github.com/gofiber/fiber/v2"
+	"fmt"
+	"math/rand"
 
+	"github.com/gofiber/fiber/v2"
+	"tritan.dev/image-uploader/config"
 	keys "tritan.dev/image-uploader/functions"
 	logs "tritan.dev/image-uploader/functions"
 )
@@ -33,11 +36,13 @@ func GetUploadsByToken(c *fiber.Ctx) error {
 		})
 	}
 
-	imported_logs := logs.LoadLogsFromFile("./data/logs.json")
+	importedLogs := logs.LoadLogsFromFile("./data/logs.json")
 
 	matchingLogs := make([]logs.LogEntry, 0)
-	for _, log := range imported_logs {
+	for _, log := range importedLogs {
 		if log.Key == key {
+			dir := config.AppConfigInstance.Dirs[rand.Intn(len(config.AppConfigInstance.Dirs))]
+			log.FileName = fmt.Sprintf("%s/%s", dir, log.FileName)
 			matchingLogs = append(matchingLogs, log)
 		}
 	}
