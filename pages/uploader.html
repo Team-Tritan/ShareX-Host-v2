@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      body {
+        color: white;
+        text-align: center;
+        font-family: Helvetica, Arial, sans-serif;
+        margin-top: 10%;
+        background: #04010a;
+      }
+
+      #dropzone {
+        width: 75vw;
+        height: 50vh;
+        border: 2px dashed rgb(46, 54, 99);
+        padding: 20px;
+        text-align: center;
+        font-size: 1.5em;
+        margin: 20px auto;
+      }
+
+      #link a {
+        margin: 20px;
+        font-size: 1.5em;
+        color: white;
+      }
+
+      #key-input {
+        background-color: transparent;
+        color: white;
+        border-radius: 10px;
+        border: 2px solid rgb(46, 54, 99);
+        padding: 14px;
+        outline-style: none;
+      }
+
+      #login {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="login">
+      <input
+        type="password"
+        placeholder="Authentication key"
+        id="key-input"
+        pattern=".*\S+.*"
+        required
+      />
+
+      <p id="key-button" style="font-size: 0.9em">Login →</p>
+
+      <p style="margin-top: 30px; color: grey">
+        If you would like to request an API key,
+        <a
+          style="color: grey; text-decoration: none; cursor: pointer"
+          id="request-key-link"
+          >click here</a
+        >.
+      </p>
+    </div>
+
+    <div id="dropzone" style="display: none">Drop an image here to upload.</div>
+    <div id="dropzone-text" style="color: grey; display: none">
+      <p id="sharex-config">Download sharex config →</p>
+      <a
+        style="text-decoration: none; color: grey"
+        href="https://github.com/Team-Tritan/Lazy-File-Host/tree/main/uploader_files"
+        >Other uploader examples →</a
+      >
+    </div>
+
+    <div id="link" style="margin-top: 50px"></div>
+
+    <script>
+      $(document).ready(function () {
+        const login = $("#login");
+        const dropzone = $("#dropzone");
+        const dropzoneText = $("#dropzone-text");
+        const domains = {{.DomainsJSON}};
+        
+        let apiKey = localStorage.getItem("uploader_apiKey") || "";
+        let key = $("#key-input").val(apiKey);
+
+        function setApiKey(key) {
+          apiKey = key;
+          localStorage.setItem("uploader_apiKey", apiKey);
+          $("#key-input").val(apiKey);
+        }
+
+        setApiKey(apiKey);
+
+        $("#key-button").click(function () {
+          const inputKey = $("#key-input").val();
+
+          if (!inputKey) {
+            return alert("Please enter an API key.");
+          }
+
+          setApiKey(inputKey);
+
+          login.hide();
+          dropzone.show();
+          dropzoneText.show();
+        });
+
+        $("#request-key-link").click(function () {
+          $.post("/api/create-key", function (data) {
+            setApiKey(data.key);
+            alert(
+              `Your API key is ${data.key}, please save this key somewhere safe.`
+            );
+          });
+        });
+
+        dropzone.on({
+          dragover: function () {
+            dropzone.css("background-color", "#eee");
+            return false;
+          },
+
+          dragleave: function () {
+            dropzone.css("background-color", "");
+            return false;
+          },
+
+          drop: function (e) {
+            e.preventDefault();
+            dropzone.css("background-color", "");
+
+            const formData = new FormData();
+            formData.append("sharex", e.originalEvent.dataTransfer.files[0]);
+
+            $.ajax({
+              url: "/api/upload",
+              type: "POST",
+              data: formData,
+              processData: false,
+              contentType: false,
+              headers: {
+                key: apiKey,
+              },
+
+              success: function (data) {
+                const domain =
+                  domains[Math.floor(Math.random() * domains.length)];
+
+                const link = domain + data.url;
+
+                $("#link").append(`<a href="${link}">${link}</a><br>`);
+              },
+
+              error: function (xhr, status, error) {
+                alert(`Error uploading file: ${error}`);
+              },
+            });
+          },
+
+          click: function () {
+            const fileInput = $("<input type='file' style='display: none;'>");
+            fileInput.on("change", function () {
+              const formData = new FormData();
+              formData.append("sharex", fileInput[0].files[0]);
+
+              $.ajax({
+                url: "/api/upload",
+                type: "POST",
+                data: formData,
+                processData: false,
+                contentType: false,
+                headers: {
+                  key: apiKey,
+                },
+
+                success: function (data) {
+                  const domain =
+                    domains[Math.floor(Math.random() * domains.length)];
+                  const link = `${domain}/${data.url}`;
+
+                  $("#link").append(`<a href="${link}">${link}</a><br>`);
+                },
+
+                error: function (xhr, status, error) {
+                  alert(`Error uploading file: ${error}`);
+                },
+              });
+            });
+
+            fileInput.click();
+          },
+        });
+
+        $("#sharex-config")
+          .show()
+          .click(function () {
+            if (!apiKey) {
+              return alert("Please enter an API key first.");
+            }
+
+            $.ajax({
+              url: "/api/sharex-config",
+              type: "POST",
+              headers: {
+                key: apiKey,
+              },
+              contentType: "application/json",
+              success: function (response) {
+                if (typeof response === "object") {
+                  response = JSON.stringify(response, null, 2);
+                }
+
+                const blob = new Blob([response], { type: "application/json" });
+                const fileName = "sharex-config.sxcu";
+                const url = window.URL.createObjectURL(blob);
+
+                const link = document.createElement("a");
+                link.href = url;
+                link.download = fileName;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+              },
+              error: function (xhr, status, error) {
+                alert(`Error generating ShareX config: ${error}`);
+              },
+            });
+          });
+      });
+    </script>
+  </body>
+</html>

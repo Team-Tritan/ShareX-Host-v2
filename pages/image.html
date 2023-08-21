@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script
+      src="https://code.jquery.com/jquery-3.6.0.min.js"
+      integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns"
+      crossorigin="anonymous"
+    ></script>
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="/api/content/raw/{{.Name}}" />
+    <meta
+      name="twitter:image:src"
+      content="/api/content/raw/{{.Name}}{{.Ext}}"
+    />
+    <meta property="og:image" content="/api/content/raw/{{.Name}}" />
+    <meta name="theme-color" content="#7c00d7" />
+    <meta property="og:title" content="{{.Name}}" />
+    <meta property="og:author" content="Sussy File Uploader" />
+    <meta name="twitter:title" content="{{.Name}}" />
+    <meta
+      name="twitter:description"
+      content="Uploaded with a poggers file upload service."
+    />
+    <meta
+      property="og:description"
+      content="Uploaded with a poggers file upload service."
+    />
+    <link type="application/json+oembed" href="/api/content/raw/{{.Name}}" />
+  </head>
+  <style>
+    body {
+      color: white;
+      text-align: center;
+      font-family: Helvetica, Arial, sans-serif;
+      margin-top: 10%;
+      background: #04010a;
+    }
+
+    body.bg-dark {
+      background-color: #04010a !important;
+    }
+
+    .row.mt-5.no-gutters {
+      margin-top: 5% !important;
+    }
+
+    .col-md-6.mx-2 {
+      width: 75vw !important;
+      margin: 0 auto !important;
+    }
+
+    .text-center.bg-dark.mb-4 {
+      background-color: #04010a !important;
+      margin-bottom: 4% !important;
+    }
+
+    .card-body {
+      padding: 1.25rem !important;
+    }
+
+    h1 {
+      font-size: 2.5rem !important;
+    }
+
+    img {
+      max-height: 75vh !important;
+      width: auto !important;
+      max-width: 100% !important;
+      border-radius: 0.25rem !important;
+    }
+
+    a[style="text-decoration: none; color: #5865f2"] {
+      text-decoration: none !important;
+      color: #5865f2 !important;
+    }
+  </style>
+  <body class="bg-dark">
+    <div class="row mt-5 no-gutters">
+      <div class="col-md-3"></div>
+      <div class="col-md-6 mx-2">
+        <div class="text-center bg-dark mb-4">
+          <div class="card-body">
+            <h1>{{.Data.Name}}</h1>
+            <a
+              style="text-decoration: none; color: white"
+              href="/api/content/raw/{{.Data.Name}}"
+              target="_blank"
+            >
+              <img
+                src="/api/content/raw/{{.Data.Name}}"
+                alt="Cannot preview this file in the browser, click here to open."
+              />
+            </a>
+            <br />
+            <br />
+            <center>
+              <a
+                style="text-decoration: none; color: #5865f2"
+                href="mailto:netops@tritan.dev?subject=REPORT: <%=name%>&body=Hi, I'd like to report <%=name%> which was uploaded onto your sharex image host."
+                >Report</a
+              >
+            </center>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
