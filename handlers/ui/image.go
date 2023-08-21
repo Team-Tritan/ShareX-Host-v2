@@ -14,7 +14,7 @@ func DisplayImage(c *fiber.Ctx) error {
 	dir := c.Params("dir")
 	file := c.Params("file")
 
-	uploadsDir := functions.GetPath("./uploads")
+	uploadsDir := functions.GetPath("./data/uploads")
 
 	fileWithoutExtension, err := functions.FindFileWithoutExtension(file, uploadsDir)
 	if err != nil {

@@ -1,2 +1,3 @@
-uploads/
-data/
+logs.json
+keys.json
+data/uploads/*

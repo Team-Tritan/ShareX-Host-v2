@@ -15,7 +15,7 @@ func SetupRoutes(app *fiber.App) error {
 	app.Post("/api/create-key", api.CreateKey)
 	app.Post("/api/sharex-config", api.GetShareXConfig)
 
-	app.Static("/api/content/raw", "./uploads")
+	app.Static("/api/content/raw", "./data/uploads")
 
 	app.Use(func(c *fiber.Ctx) error {
 		return c.Status(404).JSON(fiber.Map{
