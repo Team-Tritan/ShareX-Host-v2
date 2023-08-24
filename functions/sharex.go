@@ -28,7 +28,7 @@ func GenerateShareXConfig(key string) ShareXConfig {
 		},
 		FileFormName: "sharex",
 		ResponseType: "Text",
-		URL:          "https://im.sleepdeprived.wtf/$json:url$",
+		URL:          "https://im.sleepdeprived.wtf$json:url$",
 	}
 }
 
