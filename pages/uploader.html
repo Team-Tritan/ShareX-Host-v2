@@ -91,7 +91,9 @@
 
     <div id="dropzone" style="display: none">Drop an image here to upload.</div>
     <div id="dropzone-text" style="color: grey; display: none">
-      <p id="sharex-config">Download sharex config →</p>
+      <p id="sharex-config">Image Uploader Config →</p>
+      <p id="sharex-config-url">URL Shortener Config →</p>
+
       <a
         style="text-decoration: none; color: grey"
         href="https://github.com/Team-Tritan/Lazy-File-Host/tree/main/uploader_files"
@@ -144,7 +146,7 @@
                   },
                   success: function (data) {
                     linksList.empty();
-                    
+
                     data.forEach(function (upload) {
                       const domain = domains[Math.floor(Math.random() * domains.length)];
                       const name = `${upload.file_name}`;
@@ -251,7 +253,43 @@
             }
 
             $.ajax({
-              url: "/api/sharex-config",
+              url: "/api/config?type=upload",
+              type: "POST",
+              headers: {
+                key: apiKey,
+              },
+              contentType: "application/json",
+              success: function (response) {
+                if (typeof response === "object") {
+                  response = JSON.stringify(response, null, 2);
+                }
+
+                const blob = new Blob([response], { type: "application/json" });
+                const fileName = "sharex-config.sxcu";
+                const url = window.URL.createObjectURL(blob);
+
+                const link = document.createElement("a");
+                link.href = url;
+                link.download = fileName;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+              },
+              error: function (xhr, status, error) {
+                alert(`Error generating ShareX config: ${error}`);
+              },
+            });
+          });
+
+           $("#sharex-config-url")
+          .show()
+          .click(function () {
+            if (!apiKey) {
+              return alert("Please enter an API key first.");
+            }
+
+            $.ajax({
+              url: "/api/config?type=url",
               type: "POST",
               headers: {
                 key: apiKey,
