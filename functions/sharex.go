@@ -7,32 +7,54 @@ import (
 )
 
 type ShareXConfig struct {
+	Version         string            `json:"Version"`
 	Name            string            `json:"Name"`
 	DestinationType string            `json:"DestinationType"`
-	RequestType     string            `json:"RequestType"`
+	RequestMethod    string            `json:"RequestMethod"`
 	RequestURL      string            `json:"RequestURL"`
 	Headers         map[string]string `json:"Headers"`
-	FileFormName    string            `json:"FileFormName"`
-	ResponseType    string            `json:"ResponseType"`
+	Body            string            `json:"Body"`
+	Arguments       map[string]string `json:"Arguments"`
 	URL             string            `json:"URL"`
 }
 
-func GenerateShareXConfig(key string) ShareXConfig {
+func GenerateUploaderConfig(key string) ShareXConfig {
 	return ShareXConfig{
-		Name:            "Lazy Uploader",
+		Version:         "15.0.0",
+		Name:            "Lazy Uploader - Uploader",
 		DestinationType: "ImageUploader, TextUploader, FileUploader",
-		RequestType:     "POST",
+		RequestMethod:    "POST",
 		RequestURL:      "https://im.sleepdeprived.wtf/api/upload/",
 		Headers: map[string]string{
 			"key": key,
 		},
-		FileFormName: "sharex",
-		ResponseType: "Text",
-		URL:          "https://im.sleepdeprived.wtf$json:url$",
+		Body: "KeyValues",
+		Arguments: map[string]string{
+			"url": "{input}",
+		},
+		URL: "https://im.sleepdeprived.wtf/{json:slug}",
 	}
 }
 
-func SendShareXConfig(c *fiber.Ctx, config ShareXConfig) error {
+func GenerateURLShortenerConfig(key string) ShareXConfig {
+	return ShareXConfig{
+		Version:         "15.0.0",
+		Name:            "Lazy Uploader - URL Shortener",
+		DestinationType: "URLShortener",
+		RequestMethod:    "POST",
+		RequestURL:      "https://im.sleepdeprived.wtf/api/url",
+		Headers: map[string]string{
+			"key": key,
+		},
+		Body: "MultipartFormData",
+		Arguments: map[string]string{
+			"url": "{input}",
+		},
+		URL: "https://im.sleepdeprived.wtf/{json:slug}",
+	}
+}
+
+func SendConfig(c *fiber.Ctx, config ShareXConfig) error {
 	file, err := json.MarshalIndent(config, "", "  ")
 	if err != nil {
 		return err
