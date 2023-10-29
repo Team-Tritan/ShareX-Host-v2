@@ -10,49 +10,30 @@ import (
 
 func DisplayImage(c *fiber.Ctx) error {
 	file := c.Params("file")
-
 	uploadsDir := functions.GetPath("./uploads")
+	fileWithoutExtension, err := functions.FindFileWithoutExtension(file, uploadsDir)
 
-	resultCh := make(chan fiber.Map, 1)
-	errorCh := make(chan error, 1)
-
-	go func() {
-		fileWithoutExtension, err := functions.FindFileWithoutExtension(file, uploadsDir)
-		if err != nil {
-			errorCh <- err
-			return
-		}
-
-		if fileWithoutExtension == "" {
-			errorCh <- fmt.Errorf("Content not found")
-			return
-		}
-
-		if fileWithoutExtension != "" {
-			data := map[string]interface{}{
-				"Data": map[string]string{
-					"Name": fileWithoutExtension,
-					"Ext":  path.Ext(fileWithoutExtension),
-				},
-			}
-			resultCh <- data
-		}
-	}()
-
-	select {
-	case data := <-resultCh:
-		if data == nil {
-			return c.Status(404).JSON(fiber.Map{
-				"status":  404,
-				"message": "Content not found.",
-			})
-		}
-		return c.Render("./pages/image.html", data)
-	case err := <-errorCh:
+	if err != nil {
 		fmt.Println(err)
 		return c.Status(500).JSON(fiber.Map{
 			"status":  500,
 			"message": "Internal server error",
 		})
 	}
+
+	if fileWithoutExtension == "" {
+		return c.Status(404).JSON(fiber.Map{
+			"status":  404,
+			"message": "Content not found",
+		})
+	}
+
+	data := map[string]interface{}{
+		"Data": map[string]string{
+			"Name": fileWithoutExtension,
+			"Ext":  path.Ext(fileWithoutExtension),
+		},
+	}
+
+	return c.Render("./pages/image.html", data)
 }
