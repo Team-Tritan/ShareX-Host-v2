@@ -9,31 +9,16 @@ import (
 
 func GetShareXConfig(c *fiber.Ctx) error {
 	key := c.Get("key")
+	
+	validKeys := functions.LoadKeysFromFile("./data/keys.json")
 	queryType := c.Query("type")
 
-	validKeys := functions.LoadKeysFromFile("./data/keys.json")
-
-	found := false
-	for _, k := range validKeys.Keys {
-		if k.Key == key {
-			found = true
-			break
-		}
-	}
-
-	if !found {
-		return c.Status(401).JSON(fiber.Map{
-			"status":  401,
-			"message": "Invalid key retard.",
-		})
-	}
-
-	if key == "" {
-		return c.Status(403).JSON(fiber.Map{
-			"status":  403,
-			"message": "You need to be authenticated to get your ShareX config.",
-		})
-	}
+    if !isValidKey(key, validKeys) {
+        return c.Status(401).JSON(fiber.Map{
+            "status":  401,
+            "message": "Invalid key",
+        })
+    }
 
 	if (queryType == ""){
 		return c.Status(400).JSON(fiber.Map{
@@ -53,4 +38,13 @@ func GetShareXConfig(c *fiber.Ctx) error {
 	}
 
 	return nil
+}
+
+func isValidKey(key string, validKeys *functions.Keys) bool {
+    for _, k := range validKeys.Keys {
+        if k.Key == key {
+            return true
+        }
+    }
+    return false
 }

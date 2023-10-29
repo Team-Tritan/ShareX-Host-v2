@@ -11,30 +11,15 @@ import (
 )
 
 func GetUploadsByToken(c *fiber.Ctx) error {
-	key := c.Get("key")
-	validKeys := keys.LoadKeysFromFile("./data/keys.json")
+    key := c.Get("key")
+    validKeys := keys.LoadKeysFromFile("./data/keys.json")
 
-	if key == "" {
-		return c.Status(401).JSON(fiber.Map{
-			"status":  401,
-			"message": "Invalid key",
-		})
-	}
-
-	found := false
-	for _, k := range validKeys.Keys {
-		if k.Key == key {
-			found = true
-			break
-		}
-	}
-
-	if !found {
-		return c.Status(401).JSON(fiber.Map{
-			"status":  401,
-			"message": "Invalid key",
-		})
-	}
+    if !isValidKey(key, validKeys) {
+        return c.Status(401).JSON(fiber.Map{
+            "status":  401,
+            "message": "Invalid key",
+        })
+    }
 
 	matchingLogsCh := make(chan []logs.LogEntry, 1)
 	errorCh := make(chan error, 1)

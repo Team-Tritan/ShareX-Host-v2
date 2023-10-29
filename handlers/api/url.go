@@ -53,15 +53,6 @@ func CreateURL(c *fiber.Ctx) error {
     })
 }
 
-func isValidKey(key string, validKeys *functions.Keys) bool {
-    for _, k := range validKeys.Keys {
-        if k.Key == key {
-            return true
-        }
-    }
-    return false
-}
-
 func saveURL(urlRequest functions.URL) error {
     existingURLs := functions.LoadURLsFromFile("./data/urls.json")
     existingURLs.AddURL(urlRequest)

@@ -20,21 +20,12 @@ type Key struct {
 
 func Upload(c *fiber.Ctx) error {
     key := c.Get("key")
-
     validKeys := keys.LoadKeysFromFile("./data/keys.json")
 
-    found := false
-    for _, k := range validKeys.Keys {
-        if k.Key == key {
-            found = true
-            break
-        }
-    }
-
-    if !found {
+    if !isValidKey(key, validKeys) {
         return c.Status(401).JSON(fiber.Map{
             "status":  401,
-            "message": "Invalid key retard.",
+            "message": "Invalid key",
         })
     }
 
