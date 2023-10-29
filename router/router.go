@@ -9,6 +9,7 @@ import (
 
 func SetupRoutes(app *fiber.App) error {
 	app.Get("/", ui.LoadUploaderPage)
+	app.Get("/:slug", ui.RedirectBySlug)
 	app.Get("/:dir/:file", ui.DisplayImage)
 
 	app.Post("/api/upload", api.Upload)
