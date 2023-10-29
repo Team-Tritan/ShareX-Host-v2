@@ -62,3 +62,16 @@ func (u *URLs) SaveURLsToFile(filename string) error {
 
     return nil
 }
+
+func (u *URLs) GetURLs() []URL {
+	return u.URLs
+}
+
+func (u *URLs) GetURLBySlug(slug string) *URL {
+	for i := range u.URLs {
+		if u.URLs[i].Slug == slug {
+			return &u.URLs[i]
+		}
+	}
+	return nil
+}
