@@ -13,9 +13,9 @@
       crossorigin="anonymous"
     ></script>
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:image" content="/api/content/raw/{{.Data.Name}}" />
-    <meta name="twitter:image:src" content="/api/content/raw/{{.Data.Name}}" />
-    <meta property="og:image" content="/api/content/raw/{{.Data.Name}}" />
+    <meta name="twitter:image" content="{{.Data.fullURL}}" />
+    <meta name="twitter:image:src" content="{{.Data.fullURL}}" />
+    <meta property="og:image" content="{{.Data.fullURL}}" />
     <meta name="theme-color" content="#7c00d7" />
     <meta property="og:title" content="{{.Data.Name}}" />
     <meta property="og:author" content="Sussy File Uploader" />
@@ -28,10 +28,7 @@
       property="og:description"
       content="Uploaded with a poggers file upload service."
     />
-    <link
-      type="application/json+oembed"
-      href="/api/content/raw/{{.Data.Name}}"
-    />
+    <link type="application/json+oembed" href="{{.Data.fullURL}}" />
   </head>
   <style>
     body {
@@ -95,11 +92,11 @@
             <h1>{{.Data.Name}}</h1>
             <a
               style="text-decoration: none; color: white"
-              href="/api/content/raw/{{.Data.Name}}"
+              href="{{.Data.fullURL}}"
               target="_blank"
             >
               <img
-                src="/api/content/raw/{{.Data.Name}}"
+                src="{{.Data.fullURL}}"
                 alt="Cannot preview this file in the browser, click here to open."
               />
             </a>

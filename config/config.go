@@ -5,6 +5,11 @@ type AppConfig struct {
 	Dirs       []string
 	Domains    []string
 	Sentry_DSN string
+	S3_KeyID   string
+	S3_AppKey  string
+	S3_RegionName string
+	S3_RegionURL string 
+	S3_BucketName string
 }
 
 var AppConfigInstance = AppConfig{
@@ -32,4 +37,10 @@ var AppConfigInstance = AppConfig{
 		"https://img.onlycats.ong",
 	},
 	Sentry_DSN: "https://82c2d5853bb3bbd20124cec5bf3fa86e@sentry.tritan.dev/12",
+	
+	S3_KeyID: "00558daa392fb700000000001",
+	S3_AppKey: "K0058jnF/dPReKrJx3UpHCpeaCy/Gqg",
+	S3_RegionURL: "https://s3.us-east-005.backblazeb2.com",
+	S3_RegionName: "us-east-005",
+	S3_BucketName: "Tritan-Images",
 }
