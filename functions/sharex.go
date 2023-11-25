@@ -14,8 +14,9 @@ type ShareXConfig struct {
 	RequestURL      string            `json:"RequestURL"`
 	Headers         map[string]string `json:"Headers"`
 	Body            string            `json:"Body"`
-	Arguments       map[string]string `json:"Arguments"`
+	Arguments       map[string]string `json:"Arguments,omitempty"`
 	URL             string            `json:"URL"`
+	FileFormName    string            `json:"FileFormName,omitempty"`
 }
 
 func GenerateUploaderConfig(key string) ShareXConfig {
@@ -28,11 +29,11 @@ func GenerateUploaderConfig(key string) ShareXConfig {
 		Headers: map[string]string{
 			"key": key,
 		},
-		Body: "KeyValues",
+		Body: "MultipartFormData",
 		Arguments: map[string]string{
 			"url": "{input}",
 		},
-		URL: "https://im.sleepdeprived.wtf/{json:url}",
+		URL: "https://im.sleepdeprived.wtf{json:url}",
 	}
 }
 
@@ -47,9 +48,7 @@ func GenerateURLShortenerConfig(key string) ShareXConfig {
 			"key": key,
 		},
 		Body: "MultipartFormData",
-		Arguments: map[string]string{
-			"url": "{input}",
-		},
+  		FileFormName: "sharex",
 		URL: "https://im.sleepdeprived.wtf/{json:slug}",
 	}
 }
