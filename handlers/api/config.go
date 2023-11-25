@@ -20,14 +20,14 @@ func GetShareXConfig(c *fiber.Ctx) error {
         })
     }
 
-	if (queryType == ""){
+	if (queryType == "" || !(queryType == "upload" || queryType == "url")){
 		return c.Status(400).JSON(fiber.Map{
 			"status": 400,
 			"message": "The query type was invalid.",
 		})
 	}
 
-	if (queryType == "uploader"){
+	if (queryType == "upload"){
 		uploadConfig := sharex.GenerateUploaderConfig(key)
 		sharex.SendConfig(c, uploadConfig)
 	} 
