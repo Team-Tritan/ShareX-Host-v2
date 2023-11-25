@@ -32,7 +32,7 @@ func GenerateUploaderConfig(key string) ShareXConfig {
 		Arguments: map[string]string{
 			"url": "{input}",
 		},
-		URL: "https://im.sleepdeprived.wtf/{json:slug}",
+		URL: "https://im.sleepdeprived.wtf/{json:url}",
 	}
 }
 
