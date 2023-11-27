@@ -75,6 +75,7 @@ func Upload(c *fiber.Ctx) error {
 		Body:   file,
 		Bucket: aws.String(config.AppConfigInstance.S3_BucketName),
 		Key:    aws.String(name + ext),
+		ACL:    aws.String("public-read"),
 	})
 	if err != nil {
 		log.Printf("Error uploading to Backblaze B2: %v\n", err)
