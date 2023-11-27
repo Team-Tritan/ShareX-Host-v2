@@ -38,9 +38,9 @@ var AppConfigInstance = AppConfig{
 	},
 	Sentry_DSN: "https://82c2d5853bb3bbd20124cec5bf3fa86e@sentry.tritan.dev/12",
 	
-	S3_KeyID: "00558daa392fb700000000001",
-	S3_AppKey: "K0058jnF/dPReKrJx3UpHCpeaCy/Gqg",
-	S3_RegionURL: "https://s3.us-east-005.backblazeb2.com",
-	S3_RegionName: "us-east-005",
-	S3_BucketName: "Tritan-Images",
+	S3_KeyID: "2HA095ZTVQAKLABLDOT9",
+	S3_AppKey: "leIb1JnpY17aV6smB29ytQhDgbiQuz5veThRboP1",
+	S3_RegionURL: "https://s3.wasabisys.com",
+	S3_RegionName: "us-east-1",
+	S3_BucketName: "image-uploader",
 }
