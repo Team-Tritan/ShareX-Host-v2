@@ -78,10 +78,10 @@ func Upload(c *fiber.Ctx) error {
 		ACL:    aws.String("public-read"),
 	})
 	if err != nil {
-		log.Printf("Error uploading to Backblaze B2: %v\n", err)
+		log.Printf("Error uploading to S3: %v\n", err)
 		return c.Status(500).JSON(fiber.Map{
 			"status":  500,
-			"message": "Failed to upload the file to Backblaze B2.",
+			"message": "Failed to upload the file to S3.",
 			"error":   err.Error(),
 		})
 	}
