@@ -42,5 +42,5 @@ var AppConfigInstance = AppConfig{
 	S3_AppKey: "leIb1JnpY17aV6smB29ytQhDgbiQuz5veThRboP1",
 	S3_RegionURL: "s3.wasabisys.com",
 	S3_RegionName: "us-east-1",
-	S3_BucketName: "image-uploader",
+	S3_BucketName: "images.tritan.dev",
 }

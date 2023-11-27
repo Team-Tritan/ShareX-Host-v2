@@ -42,7 +42,7 @@ func DisplayImage(c *fiber.Ctx) error {
 	for _, obj := range resp.Contents {
 		objKeyWithoutExt := strings.TrimSuffix(path.Base(*obj.Key), path.Ext(path.Base(*obj.Key)))
 		if objKeyWithoutExt == fileWithoutExtension {
-			fullURL := fmt.Sprintf("https://%s/%s/%s", config.AppConfigInstance.S3_RegionURL, config.AppConfigInstance.S3_BucketName, *obj.Key)
+			fullURL := fmt.Sprintf("https://%s/%s", config.AppConfigInstance.S3_BucketName, *obj.Key)
 			data := map[string]interface{}{
 				"Data": map[string]string{
 					"fullURL": fullURL,
