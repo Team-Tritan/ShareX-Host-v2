@@ -40,7 +40,7 @@ var AppConfigInstance = AppConfig{
 	
 	S3_KeyID: "2HA095ZTVQAKLABLDOT9",
 	S3_AppKey: "leIb1JnpY17aV6smB29ytQhDgbiQuz5veThRboP1",
-	S3_RegionURL: "https://s3.wasabisys.com",
+	S3_RegionURL: "s3.wasabisys.com",
 	S3_RegionName: "us-east-1",
 	S3_BucketName: "image-uploader",
 }
