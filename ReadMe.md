@@ -60,6 +60,7 @@ To configure ShareX for image uploading and URL shortening, use the provided con
 
 ### API Endpoints
 
+- **Generate ShareX Config**: `/api/config`
 - **Upload Image**: `/api/upload`
 - **Get Uploads**: `/api/uploads`
 - **Delete Upload**: `/api/delete-upload/{slug}`
