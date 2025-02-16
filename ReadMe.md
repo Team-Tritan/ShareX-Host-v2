@@ -18,7 +18,6 @@ Tritan's ShareX Host is a self-hosted solution for managing and sharing images a
 
 - [Go](https://golang.org/dl/) (version 1.16 or higher)
 - [MongoDB](https://www.mongodb.com/try/download/community) (version 4.4 or higher)
-- [Node.js](https://nodejs.org/en/download/) (version 14 or higher)
 
 ### Installation
 
