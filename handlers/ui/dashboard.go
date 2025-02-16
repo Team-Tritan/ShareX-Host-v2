@@ -5,6 +5,5 @@ import (
 )
 
 func LoadDashboardPage(c *fiber.Ctx) error {
-
 	return c.Render("./pages/dashboard.html", "layouts/main")
 }
