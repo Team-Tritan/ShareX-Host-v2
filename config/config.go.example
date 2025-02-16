@@ -1,0 +1,31 @@
+package config
+
+type AppConfig struct {
+	Port          int
+	Dirs          []string
+	Sentry_DSN    string
+	S3_KeyID      string
+	S3_AppKey     string
+	S3_RegionName string
+	S3_RegionURL  string
+	S3_BucketName string
+	S3_PubURL     string
+	MongoDB_URI   string
+}
+
+var AppConfigInstance = AppConfig{
+	Port: 8080,
+	Dirs: []string{
+		"i",
+	},
+
+	Sentry_DSN: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+
+	S3_KeyID:      "aaaaaaaaaaaaaaaaaaaa",
+	S3_AppKey:     "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+	S3_RegionURL:  "s3.mci.ip.tritan.host",
+	S3_RegionName: "us-kanc",
+	S3_BucketName: "images",
+	S3_PubURL:     "s3.tritan.gg",
+	MongoDB_URI:   "mongodb://mongodb.local:27017/Uploader",
+}
