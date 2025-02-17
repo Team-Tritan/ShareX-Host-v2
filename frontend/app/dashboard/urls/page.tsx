@@ -301,7 +301,7 @@ const Urls: React.FC = () => {
                       </button>
                       <button
                         className="flex items-center rounded bg-pink-500 px-3 py-2 text-sm font-semibold text-white hover:bg-pink-600 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-colors duration-300"
-                        onClick={() => handleDelete(url.Key)}
+                        onClick={() => handleDelete(url.Slug)}
                       >
                         <Trash2 className="h-4 w-4" />
                       </button>
