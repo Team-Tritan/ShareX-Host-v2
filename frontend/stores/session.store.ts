@@ -7,10 +7,27 @@ interface TokenState {
     setDisplayName: (name: string) => void
 }
 
+function setCookie(name: string, value: string, days: number) {
+    if (typeof document !== "undefined") {
+        const expires = new Date(Date.now() + days * 864e5).toUTCString()
+        document.cookie = name + '=' + encodeURIComponent(value) + '; expires=' + expires + '; path=/'
+    }
+}
+
+function getCookie(name: string) {
+    if (typeof document !== "undefined") {
+        return document.cookie.split('; ').reduce((r, v) => {
+            const parts = v.split('=')
+            return parts[0] === name ? decodeURIComponent(parts[1]) : r
+        }, '')
+    }
+    return ""
+}
+
 export const useTokenStore = create<TokenState>((set) => ({
-    apiToken: localStorage.getItem("api_key") || "",
+    apiToken: getCookie("api_key") || "",
     setToken: (token: string) => {
-        localStorage.setItem("api_key", token)
+        setCookie("api_key", token, 7)
         set({ apiToken: token })
     },
     displayName: "User",

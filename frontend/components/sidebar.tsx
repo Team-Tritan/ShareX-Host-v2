@@ -1,4 +1,4 @@
-import { Home, Image, Settings, User, Menu, Upload } from "lucide-react"
+import { Image, Settings, User, Menu, Upload } from "lucide-react"
 
 const menuItems = [
     { icon: Image, label: "Your Uploads", href: "/dashboard" },

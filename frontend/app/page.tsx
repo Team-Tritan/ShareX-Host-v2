@@ -3,6 +3,7 @@
 import { ArrowRight } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useTokenStore } from "../stores/session.store";
+import { redirect } from "next/navigation";
 
 const LoginPage: React.FC = () => {
   const apiToken = useTokenStore((state) => state.apiToken);
@@ -15,6 +16,7 @@ const LoginPage: React.FC = () => {
 
   const handleLogin = () => {
     setToken(apiKey);
+    redirect("/dashboard");
   };
 
   const handleCreateKey = async () => {
@@ -36,6 +38,7 @@ const LoginPage: React.FC = () => {
       const data = await response.json();
       setToken(data.key);
       alert(`Your API key is ${data.key}. Please save it somewhere safe.`);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       alert(error.message);
     }

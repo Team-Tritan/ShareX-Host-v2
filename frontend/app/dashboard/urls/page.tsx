@@ -1,12 +1,11 @@
 "use client";
 
-import * as React from "react";
+import { useEffect, useState } from "react";
 import {
     Trash2,
     Eye,
     InfoIcon,
     Edit3,
-    ArrowRightFromLine,
     ArrowRight,
 } from "lucide-react";
 import { useTokenStore } from "../../../stores/session.store";
@@ -31,9 +30,9 @@ interface ApiResponse {
 }
 
 const Urls: React.FC = () => {
-    const [urlList, setUrlList] = React.useState<Url[]>([]);
-    const [sidebarOpen, setSidebarOpen] = React.useState(true);
-    const [loading, setLoading] = React.useState(true);
+    const [urlList, setUrlList] = useState<Url[]>([]);
+    const [sidebarOpen, setSidebarOpen] = useState(true);
+    const [loading, setLoading] = useState(true);
     const userStore = useTokenStore();
 
     if (!userStore.apiToken) {
@@ -49,7 +48,8 @@ const Urls: React.FC = () => {
         );
     }
 
-    React.useEffect(() => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    useEffect(() => {
         const fetchUrls = async () => {
             try {
                 const response = await fetch("/api/urls", {
@@ -73,7 +73,7 @@ const Urls: React.FC = () => {
 
         const intervalId = setInterval(fetchUrls, 10000);
         return () => clearInterval(intervalId);
-    }, [userStore.apiToken]);
+    }, [userStore.apiToken, userStore]);
 
     const handleDelete = async (Key: string) => {
         try {

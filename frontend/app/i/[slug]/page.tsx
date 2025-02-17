@@ -1,7 +1,7 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { useEffect, useState, use } from "react";
-import { useRouter } from "next/router";
 import Head from "next/head";
 
 interface Metadata {
