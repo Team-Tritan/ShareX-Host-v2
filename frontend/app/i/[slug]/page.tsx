@@ -42,9 +42,18 @@ const ImagePage = ({ params }: ImagePageProps) => {
     <div className="flex flex-col justify-center items-center h-screen bg-[#0d0c0e] text-white text-center p-5">
       <Head>
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:image" content={`https://s3.tritan.gg/images/${data?.FileName}`} />
-        <meta name="twitter:image:src" content={`https://s3.tritan.gg/images/${data?.FileName}`} />
-        <meta property="og:image" content={`https://s3.tritan.gg/images/${data?.FileName}`} />
+        <meta
+          name="twitter:image"
+          content={`https://s3.tritan.gg/images/${data?.FileName}`}
+        />
+        <meta
+          name="twitter:image:src"
+          content={`https://s3.tritan.gg/images/${data?.FileName}`}
+        />
+        <meta
+          property="og:image"
+          content={`https://s3.tritan.gg/images/${data?.FileName}`}
+        />
         <meta name="theme-color" content="#6366F1" />
         <meta property="og:title" content={data?.FileName} />
         <meta property="og:author" content="Sussy File Uploader" />
