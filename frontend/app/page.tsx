@@ -48,7 +48,7 @@ const LoginPage: React.FC = () => {
     <div className="min-h-screen flex items-center justify-center bg-[#0d0c0e]">
       <div className="max-w-md w-full space-y-8 p-8 bg-[#121114] rounded-xl shadow-md">
         <div className="text-center">
-          <h1 className="text-3xl font-bold text-white">ShareX Host</h1>
+          <h1 className="text-3xl font-bold text-white">Tritan Uploader</h1>
         </div>
 
         <div className="mt-8 space-y-6">
