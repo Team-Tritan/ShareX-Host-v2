@@ -101,7 +101,7 @@ const Dashboard: React.FC = () => {
         setImageList((prevList) =>
           prevList.filter((image) => image.FileName !== FileName)
         );
-        
+
         toast.info("File deleted successfully!");
       } else {
         console.error("Failed to delete image");
@@ -179,6 +179,7 @@ const Dashboard: React.FC = () => {
                 <div className="absolute top-2 right-2 text-white opacity-75 group-hover:opacity-100 transition-opacity duration-300">
                   <InfoIcon className="h-6 w-6" />
                 </div>
+
                 <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                   <Link
                     href={`/i/${image.FileName.split(".")
@@ -189,6 +190,7 @@ const Dashboard: React.FC = () => {
                       <Eye className="h-4 w-4" />
                     </button>
                   </Link>
+
                   <button
                     className="flex items-center rounded bg-purple-500 px-3 py-2 text-sm font-semibold text-white hover:bg-purple-800 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-800"
                     onClick={() => handleDelete(image.FileName.split(".")[0])}
@@ -196,6 +198,7 @@ const Dashboard: React.FC = () => {
                     <Trash2 className="h-4 w-4" />
                   </button>
                 </div>
+                
                 <div className="p-4">
                   <h3 className="font-semibold text-purple-400">
                     <Link
@@ -206,13 +209,16 @@ const Dashboard: React.FC = () => {
                       {image.FileName}
                     </Link>
                   </h3>
+
                   <p className="text-sm text-gray-400">
                     Uploaded on{" "}
                     {new Date(image.Metadata.UploadDate).toLocaleString()}
                   </p>
+
                   <p className="text-sm text-gray-400">
                     {image.Metadata.Views} Views
                   </p>
+                  
                   <p className="text-sm text-gray-400">
                     {formatFileSize(image.Metadata.FileSize)}
                   </p>

@@ -134,9 +134,8 @@ const Urls: React.FC = () => {
     <div className="flex h-screen bg-[#0d0c0e] text-gray-100">
       <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
       <main
-        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${
-          sidebarOpen ? "ml-64" : "ml-0"
-        }`}
+        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"
+          }`}
       >
         <ToastContainer
           position="top-right"
@@ -186,35 +185,42 @@ const Urls: React.FC = () => {
               >
                 <div className="p-4">
                   <h3 className="font-semibold text-purple-400">
-                    <Link href={`/u/${url.Slug}`}>/u/{url.Slug}</Link>
+                    <Link prefetch={false} href={`/u/${url.Slug}`}>/u/{url.Slug}</Link>
                     <ArrowRight className="inline mx-2" />
-                    <Link href={url.URL}>{url.URL}</Link>
+                    <Link prefetch={false} href={url.URL}>{url.URL}</Link>
                   </h3>
+
                   <p className="text-sm text-gray-400">
                     Created on {new Date(url.CreatedAt).toLocaleString()}
                   </p>
+
                   <p className="text-sm text-gray-400">{url.Clicks} Clicks</p>
+
                   <div className="absolute top-2 right-2 text-white opacity-75 group-hover:opacity-100 transition-opacity duration-300">
                     <InfoIcon className="h-6 w-6" />
                   </div>
+
                   <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <Link href={`/u/${url.Slug}`}>
                       <button className="flex items-center rounded bg-purple-500 px-3 py-2 text-sm font-semibold text-white hover:bg-purple-800 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-800 mr-2">
                         <Eye className="h-4 w-4" />
                       </button>
                     </Link>
+
                     <button
                       className="flex items-center rounded bg-purple-500 px-3 py-2 text-sm font-semibold text-white hover:bg-purple-800 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-800 mr-2"
                       onClick={() => handleEdit(url.Key, url.Slug)}
                     >
                       <Edit3 className="h-4 w-4" />
                     </button>
+
                     <button
                       className="flex items-center rounded bg-purple-500 px-3 py-2 text-sm font-semibold text-white hover:bg-purple-800 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-800"
                       onClick={() => handleDelete(url.Slug)}
                     >
                       <Trash2 className="h-4 w-4" />
                     </button>
+                    
                   </div>
                 </div>
               </div>

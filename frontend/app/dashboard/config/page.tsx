@@ -87,6 +87,7 @@ const Config: React.FC = () => {
           Use the buttons below to generate ShareX configs for uploading files
           or shortening URLs.
         </div>
+
         <div className="flex flex-col space-y-4">
           <button
             className="flex items-center w-1/4 justify-center rounded bg-purple-500 px-4 py-2 text-sm font-semibold text-white hover:bg-purple-800 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-800"
@@ -94,6 +95,7 @@ const Config: React.FC = () => {
           >
             ShareX Images/Files
           </button>
+          
           <button
             className="flex items-center w-1/4 justify-center rounded bg-purple-500 px-4 py-2 text-sm font-semibold text-white hover:bg-purple-800 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-800"
             onClick={() => generateConfig("url")}
