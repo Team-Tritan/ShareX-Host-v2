@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState, use } from 'react';
-import { useRouter } from 'next/router';
+import { useEffect, useState, use } from "react";
+import { useRouter } from "next/router";
 
 interface Metadata {
   FileType: string;
@@ -47,7 +47,9 @@ const ImagePage = ({ params }: ImagePageProps) => {
         ) : (
           <>
             {!data?.FileName ? (
-              <div>The content you requested could not be found on the server.</div>
+              <div className="text-grey-400 mt-4 mb-4">
+                The URL you requested could not be found.
+              </div>
             ) : (
               <>
                 <h1 className="text-2xl mb-5">{data.FileName}</h1>
@@ -57,7 +59,10 @@ const ImagePage = ({ params }: ImagePageProps) => {
                   <div>{data.Metadata.Views} Views</div>
                   <div>{data.Metadata.FileSize} bytes</div>
                 </div>
-                <a href={`https://s3.tritan.gg/images/${data.FileName}`} target="_blank">
+                <a
+                  href={`https://s3.tritan.gg/images/${data.FileName}`}
+                  target="_blank"
+                >
                   <img
                     src={`https://s3.tritan.gg/images/${data.FileName}`}
                     alt="Cannot preview this file in the browser, click here to open."
