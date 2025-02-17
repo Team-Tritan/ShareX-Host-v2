@@ -10,6 +10,10 @@ const nextConfig: NextConfig = {
       {
         source: "/u/:path",
         destination: "http://backend:8080/u/:path",
+      },
+      {
+        source: "/i/:path",
+        destination: "http://backend:8080/i/:path",
       }
     ];
   }

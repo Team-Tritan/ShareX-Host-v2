@@ -5,16 +5,15 @@ import (
 
 	api "tritan.dev/image-uploader/handlers/api"
 	ui "tritan.dev/image-uploader/handlers/ui"
-	"tritan.dev/image-uploader/middleware"
 )
 
 func SetupRoutes(app *fiber.App) error {
-	rateLimiter := middleware.NewRateLimiter()
 
 	app.Get("/u/:slug", ui.RedirectBySlug)
-	app.Get("/api/image/:slug", api.GetImageBySlug)
+	app.Get("/:dir/:file", ui.DisplayImage)
 
-	app.Post("/api/upload", rateLimiter.Limit(api.Upload))
+	app.Get("/api/image/:slug", api.GetImageBySlug)
+	app.Post("/api/upload", api.Upload)
 	app.Post("/api/create-key", api.CreateKey)
 	app.Post("/api/config", api.GetShareXConfig)
 	app.Post("/api/uploads", api.GetUploadsByToken)

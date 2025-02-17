@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{.Data.Name}} - Uploaded by {{.Data.DisplayName}}</title>
+    <script
+      src="https://code.jquery.com/jquery-3.6.0.min.js"
+      integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      defer
+      data-domain="files.tritan.gg"
+      src="https://analytics.tritan.gg/js/script.js"
+    ></script>
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="{{.Data.fullURL}}" />
+    <meta name="twitter:image:src" content="{{.Data.fullURL}}" />
+    <meta property="og:image" content="{{.Data.fullURL}}" />
+    <meta name="theme-color" content="#6366F1" />
+    <meta property="og:title" content="{{.Data.Name}}" />
+    <meta property="og:author" content="Sussy File Uploader" />
+    <meta name="twitter:title" content="{{.Data.Name}}" />
+    <meta
+      name="twitter:description"
+      content="{{.Data.DisplayName}} uploaded this {{.Data.FileSizeMB}} file at {{.Data.UploadTime}}."
+    />
+    <meta
+      property="og:description"
+      content="{{.Data.DisplayName}} uploaded this {{.Data.FileSizeMB}} file at {{.Data.UploadTime}}."
+    />
+    <link type="application/json+oembed" href="{{.Data.fullURL}}" />
+    <style>
+      body {
+        color: white;
+        text-align: center;
+        font-family: Helvetica, Arial, sans-serif;
+        background: #0d0c0e;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 800px;
+        width: 100%;
+        background-color: #121114;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+      }
+
+      h1 {
+        font-size: 2rem;
+        margin-bottom: 20px;
+      }
+
+      img {
+        max-height: 75vh;
+        width: auto;
+        max-width: 100%;
+        border-radius: 10px;
+        margin-bottom: 20px;
+      }
+
+      a {
+        text-decoration: none;
+        color: rgb(168 85 247);
+      }
+
+      .report-link {
+        margin-top: 20px;
+        display: inline-block;
+        padding: 10px 20px;
+        border: 1px solid rgb(168 85 247);
+        border-radius: 5px;
+        transition: background-color 0.3s, color 0.3s;
+        background-color: rgb(168 85 247);
+        color: white;
+      }
+
+      .data {
+        font-size: 0.9rem;
+        color: #cccccc;
+        margin-top: 3px;
+        margin-bottom: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>{{.Data.Name}}</h1>
+      <div class="data">
+        <div>{{.Data.UploadTime}}</div>
+        <div>Uploaded by {{.Data.DisplayName}}</div>
+        <div>{{.Data.Views}} Views</div>
+        <div>{{.Data.FileSizeMB}}</div>
+      </div>
+
+      <a href="{{.Data.fullURL}}" target="_blank">
+        <img
+          src="{{.Data.fullURL}}"
+          alt="Cannot preview this file in the browser, click here to open."
+        />
+      </a>
+      <br />
+      <a
+        class="report-link text-purple-500"
+        href="mailto:noc@tritan.gg?subject=REPORT: {{.Data.Name}}&body=Hi, I'd like to report {{.Data.Name}} which was uploaded onto your sharex image host."
+        >Report</a
+      >
+    </div>
+  </body>
+</html>
