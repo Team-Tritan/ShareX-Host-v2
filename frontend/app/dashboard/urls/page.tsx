@@ -67,7 +67,8 @@ const Urls: React.FC = () => {
 
     const intervalId = setInterval(fetchUrls, 10000);
     return () => clearInterval(intervalId);
-  }, [userStore.apiToken, userStore]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userStore.apiToken]);
 
   const handleDelete = async (Key: string) => {
     try {
