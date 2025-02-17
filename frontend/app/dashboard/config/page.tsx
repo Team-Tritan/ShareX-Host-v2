@@ -54,7 +54,7 @@ const Config: React.FC = () => {
       link.click();
       document.body.removeChild(link);
 
-      toast.success("Config generated successfully!");
+      toast.info("Config generated successfully!");
     } catch (error) {
       toast.error(`Error generating ShareX config: ${error}`);
     }
