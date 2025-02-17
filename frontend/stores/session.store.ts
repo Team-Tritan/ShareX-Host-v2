@@ -3,6 +3,8 @@ import { create } from "zustand"
 interface TokenState {
     apiToken: string
     setToken: (token: string) => void
+    displayName: string
+    setDisplayName: (name: string) => void
 }
 
 export const useTokenStore = create<TokenState>((set) => ({
@@ -11,4 +13,8 @@ export const useTokenStore = create<TokenState>((set) => ({
         localStorage.setItem("api_key", token)
         set({ apiToken: token })
     },
+    displayName: "User",
+    setDisplayName: (name: string) => {
+        set({ displayName: name })
+    }
 }))
