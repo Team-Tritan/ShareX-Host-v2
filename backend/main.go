@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 	"html/template"
-	"io/ioutil"
 	"log"
+	"os"
 	"path/filepath"
 	"strings"
 
@@ -58,7 +58,7 @@ func loadTemplates() *template.Template {
 	templates := template.New("")
 	templatePath := "./pages"
 
-	templateDir, err := ioutil.ReadDir(templatePath)
+	templateDir, err := os.ReadDir(templatePath)
 	if err != nil {
 		sentry.CaptureException(err)
 		log.Fatalf("Error reading template directory: %v", err)
@@ -67,7 +67,7 @@ func loadTemplates() *template.Template {
 	for _, fileInfo := range templateDir {
 		templateName := fileInfo.Name()
 		if !fileInfo.IsDir() && strings.HasSuffix(templateName, ".html") {
-			templateBytes, err := ioutil.ReadFile(filepath.Join(templatePath, templateName))
+			templateBytes, err := os.ReadFile(filepath.Join(templatePath, templateName))
 			if err != nil {
 				sentry.CaptureException(err)
 				log.Fatalf("Error reading template file: %v", err)
