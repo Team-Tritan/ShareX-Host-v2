@@ -2,6 +2,7 @@
 
 import { useEffect, useState, use } from "react";
 import { useRouter } from "next/router";
+import Head from "next/head";
 
 interface Metadata {
   FileType: string;
@@ -39,6 +40,24 @@ const ImagePage = ({ params }: ImagePageProps) => {
 
   return (
     <div className="flex flex-col justify-center items-center h-screen bg-[#0d0c0e] text-white text-center p-5">
+      <Head>
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:image" content={`https://s3.tritan.gg/images/${data?.FileName}`} />
+        <meta name="twitter:image:src" content={`https://s3.tritan.gg/images/${data?.FileName}`} />
+        <meta property="og:image" content={`https://s3.tritan.gg/images/${data?.FileName}`} />
+        <meta name="theme-color" content="#6366F1" />
+        <meta property="og:title" content={data?.FileName} />
+        <meta property="og:author" content="Sussy File Uploader" />
+        <meta name="twitter:title" content={data?.FileName} />
+        <meta
+          name="twitter:description"
+          content={`${data?.DisplayName} uploaded this ${data?.Metadata.FileSize} bytes file at ${data?.Metadata.UploadDate}.`}
+        />
+        <meta
+          property="og:description"
+          content={`${data?.DisplayName} uploaded this ${data?.Metadata.FileSize} bytes file at ${data?.Metadata.UploadDate}.`}
+        />
+      </Head>
       <div className="container max-w-2xl w-full bg-[#121114] rounded-lg p-5 shadow-lg">
         {loading ? (
           <div className="flex justify-center items-center h-full">
@@ -66,7 +85,7 @@ const ImagePage = ({ params }: ImagePageProps) => {
                   <img
                     src={`https://s3.tritan.gg/images/${data.FileName}`}
                     alt="Cannot preview this file in the browser, click here to open."
-                    className="max-h-[75vh] w-auto max-w-full rounded-lg mb-5"
+                    className="max-h-[75vh] w-auto max-w-full rounded-lg mb-5 block mx-auto"
                   />
                 </a>
                 <br />
