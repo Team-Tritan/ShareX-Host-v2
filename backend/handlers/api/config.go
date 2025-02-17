@@ -18,6 +18,7 @@ func GetShareXConfig(c *fiber.Ctx) error {
 		})
 	}
 	queryType := c.Query("type")
+	domain := c.Query("domain")
 
 	if !functions.IsValidKey(key, validUsers) {
 		return c.Status(401).JSON(fiber.Map{
@@ -34,12 +35,12 @@ func GetShareXConfig(c *fiber.Ctx) error {
 	}
 
 	if queryType == "upload" {
-		uploadConfig := functions.GenerateUploaderConfig(key)
+		uploadConfig := functions.GenerateUploaderConfig(key, domain)
 		functions.SendConfig(c, uploadConfig)
 	}
 
 	if queryType == "url" {
-		urlConfig := functions.GenerateURLShortenerConfig(key)
+		urlConfig := functions.GenerateURLShortenerConfig(key, domain)
 		functions.SendConfig(c, urlConfig)
 	}
 

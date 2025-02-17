@@ -19,13 +19,16 @@ type ShareXConfig struct {
 	FileFormName    string            `json:"FileFormName,omitempty"`
 }
 
-func GenerateUploaderConfig(key string) ShareXConfig {
+func GenerateUploaderConfig(key string, domain string) ShareXConfig {
+	if domain == "" {
+		domain = "https://i.tritan.gg"
+	}
 	return ShareXConfig{
 		Version:         "15.0.0",
 		Name:            "Lazy Uploader - Uploader",
 		DestinationType: "ImageUploader, TextUploader, FileUploader",
 		RequestMethod:   "POST",
-		RequestURL:      "https://i.tritan.gg/api/upload",
+		RequestURL:      domain + "/api/upload",
 		Headers: map[string]string{
 			"key": key,
 		},
@@ -34,17 +37,20 @@ func GenerateUploaderConfig(key string) ShareXConfig {
 		Arguments: map[string]string{
 			"url": "{input}",
 		},
-		URL: "https://i.tritan.gg{json:url}",
+		URL: domain + "{json:url}",
 	}
 }
 
-func GenerateURLShortenerConfig(key string) ShareXConfig {
+func GenerateURLShortenerConfig(key string, domain string) ShareXConfig {
+	if domain == "" {
+		domain = "https://i.tritan.gg"
+	}
 	return ShareXConfig{
 		Version:         "15.0.0",
 		Name:            "Lazy Uploader - URL Shortener",
 		DestinationType: "URLShortener",
 		RequestMethod:   "POST",
-		RequestURL:      "https://i.tritan.gg/api/url",
+		RequestURL:      domain + "/api/url",
 		Headers: map[string]string{
 			"key": key,
 		},
@@ -53,7 +59,7 @@ func GenerateURLShortenerConfig(key string) ShareXConfig {
 		Arguments: map[string]string{
 			"url": "{input}",
 		},
-		URL: "https://i.tritan.gg/u/{json:slug}",
+		URL: domain + "/u/{json:slug}",
 	}
 }
 
