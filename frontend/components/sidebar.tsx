@@ -29,7 +29,7 @@ export function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
         <div className="flex h-full flex-col">
           <div className="flex items-center justify-between p-4">
             <h2 className="text-lg font-semibold text-white ml-4 mt-2.5">
-              Tritan ShareX Host
+              Tritan Uploader
             </h2>
           </div>
           <nav className="flex-1 space-y-2 p-4">
