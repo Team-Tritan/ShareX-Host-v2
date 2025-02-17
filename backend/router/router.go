@@ -12,7 +12,7 @@ func SetupRoutes(app *fiber.App) error {
 	rateLimiter := middleware.NewRateLimiter()
 
 	app.Get("/", ui.LoadDashboardPage)
-	app.Get("/:slug", ui.RedirectBySlug)
+	app.Get("/u/:slug", ui.RedirectBySlug)
 	app.Get("/:dir/:file", ui.DisplayImage)
 
 	app.Get("/api/image/:slug", api.GetImageBySlug)
