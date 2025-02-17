@@ -1,11 +1,7 @@
 package handlers
 
 import (
-	"fmt"
-	"math/rand"
-
 	"github.com/gofiber/fiber/v2"
-	"tritan.dev/image-uploader/config"
 	"tritan.dev/image-uploader/database"
 )
 
@@ -42,11 +38,6 @@ func GetUploadsByToken(c *fiber.Ctx) error {
 			"message": "Error fetching uploads.",
 			"error":   err.Error(),
 		})
-	}
-
-	for i := range matchingLogs {
-		dir := config.AppConfigInstance.Dirs[rand.Intn(len(config.AppConfigInstance.Dirs))]
-		matchingLogs[i].FileName = fmt.Sprintf("%s/%s", dir, matchingLogs[i].FileName)
 	}
 
 	return c.JSON(fiber.Map{
