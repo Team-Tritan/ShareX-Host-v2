@@ -54,3 +54,20 @@ func GetUploadsByToken(c *fiber.Ctx) error {
 		"displayName": displayName,
 	})
 }
+
+func GetImageBySlug(c *fiber.Ctx) error {
+	slug := c.Params("slug")
+	upload, err := database.GetUploadBySlug(slug)
+
+	if err != nil {
+		return c.Status(500).JSON(fiber.Map{
+			"status":  500,
+			"message": "Error fetching upload.",
+			"error":   err.Error(),
+		})
+	}
+
+	database.IncrementViewCount(upload.FileName)
+
+	return c.JSON(upload)
+}

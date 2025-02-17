@@ -15,6 +15,7 @@ func SetupRoutes(app *fiber.App) error {
 	app.Get("/:slug", ui.RedirectBySlug)
 	app.Get("/:dir/:file", ui.DisplayImage)
 
+	app.Get("/api/image/:slug", api.GetImageBySlug)
 	app.Post("/api/upload", rateLimiter.Limit(api.Upload))
 	app.Post("/api/create-key", api.CreateKey)
 	app.Post("/api/config", api.GetShareXConfig)

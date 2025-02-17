@@ -264,3 +264,13 @@ func IncrementClickCount(slug string) error {
 	_, err := collection.UpdateOne(ctx, filter, update)
 	return err
 }
+
+func GetUploadBySlug(slug string) (UploadEntry, error) {
+	var uploadEntry UploadEntry
+	collection := db.Collection("uploads")
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	filter := bson.M{"file_name": bson.M{"$regex": "^" + slug + "\\..*$"}}
+	err := collection.FindOne(ctx, filter).Decode(&uploadEntry)
+	return uploadEntry, err
+}
