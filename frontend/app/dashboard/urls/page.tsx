@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Trash2, Eye, InfoIcon, Edit3, ArrowRight } from "lucide-react";
+import { Trash2, Eye, InfoIcon, Edit3, AlertCircle, ChevronRight } from "lucide-react";
 import { useTokenStore } from "../../../stores/session.store";
 import { Sidebar } from "../../../components/sidebar";
 import Link from "next/link";
@@ -149,10 +149,10 @@ const Urls: React.FC = () => {
           pauseOnHover
           theme="dark"
         />
-        <h1 className="mb-2 text-2xl font-bold">
+        <h1 className="mb-2 text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-600 text-transparent bg-clip-text">
           Welcome, {userStore.displayName}!
         </h1>
-        <div className="text-gray-400 mb-12">
+        <div className="text-gray-400 mb-12 text-lg">
           You can view and manage your URLs below.
         </div>
 
@@ -161,7 +161,7 @@ const Urls: React.FC = () => {
             {Array.from({ length: 6 }).map((_, index) => (
               <div
                 key={index}
-                className="overflow-hidden rounded-lg bg-[#121114] animate-pulse"
+                className="overflow-hidden rounded-lg bg-[#121114] animate-pulse shadow-lg shadow-purple-500/20"
               >
                 <div className="h-48 w-full bg-[#121114]"></div>
                 <div className="p-4">
@@ -172,59 +172,83 @@ const Urls: React.FC = () => {
               </div>
             ))}
           </div>
-        ) : urlList.length === 0 ? (
-          <p className="text-gray-400 py-4 px-4 border border-zinc-800 w-1/4 rounded-xl">
-            No URLs to display
-          </p>
         ) : (
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {urlList.map((url) => (
-              <div
-                key={url.Key}
-                className="relative overflow-hidden rounded-lg bg-[#121114] group"
-              >
-                <div className="p-4">
-                  <h3 className="font-semibold text-purple-400">
-                    <Link prefetch={false} href={`/u/${url.Slug}`}>/u/{url.Slug}</Link>
-                    <ArrowRight className="inline mx-2" />
-                    <Link prefetch={false} href={url.URL}>{url.URL}</Link>
-                  </h3>
+            {urlList.length === 0 ? (
+              <>
+                <div className="col-span-full flex items-center justify-center text-gray-400 rounded-lg">
+                  <AlertCircle className="h-6 w-6 mr-2" />
 
-                  <p className="text-sm text-gray-400">
-                    Created on {new Date(url.CreatedAt).toLocaleString()}
-                  </p>
-
-                  <p className="text-sm text-gray-400">{url.Clicks} Clicks</p>
-
-                  <div className="absolute top-2 right-2 text-white opacity-75 group-hover:opacity-100 transition-opacity duration-300">
-                    <InfoIcon className="h-6 w-6" />
-                  </div>
-
-                  <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <Link href={`/u/${url.Slug}`}>
-                      <button className="flex items-center rounded bg-purple-500 px-3 py-2 text-sm font-semibold text-white hover:bg-purple-800 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-800 mr-2">
-                        <Eye className="h-4 w-4" />
-                      </button>
-                    </Link>
-
-                    <button
-                      className="flex items-center rounded bg-purple-500 px-3 py-2 text-sm font-semibold text-white hover:bg-purple-800 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-800 mr-2"
-                      onClick={() => handleEdit(url.Key, url.Slug)}
-                    >
-                      <Edit3 className="h-4 w-4" />
-                    </button>
-
-                    <button
-                      className="flex items-center rounded bg-purple-500 px-3 py-2 text-sm font-semibold text-white hover:bg-purple-800 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-800"
-                      onClick={() => handleDelete(url.Slug)}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </button>
-                    
+                  <div className="col-span-full text-gray-400 rounded-lg">
+                    You do not have any shortened URLs.
                   </div>
                 </div>
-              </div>
-            ))}
+
+                {Array.from({ length: 12 }).map((_, index) => (
+                  <div
+                    key={index}
+                    className="overflow-hidden rounded-lg bg-[#121114] animate-pulse"
+                  >
+                    <div className="h-12 w-full bg-[#121114]"></div>
+                    <div className="p-4">
+                      <div className="h-4 bg-zinc-800 mb-2"></div>
+                      <div className="h-4 bg-zinc-800 mb-2"></div>
+                      <div className="h-4 bg-zinc-800"></div>
+                    </div>
+                  </div>
+                ))}
+              </>
+            ) : (
+              urlList.map((url) => (
+                <div
+                  key={url.Key}
+                  className="relative overflow-hidden rounded-lg bg-[#121114] group shadow-2xl shadow-indigo-500/20 transition-all duration-300 hover:shadow-indigo-500/40 hover:scale-105"
+                >
+                  <div className="p-4">
+                    <h3 className="font-semibold text-purple-400 hover:text-purple-300 transition-colors duration-300">
+                      <Link prefetch={false} href={`/u/${url.Slug}`}>/u/{url.Slug}</Link>
+                      <ChevronRight className="inline mx-2 text-white font-semibold" />
+                      <Link prefetch={false} href={url.URL}>{url.URL}</Link>
+                    </h3>
+
+                    <p className="text-sm text-gray-400 mt-2">
+                      Created on {new Date(url.CreatedAt).toLocaleString()}
+                    </p>
+
+                    <p className="text-sm text-gray-400 mt-1">
+                      <span className="text-pink-400">{url.Clicks}</span> Clicks
+                    </p>
+
+                    <div className="absolute top-2 right-2 text-white opacity-75 group-hover:opacity-100 transition-opacity duration-300">
+                      <InfoIcon className="h-6 w-6 text-purple-400" />
+                    </div>
+
+                    <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <Link href={`/u/${url.Slug}`}>
+                        <button className="flex items-center rounded bg-purple-500 px-3 py-2 text-sm font-semibold text-white hover:bg-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-800 mr-2 transition-colors duration-300">
+                          <Eye className="h-4 w-4" />
+                        </button>
+                      </Link>
+
+                      <button
+                        className="flex items-center rounded bg-pink-500 px-3 py-2 text-sm font-semibold text-white hover:bg-pink-600 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2 focus:ring-offset-gray-800 mr-2 transition-colors duration-300"
+                        onClick={() => handleEdit(url.Key, url.Slug)}
+                      >
+                        <Edit3 className="h-4 w-4" />
+                      </button>
+
+                      <button
+                        className="flex items-center rounded bg-pink-500 px-3 py-2 text-sm font-semibold text-white hover:bg-pink-600 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-colors duration-300"
+                        onClick={() => handleDelete(url.Slug)}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         )}
       </main>

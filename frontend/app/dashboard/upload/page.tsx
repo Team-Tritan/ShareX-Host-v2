@@ -100,7 +100,7 @@ const UploadPage: React.FC = () => {
 
         <div
           ref={dropzoneRef}
-          className={`flex flex-col items-center justify-center w-full h-[75%] border-2 border-dashed border-zinc-600 rounded-lg cursor-pointer transition-all duration-300"
+          className={`flex flex-col items-center justify-center w-full h-[75%] border-2 border-dashed border-zinc-600 rounded-lg cursor-pointer transition-all duration-300 group shadow-2xl shadow-indigo-500/20 transition-all duration-300 hover:shadow-indigo-500/40 hover:scale-105"
             }`}
           onDrop={handleDrop}
           onClick={handleClick}

@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/alt-text */
 "use client";
 
 import * as React from "react";
@@ -5,6 +6,7 @@ import { useTokenStore } from "../../../stores/session.store";
 import { Sidebar } from "../../../components/sidebar";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Download, Image, Link } from 'lucide-react';
 
 const Config: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = React.useState(true);
@@ -54,7 +56,7 @@ const Config: React.FC = () => {
 
       toast.success("Config generated successfully!");
     } catch (error) {
-      alert(`Error generating ShareX config: ${error}`);
+      toast.error(`Error generating ShareX config: ${error}`);
     }
   };
 
@@ -66,9 +68,8 @@ const Config: React.FC = () => {
     <div className="flex h-screen bg-[#0d0c0e] text-gray-100">
       <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
       <main
-        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${
-          sidebarOpen ? "ml-64" : "ml-0"
-        }`}
+        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"
+          }`}
       >
         <ToastContainer
           position="top-right"
@@ -88,20 +89,36 @@ const Config: React.FC = () => {
           or shortening URLs.
         </div>
 
-        <div className="flex flex-col space-y-4">
-          <button
-            className="flex items-center w-1/4 justify-center rounded bg-purple-500 px-4 py-2 text-sm font-semibold text-white hover:bg-purple-800 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-800"
-            onClick={() => generateConfig("upload")}
-          >
-            ShareX Images/Files
-          </button>
-          
-          <button
-            className="flex items-center w-1/4 justify-center rounded bg-purple-500 px-4 py-2 text-sm font-semibold text-white hover:bg-purple-800 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-800"
-            onClick={() => generateConfig("url")}
-          >
-            ShareX URL Shortener
-          </button>
+        <div className="flex  space-x-8">
+          <div className="w-64 bg-gradient-to-br from-purple-600 to-purple-800 rounded-lg shadow-lg overflow-hidden">
+            <div className="p-4">
+              <h2 className="text-xl font-bold text-center text-white mb-4">Images/Files</h2>
+              <div className="flex justify-center mb-4">
+                <Image className="w-16 h-16 text-white" />
+              </div>
+              <button
+                className="w-full bg-white text-purple-700 font-semibold py-2 px-4 rounded hover:bg-purple-100 transition duration-300 flex items-center justify-center"
+                onClick={() => generateConfig("upload")}
+              >
+                <Download className="mr-2 h-4 w-4" /> Download Config
+              </button>
+            </div>
+          </div>
+
+          <div className="w-64 bg-gradient-to-br from-indigo-600 to-indigo-800 rounded-lg shadow-lg overflow-hidden">
+            <div className="p-4">
+              <h2 className="text-xl font-bold text-center text-white mb-4">URL Shortener</h2>
+              <div className="flex justify-center mb-4">
+                <Link className="w-16 h-16 text-white" />
+              </div>
+              <button
+                className="w-full bg-white text-indigo-700 font-semibold py-2 px-4 rounded hover:bg-indigo-100 transition duration-300 flex items-center justify-center"
+                onClick={() => generateConfig("url")}
+              >
+                <Download className="mr-2 h-4 w-4" /> Download Config
+              </button>
+            </div>
+          </div>
         </div>
       </main>
     </div>
