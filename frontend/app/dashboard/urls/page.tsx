@@ -54,6 +54,7 @@ const Urls: React.FC = () => {
         });
 
         const data: ApiResponse = await response.json();
+
         userStore.setDisplayName(data.displayName);
         setUrlList(data.urls || []);
       } catch (error) {
@@ -67,7 +68,7 @@ const Urls: React.FC = () => {
 
     const intervalId = setInterval(fetchUrls, 10000);
     return () => clearInterval(intervalId);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userStore.apiToken]);
 
   const handleDelete = async (Key: string) => {
@@ -112,6 +113,7 @@ const Urls: React.FC = () => {
             url.Key === Key ? { ...url, Slug: newSlug } : url
           )
         );
+
         toast.success("Slug updated successfully!");
       } else if (response.status === 409) {
         toast.error("Slug is already taken. Please enter a new slug.");

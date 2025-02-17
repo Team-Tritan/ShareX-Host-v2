@@ -71,6 +71,7 @@ const Dashboard: React.FC = () => {
         });
 
         const data: ApiResponse = await response.json();
+
         userStore.setDisplayName(data.displayName);
         setImageList(data.uploads || []);
       } catch (error) {
@@ -100,6 +101,7 @@ const Dashboard: React.FC = () => {
         setImageList((prevList) =>
           prevList.filter((image) => image.FileName !== FileName)
         );
+        
         toast.info("File deleted successfully!");
       } else {
         console.error("Failed to delete image");

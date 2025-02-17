@@ -26,16 +26,14 @@ const Upload: React.FC = () => {
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
-    if (dropzoneRef.current) {
-      dropzoneRef.current.classList.add("dropzone-bg");
-    }
+    if (dropzoneRef.current) dropzoneRef.current.classList.add("dropzone-bg");
   };
 
   const handleDragLeave = (e: React.DragEvent) => {
     e.preventDefault();
-    if (dropzoneRef.current) {
+
+    if (dropzoneRef.current)
       dropzoneRef.current.classList.remove("dropzone-bg");
-    }
   };
 
   const handleDrop = async (e: React.DragEvent) => {
@@ -68,10 +66,13 @@ const Upload: React.FC = () => {
 
   const handleClick = () => {
     const fileInput = document.createElement("input");
+
     fileInput.type = "file";
     fileInput.style.display = "none";
+
     fileInput.onchange = async () => {
       const formData = new FormData();
+
       if (fileInput.files) {
         formData.append("sharex", fileInput.files[0]);
 

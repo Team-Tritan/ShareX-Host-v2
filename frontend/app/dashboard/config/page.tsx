@@ -42,9 +42,10 @@ const Config: React.FC = () => {
         type === "upload"
           ? "sharex-img-config.sxcu"
           : "sharex-shortener-config.sxcu";
-      const url = window.URL.createObjectURL(blob);
 
+      const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
+
       link.href = url;
       link.download = fileName;
       document.body.appendChild(link);
