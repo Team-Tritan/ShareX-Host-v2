@@ -1,12 +1,13 @@
 "use client";
 
-import { ArrowRight } from "lucide-react";
-import { useState, useEffect } from "react";
-import { useTokenStore } from "../stores/session.store";
-import { redirect } from "next/navigation";
+import { useTokenStore } from "@/stores/session.store";
 import { motion } from "framer-motion";
+import { ArrowRight } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const LoginPage: React.FC = () => {
+  const router = useRouter();
   const apiToken = useTokenStore((state) => state.apiToken);
   const setToken = useTokenStore((state) => state.setToken);
   const [apiKey, setApiKey] = useState(apiToken);
@@ -17,12 +18,11 @@ const LoginPage: React.FC = () => {
 
   const handleLogin = () => {
     setToken(apiKey);
-    redirect("/dashboard");
+    router.push("/dashboard");
   };
 
   const handleCreateKey = async () => {
     const displayName = prompt("Please enter a display name:");
-
     if (!displayName) return alert("Display name is required.");
 
     try {

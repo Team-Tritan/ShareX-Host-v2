@@ -1,20 +1,20 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Sidebar } from "@/components/sidebar";
+import { useTokenStore } from "@/stores/session.store";
+import { motion } from "framer-motion";
 import {
-  Trash2,
-  Eye,
-  InfoIcon,
-  Edit3,
   AlertCircle,
   ChevronRight,
+  Edit3,
+  Eye,
+  InfoIcon,
+  Trash2,
 } from "lucide-react";
-import { useTokenStore } from "../../../stores/session.store";
-import { Sidebar } from "../../../components/sidebar";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { motion } from "framer-motion";
 
 interface Url {
   Key: string;
@@ -45,6 +45,13 @@ const Urls: React.FC = () => {
             <h1 className="text-3xl font-bold text-white">ShareX Host</h1>
           </div>
           <p className="text-center">Please log in to view this page.</p>
+          <div className="flex justify-center">
+            <Link href="/">
+              <button className="w-full rounded bg-purple-500 py-2 px-4 text-white font-bold shadow hover:bg-purple-600 transition duration-200">
+                Home Page
+              </button>
+            </Link>
+          </div>
         </div>
       </div>
     );
@@ -171,8 +178,9 @@ const Urls: React.FC = () => {
     <div className="flex h-screen bg-[#0d0c0e] text-gray-100">
       <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
       <motion.main
-        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"
-          }`}
+        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${
+          sidebarOpen ? "ml-64" : "ml-0"
+        }`}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}

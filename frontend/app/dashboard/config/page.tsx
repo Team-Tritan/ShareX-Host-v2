@@ -1,13 +1,14 @@
 /* eslint-disable jsx-a11y/alt-text */
 "use client";
 
+import { Sidebar } from "@/components/sidebar";
+import { useTokenStore } from "@/stores/session.store";
+import { motion } from "framer-motion";
+import { Download, Image, Link } from "lucide-react";
+import NextLink from "next/link";
 import * as React from "react";
-import { useTokenStore } from "../../../stores/session.store";
-import { Sidebar } from "../../../components/sidebar";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Download, Image, Link } from "lucide-react";
-import { motion } from "framer-motion";
 
 const Config: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = React.useState(true);
@@ -34,6 +35,13 @@ const Config: React.FC = () => {
             <h1 className="text-3xl font-bold text-white">ShareX Host</h1>
           </div>
           <p className="text-center">Please log in to view this page.</p>
+          <div className="flex justify-center">
+            <NextLink href="/">
+              <button className="w-full rounded bg-purple-500 py-2 px-4 text-white font-bold shadow hover:bg-purple-600 transition duration-200">
+                Home Page
+              </button>
+            </NextLink>
+          </div>
         </div>
       </div>
     );
@@ -41,12 +49,15 @@ const Config: React.FC = () => {
 
   const generateConfig = async (type: string) => {
     try {
-      const response = await fetch(`/api/config?type=${type}&domain=${selectedDomain}`, {
-        headers: {
-          key: userStore.apiToken,
-        },
-        method: "POST",
-      });
+      const response = await fetch(
+        `/api/config?type=${type}&domain=${selectedDomain}`,
+        {
+          headers: {
+            key: userStore.apiToken,
+          },
+          method: "POST",
+        }
+      );
 
       let data = await response.json();
       if (typeof data === "object") {
@@ -82,8 +93,9 @@ const Config: React.FC = () => {
     <div className="flex h-screen bg-[#0d0c0e] text-gray-100">
       <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
       <main
-        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"
-          }`}
+        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${
+          sidebarOpen ? "ml-64" : "ml-0"
+        }`}
       >
         <ToastContainer
           position="top-right"
@@ -135,7 +147,10 @@ const Config: React.FC = () => {
                 <Image className="w-16 h-16 text-white" />
               </div>
               <div className="mb-4">
-                <label htmlFor="domain-upload" className="block text-sm font-medium text-gray-300">
+                <label
+                  htmlFor="domain-upload"
+                  className="block text-sm font-medium text-gray-300"
+                >
                   Select Domain
                 </label>
                 <select
@@ -176,7 +191,10 @@ const Config: React.FC = () => {
                 <Link className="w-16 h-16 text-white" />
               </div>
               <div className="mb-4">
-                <label htmlFor="domain-url" className="block text-sm font-medium text-gray-300">
+                <label
+                  htmlFor="domain-url"
+                  className="block text-sm font-medium text-gray-300"
+                >
                   Select Domain
                 </label>
                 <select

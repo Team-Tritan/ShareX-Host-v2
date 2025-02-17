@@ -1,16 +1,15 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import type React from "react";
-
-import { useEffect, useState } from "react";
-import { Trash2, Eye, InfoIcon, AlertCircle } from "lucide-react";
-import { useTokenStore } from "../../stores/session.store";
-import { Sidebar } from "../../components/sidebar";
+import { Sidebar } from "@/components/sidebar";
+import { useTokenStore } from "@/stores/session.store";
+import { motion } from "framer-motion";
+import { AlertCircle, Eye, InfoIcon, Trash2 } from "lucide-react";
 import Link from "next/link";
+import type React from "react";
+import { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { motion } from "framer-motion";
 
 interface Metadata {
   FileType: string;
@@ -49,9 +48,15 @@ const Dashboard: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const userStore = useTokenStore();
 
-  const totalStorageUsed = imageList.reduce((acc, image) => acc + image.Metadata.FileSize, 0);
+  const totalStorageUsed = imageList.reduce(
+    (acc, image) => acc + image.Metadata.FileSize,
+    0
+  );
   const totalFilesUploaded = imageList.length;
-  const totalViews = imageList.reduce((acc, image) => acc + image.Metadata.Views, 0);
+  const totalViews = imageList.reduce(
+    (acc, image) => acc + image.Metadata.Views,
+    0
+  );
 
   if (!userStore.apiToken) {
     return (
@@ -61,6 +66,13 @@ const Dashboard: React.FC = () => {
             <h1 className="text-3xl font-bold text-white">ShareX Host</h1>
           </div>
           <p className="text-center">Please log in to view this page.</p>
+          <div className="flex justify-center">
+            <Link href="/">
+              <button className="w-full rounded bg-purple-500 py-2 px-4 text-white font-bold shadow hover:bg-purple-600 transition duration-200">
+                Home Page
+              </button>
+            </Link>
+          </div>
         </div>
       </div>
     );
@@ -132,8 +144,9 @@ const Dashboard: React.FC = () => {
     <div className="flex h-screen bg-[#0d0c0e] text-gray-100">
       <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
       <motion.main
-        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"
-          }`}
+        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${
+          sidebarOpen ? "ml-64" : "ml-0"
+        }`}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
@@ -167,17 +180,23 @@ const Dashboard: React.FC = () => {
           You can view and manage your uploads below.
         </motion.div>
 
-        <p className="text-gray-400 text-lg mb-4">
-          Your Stats
-        </p>
+        <p className="text-gray-400 text-lg mb-4">Your Stats</p>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 mb-12">
           <div className="p-4 bg-purple-500 rounded-lg shadow-lg">
-            <h3 className="text-lg font-semibold text-white">Total Storage Used</h3>
-            <p className="text-2xl font-bold text-white">{formatFileSize(totalStorageUsed)}</p>
+            <h3 className="text-lg font-semibold text-white">
+              Total Storage Used
+            </h3>
+            <p className="text-2xl font-bold text-white">
+              {formatFileSize(totalStorageUsed)}
+            </p>
           </div>
           <div className="p-4 bg-pink-500 rounded-lg shadow-lg">
-            <h3 className="text-lg font-semibold text-white">Total Files Uploaded</h3>
-            <p className="text-2xl font-bold text-white">{totalFilesUploaded}</p>
+            <h3 className="text-lg font-semibold text-white">
+              Total Files Uploaded
+            </h3>
+            <p className="text-2xl font-bold text-white">
+              {totalFilesUploaded}
+            </p>
           </div>
           <div className="p-4 bg-green-500 rounded-lg shadow-lg">
             <h3 className="text-lg font-semibold text-white">Total Views</h3>

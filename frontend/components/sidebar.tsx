@@ -1,4 +1,4 @@
-import { Image, Settings, Menu, Upload, LinkIcon } from "lucide-react";
+import { Image, LinkIcon, Menu, Settings, Upload } from "lucide-react";
 import Link from "next/link";
 
 const menuItems = [
@@ -23,8 +23,9 @@ export function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
         <Menu className="h-6 w-6" />
       </button>
       <aside
-        className={`fixed left-0 top-0 z-10 h-full w-45 bg-[#171619]  transition-transform duration-300 ease-in-out ${isOpen ? "translate-x-0" : "-translate-x-full"
-          }`}
+        className={`fixed left-0 top-0 z-10 h-full w-45 bg-[#171619]  transition-transform duration-300 ease-in-out ${
+          isOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
       >
         <div className="flex h-full flex-col">
           <div className="flex items-center justify-between p-4">
