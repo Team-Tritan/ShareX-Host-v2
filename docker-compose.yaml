@@ -1,7 +1,24 @@
-version: "3"
 services:
-  web:
-    restart: unless-stopped
-    build: .
+  backend:
+    build:
+      context: ./backend
     ports:
       - "8080:8080"
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "3000:3000"
+    networks:
+      - app-network
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+networks:
+  app-network:
+    driver: bridge

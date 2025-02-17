@@ -2,6 +2,7 @@ package database
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -134,11 +135,15 @@ func DeleteUploadFromDB(key, fileName string) (UploadEntry, error) {
 		"api_key":   key,
 		"file_name": bson.M{"$regex": "^" + fileName + "\\..*$"},
 	}
-	err := collection.FindOneAndDelete(ctx, filter).Decode(&logEntry)
+	err := collection.FindOne(ctx, filter).Decode(&logEntry)
 	if err != nil {
 		return logEntry, err
 	}
-	return logEntry, nil
+	if logEntry.Key != key {
+		return logEntry, fmt.Errorf("unauthorized: key mismatch")
+	}
+	err = collection.FindOneAndDelete(ctx, filter).Decode(&logEntry)
+	return logEntry, err
 }
 
 func LoadURLsFromDB() ([]URL, error) {
@@ -222,11 +227,15 @@ func DeleteURLFromDB(key, slug string) (URL, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	filter := bson.M{"api_key": key, "slug": slug}
-	err := collection.FindOneAndDelete(ctx, filter).Decode(&url)
+	err := collection.FindOne(ctx, filter).Decode(&url)
 	if err != nil {
 		return url, err
 	}
-	return url, nil
+	if url.Key != key {
+		return url, fmt.Errorf("unauthorized: key mismatch")
+	}
+	err = collection.FindOneAndDelete(ctx, filter).Decode(&url)
+	return url, err
 }
 
 func UpdateURLSlugInDB(oldSlug, newSlug string) error {
@@ -263,4 +272,14 @@ func IncrementClickCount(slug string) error {
 
 	_, err := collection.UpdateOne(ctx, filter, update)
 	return err
+}
+
+func GetUploadBySlug(slug string) (UploadEntry, error) {
+	var uploadEntry UploadEntry
+	collection := db.Collection("uploads")
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	filter := bson.M{"file_name": bson.M{"$regex": "^" + slug + "\\..*$"}}
+	err := collection.FindOne(ctx, filter).Decode(&uploadEntry)
+	return uploadEntry, err
 }

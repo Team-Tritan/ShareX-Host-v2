@@ -24,6 +24,21 @@ func GetURLsByToken(c *fiber.Ctx) error {
 		})
 	}
 
+	var displayName string
+	for _, user := range validUsers {
+		if user.Key == key {
+			displayName = user.DisplayName
+			break
+		}
+	}
+
+	if displayName == "" {
+		return c.Status(401).JSON(fiber.Map{
+			"status":  401,
+			"message": "Invalid key",
+		})
+	}
+
 	urls, err := database.LoadURLsFromDBByKey(key)
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{
@@ -34,7 +49,8 @@ func GetURLsByToken(c *fiber.Ctx) error {
 	}
 
 	return c.Status(200).JSON(fiber.Map{
-		"status": 200,
-		"urls":   urls,
+		"status":      200,
+		"urls":        urls,
+		"displayName": displayName,
 	})
 }

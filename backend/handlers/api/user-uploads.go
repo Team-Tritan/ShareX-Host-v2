@@ -1,11 +1,7 @@
 package handlers
 
 import (
-	"fmt"
-	"math/rand"
-
 	"github.com/gofiber/fiber/v2"
-	"tritan.dev/image-uploader/config"
 	"tritan.dev/image-uploader/database"
 )
 
@@ -44,13 +40,25 @@ func GetUploadsByToken(c *fiber.Ctx) error {
 		})
 	}
 
-	for i := range matchingLogs {
-		dir := config.AppConfigInstance.Dirs[rand.Intn(len(config.AppConfigInstance.Dirs))]
-		matchingLogs[i].FileName = fmt.Sprintf("%s/%s", dir, matchingLogs[i].FileName)
-	}
-
 	return c.JSON(fiber.Map{
 		"uploads":     matchingLogs,
 		"displayName": displayName,
 	})
+}
+
+func GetImageBySlug(c *fiber.Ctx) error {
+	slug := c.Params("slug")
+	upload, err := database.GetUploadBySlug(slug)
+
+	if err != nil {
+		return c.Status(500).JSON(fiber.Map{
+			"status":  500,
+			"message": "Error fetching upload.",
+			"error":   err.Error(),
+		})
+	}
+
+	database.IncrementViewCount(upload.FileName)
+
+	return c.JSON(upload)
 }

@@ -53,7 +53,7 @@ func GenerateURLShortenerConfig(key string) ShareXConfig {
 		Arguments: map[string]string{
 			"url": "{input}",
 		},
-		URL: "https://i.tritan.gg/{json:slug}",
+		URL: "https://i.tritan.gg/u/{json:slug}",
 	}
 }
 

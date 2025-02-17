@@ -11,9 +11,8 @@ import (
 func SetupRoutes(app *fiber.App) error {
 	rateLimiter := middleware.NewRateLimiter()
 
-	app.Get("/", ui.LoadDashboardPage)
-	app.Get("/:slug", ui.RedirectBySlug)
-	app.Get("/:dir/:file", ui.DisplayImage)
+	app.Get("/u/:slug", ui.RedirectBySlug)
+	app.Get("/api/image/:slug", api.GetImageBySlug)
 
 	app.Post("/api/upload", rateLimiter.Limit(api.Upload))
 	app.Post("/api/create-key", api.CreateKey)
