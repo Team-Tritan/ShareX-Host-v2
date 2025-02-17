@@ -3,8 +3,8 @@ import { Home, Image, Settings, User, Menu, Upload } from "lucide-react"
 const menuItems = [
     { icon: Image, label: "Your Uploads", href: "/dashboard" },
     { icon: User, label: "Shortened URLs", href: "/dashboard/urls" },
-    { icon: Upload, label: "Web Upload", href: "/dashboard/upload" },
-    { icon: Settings, label: "ShareX Configs", href: "/dashboard/configs" },
+    { icon: Upload, label: "Upload Files", href: "/dashboard/upload" },
+    { icon: Settings, label: "ShareX Configs", href: "/dashboard/config" },
 ]
 
 interface SidebarProps {
@@ -16,13 +16,13 @@ export function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
     return (
         <>
             <button
-                className="fixed left-4 top-4 z-20 rounded-md bg-[#0d0c0e] p-2 text-gray-400 lg:hidden"
+                className="fixed left-4 top-4 z-20 rounded-md bg-[#171619] p-2 text-gray-400 lg:hidden"
                 onClick={toggleSidebar}
             >
                 <Menu className="h-6 w-6" />
             </button>
             <aside
-                className={`fixed left-0 top-0 z-10 h-full w-64 bg-[#0d0c0e]  transition-transform duration-300 ease-in-out ${isOpen ? "translate-x-0" : "-translate-x-full"}`}
+                className={`fixed left-0 top-0 z-10 h-full w-45 bg-[#171619]  transition-transform duration-300 ease-in-out ${isOpen ? "translate-x-0" : "-translate-x-full"}`}
             >
                 <div className="flex h-full flex-col">
                     <div className="flex items-center justify-between p-4">
