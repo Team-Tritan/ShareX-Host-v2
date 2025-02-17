@@ -167,6 +167,9 @@ const Dashboard: React.FC = () => {
           You can view and manage your uploads below.
         </motion.div>
 
+        <p className="text-gray-400 text-lg mb-4">
+          Your Stats
+        </p>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 mb-12">
           <div className="p-4 bg-purple-500 rounded-lg shadow-lg">
             <h3 className="text-lg font-semibold text-white">Total Storage Used</h3>
