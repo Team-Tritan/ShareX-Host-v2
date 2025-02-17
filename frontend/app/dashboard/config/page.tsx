@@ -22,8 +22,8 @@ const Config: React.FC = () => {
     "https://fakyuu.tritan.gg",
     "https://files.tritan.gg",
     "https://files.cockz.me",
-    "https://love.cockz.me",
     "https://uploads.tritan.gg",
+    "https://big.cockz.me",
   ];
 
   if (!userStore.apiToken) {
