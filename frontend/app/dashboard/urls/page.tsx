@@ -208,7 +208,7 @@ const Urls: React.FC = () => {
                                         >
                                             <Edit3 className="h-4 w-4" />
                                         </button>
-                                        <Link href={url.URL}>
+                                        <Link href={`/u/${url.Slug}`}>
                                             <button className="flex items-center rounded bg-purple-500 px-3 py-2 text-sm font-semibold text-white hover:bg-purple-800 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-800">
                                                 <Eye className="h-4 w-4" />
                                             </button>
