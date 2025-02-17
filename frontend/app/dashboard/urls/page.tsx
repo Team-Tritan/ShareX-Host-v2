@@ -1,7 +1,14 @@
 "use client";
 
 import * as React from "react";
-import { Trash2, Eye, InfoIcon, Edit3, ArrowRightFromLine, ArrowRight } from "lucide-react";
+import {
+    Trash2,
+    Eye,
+    InfoIcon,
+    Edit3,
+    ArrowRightFromLine,
+    ArrowRight,
+} from "lucide-react";
 import { useTokenStore } from "../../../stores/session.store";
 import { Sidebar } from "../../../components/sidebar";
 import Link from "next/link";
@@ -78,9 +85,7 @@ const Urls: React.FC = () => {
             });
 
             if (response.ok) {
-                setUrlList((prevList) =>
-                    prevList.filter((url) => url.Key !== Key)
-                );
+                setUrlList((prevList) => prevList.filter((url) => url.Key !== Key));
                 toast.info("URL deleted successfully!");
             } else {
                 console.error("Failed to delete URL");
@@ -171,7 +176,9 @@ const Urls: React.FC = () => {
                         ))}
                     </div>
                 ) : urlList.length === 0 ? (
-                    <p className="text-gray-400 py-4 px-4 border border-zinc-800 w-1/4 rounded-xl">No URLs to display</p>
+                    <p className="text-gray-400 py-4 px-4 border border-zinc-800 w-1/4 rounded-xl">
+                        No URLs to display
+                    </p>
                 ) : (
                     <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                         {urlList.map((url) => (
@@ -186,42 +193,38 @@ const Urls: React.FC = () => {
                                         <Link href={url.URL}>{url.URL}</Link>
                                     </h3>
                                     <p className="text-sm text-gray-400">
-                                        Created on{" "}
-                                        {new Date(url.CreatedAt).toLocaleString()}
+                                        Created on {new Date(url.CreatedAt).toLocaleString()}
                                     </p>
-                                    <p className="text-sm text-gray-400">
-                                        {url.Clicks} Clicks
-                                    </p>
+                                    <p className="text-sm text-gray-400">{url.Clicks} Clicks</p>
                                     <div className="absolute top-2 right-2 text-white opacity-75 group-hover:opacity-100 transition-opacity duration-300">
                                         <InfoIcon className="h-6 w-6" />
                                     </div>
                                     <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                        <button
-                                            className="flex items-center rounded bg-purple-500 px-3 py-2 text-sm font-semibold text-white hover:bg-purple-800 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-800 mr-2"
-                                            onClick={() => handleDelete(url.Slug)}
-                                        >
-                                            <Trash2 className="h-4 w-4" />
-                                        </button>
+                                        <Link href={`/u/${url.Slug}`}>
+                                            <button className="flex items-center rounded bg-purple-500 px-3 py-2 text-sm font-semibold text-white hover:bg-purple-800 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-800 mr-2">
+                                                <Eye className="h-4 w-4" />
+                                            </button>
+                                        </Link>
                                         <button
                                             className="flex items-center rounded bg-purple-500 px-3 py-2 text-sm font-semibold text-white hover:bg-purple-800 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-800 mr-2"
                                             onClick={() => handleEdit(url.Key, url.Slug)}
                                         >
                                             <Edit3 className="h-4 w-4" />
                                         </button>
-                                        <Link href={`/u/${url.Slug}`}>
-                                            <button className="flex items-center rounded bg-purple-500 px-3 py-2 text-sm font-semibold text-white hover:bg-purple-800 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-800">
-                                                <Eye className="h-4 w-4" />
-                                            </button>
-                                        </Link>
+                                        <button
+                                            className="flex items-center rounded bg-purple-500 px-3 py-2 text-sm font-semibold text-white hover:bg-purple-800 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-800"
+                                            onClick={() => handleDelete(url.Slug)}
+                                        >
+                                            <Trash2 className="h-4 w-4" />
+                                        </button>
                                     </div>
                                 </div>
                             </div>
                         ))}
                     </div>
-                )
-                }
-            </main >
-        </div >
+                )}
+            </main>
+        </div>
     );
 };
 
