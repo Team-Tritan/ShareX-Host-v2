@@ -1,12 +1,20 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Trash2, Eye, InfoIcon, Edit3, AlertCircle, ChevronRight } from "lucide-react";
+import {
+  Trash2,
+  Eye,
+  InfoIcon,
+  Edit3,
+  AlertCircle,
+  ChevronRight,
+} from "lucide-react";
 import { useTokenStore } from "../../../stores/session.store";
 import { Sidebar } from "../../../components/sidebar";
 import Link from "next/link";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { motion } from "framer-motion";
 
 interface Url {
   Key: string;
@@ -134,7 +142,6 @@ const Urls: React.FC = () => {
     if (!newUrl.startsWith("http") || !newUrl.startsWith("https"))
       return toast.error("URL must start with http:// or https://");
 
-
     try {
       const response = await fetch("/api/url", {
         headers: {
@@ -163,9 +170,12 @@ const Urls: React.FC = () => {
   return (
     <div className="flex h-screen bg-[#0d0c0e] text-gray-100">
       <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
-      <main
+      <motion.main
         className={`flex-1 overflow-auto p-6 transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"
           }`}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
       >
         <ToastContainer
           position="top-right"
@@ -179,19 +189,32 @@ const Urls: React.FC = () => {
           pauseOnHover
           theme="dark"
         />
-        <h1 className="mb-2 text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-600 text-transparent bg-clip-text">
+        <motion.h1
+          className="mb-2 text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-600 text-transparent bg-clip-text"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
           Welcome, {userStore.displayName}!
-        </h1>
-        <div className="text-gray-400 mb-8 text-lg">
+        </motion.h1>
+        <motion.div
+          className="text-gray-400 mb-8 text-lg"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
           You can view and manage your URLs below.
-        </div>
+        </motion.div>
 
-        <button
+        <motion.button
           className="mb-12 px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600 transition-colors duration-300"
           onClick={handleCreateUrl}
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
         >
           Shorten a URL
-        </button>
+        </motion.button>
 
         {loading ? (
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -243,9 +266,13 @@ const Urls: React.FC = () => {
                 >
                   <div className="p-4">
                     <h3 className="font-semibold text-purple-400 hover:text-purple-300 transition-colors duration-300">
-                      <Link prefetch={false} href={`/u/${url.Slug}`}>/u/{url.Slug}</Link>
+                      <Link prefetch={false} href={`/u/${url.Slug}`}>
+                        /u/{url.Slug}
+                      </Link>
                       <ChevronRight className="inline mx-2 text-white font-semibold" />
-                      <Link prefetch={false} href={url.URL}>{url.URL}</Link>
+                      <Link prefetch={false} href={url.URL}>
+                        {url.URL}
+                      </Link>
                     </h3>
 
                     <p className="text-sm text-gray-400 mt-2">
@@ -266,21 +293,18 @@ const Urls: React.FC = () => {
                           <Eye className="h-4 w-4" />
                         </button>
                       </Link>
-
                       <button
                         className="flex items-center rounded bg-pink-500 px-3 py-2 text-sm font-semibold text-white hover:bg-pink-600 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2 focus:ring-offset-gray-800 mr-2 transition-colors duration-300"
                         onClick={() => handleEdit(url.Key, url.Slug)}
                       >
                         <Edit3 className="h-4 w-4" />
                       </button>
-
                       <button
                         className="flex items-center rounded bg-pink-500 px-3 py-2 text-sm font-semibold text-white hover:bg-pink-600 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-colors duration-300"
-                        onClick={() => handleDelete(url.Slug)}
+                        onClick={() => handleDelete(url.Key)}
                       >
                         <Trash2 className="h-4 w-4" />
                       </button>
-
                     </div>
                   </div>
                 </div>
@@ -288,7 +312,7 @@ const Urls: React.FC = () => {
             )}
           </div>
         )}
-      </main>
+      </motion.main>
     </div>
   );
 };

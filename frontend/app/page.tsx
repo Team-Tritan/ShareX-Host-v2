@@ -4,6 +4,7 @@ import { ArrowRight } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useTokenStore } from "../stores/session.store";
 import { redirect } from "next/navigation";
+import { motion } from "framer-motion";
 
 const LoginPage: React.FC = () => {
   const apiToken = useTokenStore((state) => state.apiToken);
@@ -46,12 +47,27 @@ const LoginPage: React.FC = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#0d0c0e]">
-      <div className="max-w-md w-full space-y-8 p-8 bg-[#121114] rounded-xl shadow-md">
-        <div className="text-center">
+      <motion.div
+        className="max-w-md w-full space-y-8 p-8 bg-[#121114] rounded-xl shadow-md"
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <motion.div
+          className="text-center"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2, duration: 0.5 }}
+        >
           <h1 className="text-3xl font-bold text-white">Tritan Uploader</h1>
-        </div>
+        </motion.div>
 
-        <div className="mt-8 space-y-6">
+        <motion.div
+          className="mt-8 space-y-6"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.4, duration: 0.5 }}
+        >
           <div className="relative">
             <input
               id="api-key"
@@ -71,20 +87,30 @@ const LoginPage: React.FC = () => {
               <ArrowRight className="h-5 w-5" />
             </button>
           </div>
-        </div>
+        </motion.div>
 
-        <div className="mt-8 flex items-center justify-center">
+        <motion.div
+          className="mt-8 flex items-center justify-center"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6, duration: 0.5 }}
+        >
           <div className="border-t border-zinc-800 flex-grow"></div>
           <span className="px-4 text-sm text-gray-500">Or</span>
           <div className="border-t border-zinc-800 flex-grow"></div>
-        </div>
+        </motion.div>
 
-        <div className="mt-4 text-center">
+        <motion.div
+          className="mt-4 text-center"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.8, duration: 0.5 }}
+        >
           <button onClick={handleCreateKey} className="text-sm text-purple-500">
             Create an API Key
           </button>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     </div>
   );
 };

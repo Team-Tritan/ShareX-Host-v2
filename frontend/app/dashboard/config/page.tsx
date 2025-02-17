@@ -6,7 +6,8 @@ import { useTokenStore } from "../../../stores/session.store";
 import { Sidebar } from "../../../components/sidebar";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Download, Image, Link } from 'lucide-react';
+import { Download, Image, Link } from "lucide-react";
+import { motion } from "framer-motion";
 
 const Config: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = React.useState(true);
@@ -68,8 +69,9 @@ const Config: React.FC = () => {
     <div className="flex h-screen bg-[#0d0c0e] text-gray-100">
       <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
       <main
-        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"
-          }`}
+        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${
+          sidebarOpen ? "ml-64" : "ml-0"
+        }`}
       >
         <ToastContainer
           position="top-right"
@@ -83,18 +85,40 @@ const Config: React.FC = () => {
           pauseOnHover
           theme="dark"
         />
-        <h1 className="mb-2 text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-600 text-transparent bg-clip-text">
+        <motion.h1
+          className="mb-2 text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-600 text-transparent bg-clip-text"
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
           ShareX Config Generator
-        </h1>
-        <div className="text-gray-400 mb-12">
+        </motion.h1>
+        <motion.div
+          className="text-gray-400 mb-12"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2, duration: 0.5 }}
+        >
           Use the buttons below to generate ShareX configs for uploading files
           or shortening URLs.
-        </div>
+        </motion.div>
 
-        <div className="flex  space-x-8">
-          <div className="w-64 bg-gradient-to-br from-purple-600 to-purple-800 rounded-lg shadow-lg overflow-hidden">
+        <motion.div
+          className="flex space-x-8"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.4, duration: 0.5 }}
+        >
+          <motion.div
+            className="w-64 bg-gradient-to-br from-purple-600 to-purple-800 rounded-lg shadow-lg overflow-hidden"
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
             <div className="p-4">
-              <h2 className="text-xl font-bold text-center text-white mb-4">Images/Files</h2>
+              <h2 className="text-xl font-bold text-center text-white mb-4">
+                Images/Files
+              </h2>
               <div className="flex justify-center mb-4">
                 <Image className="w-16 h-16 text-white" />
               </div>
@@ -105,11 +129,18 @@ const Config: React.FC = () => {
                 <Download className="mr-2 h-4 w-4" /> Download Config
               </button>
             </div>
-          </div>
+          </motion.div>
 
-          <div className="w-64 bg-gradient-to-br from-indigo-600 to-indigo-800 rounded-lg shadow-lg overflow-hidden">
+          <motion.div
+            className="w-64 bg-gradient-to-br from-indigo-600 to-indigo-800 rounded-lg shadow-lg overflow-hidden"
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
             <div className="p-4">
-              <h2 className="text-xl font-bold text-center text-white mb-4">URL Shortener</h2>
+              <h2 className="text-xl font-bold text-center text-white mb-4">
+                URL Shortener
+              </h2>
               <div className="flex justify-center mb-4">
                 <Link className="w-16 h-16 text-white" />
               </div>
@@ -120,8 +151,8 @@ const Config: React.FC = () => {
                 <Download className="mr-2 h-4 w-4" /> Download Config
               </button>
             </div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </main>
     </div>
   );

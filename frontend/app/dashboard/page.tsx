@@ -1,52 +1,53 @@
 /* eslint-disable @next/next/no-img-element */
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useEffect, useState } from "react"
-import { Trash2, Eye, InfoIcon, AlertCircle } from "lucide-react"
-import { useTokenStore } from "../../stores/session.store"
-import { Sidebar } from "../../components/sidebar"
-import Link from "next/link"
-import { ToastContainer, toast } from "react-toastify"
-import "react-toastify/dist/ReactToastify.css"
+import { useEffect, useState } from "react";
+import { Trash2, Eye, InfoIcon, AlertCircle } from "lucide-react";
+import { useTokenStore } from "../../stores/session.store";
+import { Sidebar } from "../../components/sidebar";
+import Link from "next/link";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { motion } from "framer-motion";
 
 interface Metadata {
-  FileType: string
-  FileSize: number
-  UploadDate: string
-  Views: number
+  FileType: string;
+  FileSize: number;
+  UploadDate: string;
+  Views: number;
 }
 
 interface Upload {
-  _id: string
-  IP: string
-  Key: string
-  DisplayName: string
-  FileName: string
-  Metadata: Metadata
+  _id: string;
+  IP: string;
+  Key: string;
+  DisplayName: string;
+  FileName: string;
+  Metadata: Metadata;
 }
 
 interface ApiResponse {
-  displayName: string
-  uploads: Upload[]
+  displayName: string;
+  uploads: Upload[];
 }
 
 const formatFileSize = (size: number) => {
   if (size >= 1e9) {
-    return (size / 1e9).toFixed(2) + " GB"
+    return (size / 1e9).toFixed(2) + " GB";
   } else if (size >= 1e6) {
-    return (size / 1e6).toFixed(2) + " MB"
+    return (size / 1e6).toFixed(2) + " MB";
   } else {
-    return (size / 1e3).toFixed(2) + " KB"
+    return (size / 1e3).toFixed(2) + " KB";
   }
-}
+};
 
 const Dashboard: React.FC = () => {
-  const [imageList, setImageList] = useState<Upload[]>([])
-  const [sidebarOpen, setSidebarOpen] = useState(true)
-  const [loading, setLoading] = useState(true)
-  const userStore = useTokenStore()
+  const [imageList, setImageList] = useState<Upload[]>([]);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [loading, setLoading] = useState(true);
+  const userStore = useTokenStore();
 
   if (!userStore.apiToken) {
     return (
@@ -58,7 +59,7 @@ const Dashboard: React.FC = () => {
           <p className="text-center">Please log in to view this page.</p>
         </div>
       </div>
-    )
+    );
   }
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -70,26 +71,26 @@ const Dashboard: React.FC = () => {
             key: userStore.apiToken,
           },
           method: "POST",
-        })
+        });
 
-        const data: ApiResponse = await response.json()
+        const data: ApiResponse = await response.json();
 
-        userStore.setDisplayName(data.displayName)
-        setImageList(data.uploads || [])
+        userStore.setDisplayName(data.displayName);
+        setImageList(data.uploads || []);
       } catch (error) {
-        console.error("Error fetching images:", error)
-        toast.error("Failed to fetch images")
+        console.error("Error fetching images:", error);
+        toast.error("Failed to fetch images");
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
-    fetchImages()
+    fetchImages();
 
-    const intervalId = setInterval(fetchImages, 10000)
-    return () => clearInterval(intervalId)
+    const intervalId = setInterval(fetchImages, 10000);
+    return () => clearInterval(intervalId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userStore.apiToken])
+  }, [userStore.apiToken]);
 
   const handleDelete = async (FileName: string) => {
     try {
@@ -98,31 +99,41 @@ const Dashboard: React.FC = () => {
           key: userStore.apiToken,
         },
         method: "DELETE",
-      })
+      });
 
       if (response.ok) {
-        setImageList((prevList) => prevList.filter((image) => image.FileName !== FileName))
+        setImageList((prevList) =>
+          prevList.filter((image) => image.FileName !== FileName)
+        );
 
-        toast.info("File deleted successfully!")
+        toast.info("File deleted successfully!");
       } else {
-        const errorData = await response.json()
-        console.error("Failed to delete image", errorData)
-        toast.error("Failed to delete image: " + (errorData.message || "Unknown error"))
+        const errorData = await response.json();
+        console.error("Failed to delete image", errorData);
+        toast.error(
+          "Failed to delete image: " + (errorData.message || "Unknown error")
+        );
       }
     } catch (error) {
-      console.error("Error deleting image:", error)
-      toast.error("Error deleting image")
+      console.error("Error deleting image:", error);
+      toast.error("Error deleting image");
     }
-  }
+  };
 
   const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen)
-  }
+    setSidebarOpen(!sidebarOpen);
+  };
 
   return (
     <div className="flex h-screen bg-[#0d0c0e] text-gray-100">
       <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
-      <main className={`flex-1 overflow-auto p-6 transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"}`}>
+      <motion.main
+        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"
+          }`}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      >
         <ToastContainer
           position="top-right"
           autoClose={5000}
@@ -135,10 +146,22 @@ const Dashboard: React.FC = () => {
           pauseOnHover
           theme="dark"
         />
-        <h1 className="mb-2 text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-600 text-transparent bg-clip-text">
+        <motion.h1
+          className="mb-2 text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-600 text-transparent bg-clip-text"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
           Welcome, {userStore.displayName}!
-        </h1>
-        <div className="text-gray-400 mb-12 text-lg">You can view and manage your uploads below.</div>
+        </motion.h1>
+        <motion.div
+          className="text-gray-400 mb-12 text-lg"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
+          You can view and manage your uploads below.
+        </motion.div>
 
         {loading ? (
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -198,7 +221,11 @@ const Dashboard: React.FC = () => {
                   </div>
 
                   <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <Link href={`/i/${image.FileName.split(".").slice(0, -1).join(".")}`}>
+                    <Link
+                      href={`/i/${image.FileName.split(".")
+                        .slice(0, -1)
+                        .join(".")}`}
+                    >
                       <button className="flex items-center rounded bg-purple-500 px-3 py-2 text-sm font-semibold text-white hover:bg-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-800 mr-2 transition-colors duration-300">
                         <Eye className="h-4 w-4" />
                       </button>
@@ -206,7 +233,11 @@ const Dashboard: React.FC = () => {
 
                     <button
                       className="flex items-center rounded bg-pink-500 px-3 py-2 text-sm font-semibold text-white hover:bg-pink-600 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-colors duration-300"
-                      onClick={() => handleDelete(`${image.FileName.split(".").slice(0, -1).join(".")}`)}
+                      onClick={() =>
+                        handleDelete(
+                          `${image.FileName.split(".").slice(0, -1).join(".")}`
+                        )
+                      }
                     >
                       <Trash2 className="h-4 w-4" />
                     </button>
@@ -214,19 +245,31 @@ const Dashboard: React.FC = () => {
 
                   <div className="p-4">
                     <h3 className="font-semibold text-purple-400 hover:text-purple-300 transition-colors duration-300">
-                      <Link href={`/i/${image.FileName.split(".").slice(0, -1).join(".")}`}>{image.FileName}</Link>
+                      <Link
+                        href={`/i/${image.FileName.split(".")
+                          .slice(0, -1)
+                          .join(".")}`}
+                      >
+                        {image.FileName}
+                      </Link>
                     </h3>
 
                     <p className="text-sm text-gray-400 mt-2">
-                      Uploaded on {new Date(image.Metadata.UploadDate).toLocaleString()}
+                      Uploaded on{" "}
+                      {new Date(image.Metadata.UploadDate).toLocaleString()}
                     </p>
 
                     <p className="text-sm text-gray-400 mt-1">
-                      <span className="text-pink-400">{image.Metadata.Views}</span> Views
+                      <span className="text-pink-400">
+                        {image.Metadata.Views}
+                      </span>{" "}
+                      Views
                     </p>
 
                     <p className="text-sm text-gray-400 mt-1">
-                      <span className="text-green-400">{formatFileSize(image.Metadata.FileSize)}</span>
+                      <span className="text-green-400">
+                        {formatFileSize(image.Metadata.FileSize)}
+                      </span>
                     </p>
                   </div>
                 </div>
@@ -234,10 +277,9 @@ const Dashboard: React.FC = () => {
             )}
           </div>
         )}
-      </main>
+      </motion.main>
     </div>
-  )
-}
+  );
+};
 
-export default Dashboard
-
+export default Dashboard;

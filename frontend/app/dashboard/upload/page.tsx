@@ -6,6 +6,7 @@ import { Sidebar } from "../../../components/sidebar";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Upload, FileUp } from "lucide-react";
+import { motion } from "framer-motion";
 
 const UploadPage: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = React.useState(true);
@@ -78,8 +79,9 @@ const UploadPage: React.FC = () => {
     <div className="flex h-screen bg-[#0d0c0e] text-gray-100">
       <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
       <main
-        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"
-          }`}
+        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${
+          sidebarOpen ? "ml-64" : "ml-0"
+        }`}
       >
         <ToastContainer
           position="top-right"
@@ -93,19 +95,32 @@ const UploadPage: React.FC = () => {
           pauseOnHover
           theme="dark"
         />
-        <h1 className="mb-2 text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-600 text-transparent bg-clip-text">
+        <motion.h1
+          className="mb-2 text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-600 text-transparent bg-clip-text"
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
           Upload Files
-        </h1>
-        <p className="mb-8 text-gray-400">
+        </motion.h1>
+        <motion.p
+          className="mb-8 text-gray-400"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2, duration: 0.5 }}
+        >
           Use the dropzone below to upload files to your account.
-        </p>
+        </motion.p>
 
-        <div
+        <motion.div
           ref={dropzoneRef}
           className={`flex flex-col items-center justify-center w-full h-[75%] border-2 border-dashed border-zinc-600 rounded-lg cursor-pointer transition-all duration-300 group shadow-2xl shadow-indigo-500/20 transition-all duration-300 hover:shadow-indigo-500/40 hover:scale-105"
             }`}
           onDrop={handleDrop}
           onClick={handleClick}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.4, duration: 0.5 }}
         >
           <Upload className="w-12 h-12 mb-4 text-gray-400" />
           <p className="text-lg font-medium text-gray-300 mb-2">
@@ -116,7 +131,7 @@ const UploadPage: React.FC = () => {
             <FileUp className="w-4 h-4 mr-2" />
             Select Files
           </button>
-        </div>
+        </motion.div>
       </main>
     </div>
   );
