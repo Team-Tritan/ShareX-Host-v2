@@ -58,7 +58,14 @@ func Upload(c *fiber.Ctx) error {
 		Region:           aws.String(config.AppConfigInstance.S3_RegionName),
 		S3ForcePathStyle: aws.Bool(true),
 	}
-	newSession := session.New(s3Config)
+	newSession, err := session.NewSession(s3Config)
+	if err != nil {
+		log.Printf("Error creating new session: %v\n", err)
+		return c.Status(500).JSON(fiber.Map{
+			"status":  500,
+			"message": "Internal server error",
+		})
+	}
 
 	s3Client := s3.New(newSession)
 
@@ -147,4 +154,3 @@ func getUserByKey(key string, validUsers []database.User) (database.User, bool) 
 	}
 	return database.User{}, false
 }
-
