@@ -1,28 +1,26 @@
 "use client";
 
-import { ArrowRight } from "lucide-react"
-import { useState, useEffect } from "react"
-import { useTokenStore } from "../stores/session.store"
+import { ArrowRight } from "lucide-react";
+import { useState, useEffect } from "react";
+import { useTokenStore } from "../stores/session.store";
 
 const LoginPage: React.FC = () => {
-  const apiToken = useTokenStore((state) => state.apiToken)
-  const setToken = useTokenStore((state) => state.setToken)
-  const [apiKey, setApiKey] = useState(apiToken)
+  const apiToken = useTokenStore((state) => state.apiToken);
+  const setToken = useTokenStore((state) => state.setToken);
+  const [apiKey, setApiKey] = useState(apiToken);
 
   useEffect(() => {
-    setApiKey(apiToken)
-  }, [apiToken])
+    setApiKey(apiToken);
+  }, [apiToken]);
 
   const handleLogin = () => {
-    setToken(apiKey)
-  }
+    setToken(apiKey);
+  };
 
   const handleCreateKey = async () => {
-    const displayName = prompt("Please enter a display name:")
+    const displayName = prompt("Please enter a display name:");
 
-    if (!displayName)
-      return alert("Display name is required.")
-
+    if (!displayName) return alert("Display name is required.");
 
     try {
       const response = await fetch("/api/create-key", {
@@ -31,19 +29,17 @@ const LoginPage: React.FC = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ display_name: displayName }),
-      })
+      });
 
-      if (!response.ok)
-        throw new Error("Failed to create API key")
+      if (!response.ok) throw new Error("Failed to create API key");
 
-
-      const data = await response.json()
-      setToken(data.key)
-      alert(`Your API key is ${data.key}. Please save it somewhere safe.`)
+      const data = await response.json();
+      setToken(data.key);
+      alert(`Your API key is ${data.key}. Please save it somewhere safe.`);
     } catch (error: any) {
-      alert(error.message)
+      alert(error.message);
     }
-  }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#0d0c0e]">
@@ -87,8 +83,7 @@ const LoginPage: React.FC = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default LoginPage
-
+export default LoginPage;
