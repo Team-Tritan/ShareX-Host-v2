@@ -61,7 +61,7 @@ const UploadPage: React.FC = () => {
       });
 
       if (response.ok) {
-        toast.success("File uploaded successfully!");
+        toast.info("File uploaded successfully!");
       } else {
         toast.error("Error uploading file");
       }
