@@ -126,6 +126,36 @@ const Urls: React.FC = () => {
     }
   };
 
+  const handleCreateUrl = async () => {
+    const newUrl = prompt("Enter the URL to shorten:");
+
+    if (!newUrl) return;
+
+    if (!newUrl.startsWith("http") || !newUrl.startsWith("https"))
+      return toast.error("URL must start with http:// or https://");
+
+
+    try {
+      const response = await fetch("/api/url", {
+        headers: {
+          key: userStore.apiToken,
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+        body: JSON.stringify({ url: newUrl }),
+      });
+
+      if (response.ok) {
+        toast.success("URL created successfully!");
+      } else {
+        toast.error("Failed to create URL.");
+      }
+    } catch (error) {
+      console.error("Error creating URL:", error);
+      toast.error("Error creating URL.");
+    }
+  };
+
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
@@ -152,9 +182,16 @@ const Urls: React.FC = () => {
         <h1 className="mb-2 text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-600 text-transparent bg-clip-text">
           Welcome, {userStore.displayName}!
         </h1>
-        <div className="text-gray-400 mb-12 text-lg">
+        <div className="text-gray-400 mb-8 text-lg">
           You can view and manage your URLs below.
         </div>
+
+        <button
+          className="mb-12 px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600 transition-colors duration-300"
+          onClick={handleCreateUrl}
+        >
+          Shorten a URL
+        </button>
 
         {loading ? (
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">

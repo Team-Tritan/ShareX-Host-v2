@@ -1,9 +1,9 @@
-import { Image, Settings, User, Menu, Upload } from "lucide-react";
+import { Image, Settings, Menu, Upload, LinkIcon } from "lucide-react";
 import Link from "next/link";
 
 const menuItems = [
   { icon: Image, label: "Your Uploads", href: "/dashboard" },
-  { icon: User, label: "Shortened URLs", href: "/dashboard/urls" },
+  { icon: LinkIcon, label: "Shortened URLs", href: "/dashboard/urls" },
   { icon: Upload, label: "Upload Files", href: "/dashboard/upload" },
   { icon: Settings, label: "ShareX Configs", href: "/dashboard/config" },
 ];
