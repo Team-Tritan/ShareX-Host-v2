@@ -161,7 +161,7 @@ const Urls: React.FC = () => {
             {Array.from({ length: 6 }).map((_, index) => (
               <div
                 key={index}
-                className="overflow-hidden rounded-lg bg-[#121114] animate-pulse shadow-lg shadow-purple-500/20"
+                className="overflow-hidden rounded-lg bg-[#121114] animate-pulse"
               >
                 <div className="h-48 w-full bg-[#121114]"></div>
                 <div className="p-4">
