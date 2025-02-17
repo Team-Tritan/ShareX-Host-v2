@@ -16,16 +16,11 @@ var db *mongo.Database
 
 func init() {
 	var err error
-	client, err = mongo.NewClient(options.Client().ApplyURI(config.AppConfigInstance.MongoDB_URI))
+	client, err = mongo.Connect(context.Background(), options.Client().ApplyURI(config.AppConfigInstance.MongoDB_URI))
 	if err != nil {
 		panic(err)
 	}
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
-	err = client.Connect(ctx)
-	if err != nil {
-		panic(err)
-	}
+
 	db = client.Database("ShareX-Uploader")
 }
 
@@ -102,7 +97,7 @@ func LoadUploadsFromDB(key string) ([]UploadEntry, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	filter := bson.M{"api_key": key}
-	opts := options.Find().SetSort(bson.D{{"_id", -1}})
+	opts := options.Find().SetSort(bson.D{{Key: "_id", Value: -1}})
 	cursor, err := collection.Find(ctx, filter, opts)
 	if err != nil {
 		return nil, err
@@ -172,7 +167,7 @@ func LoadURLsFromDBByKey(key string) ([]URL, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	filter := bson.M{"api_key": key}
-	opts := options.Find().SetSort(bson.D{{"_id", -1}})
+	opts := options.Find().SetSort(bson.D{{Key: "_id", Value: -1}})
 	cursor, err := collection.Find(ctx, filter, opts)
 	if err != nil {
 		return nil, err
