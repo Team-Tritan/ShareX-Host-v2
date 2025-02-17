@@ -93,7 +93,9 @@ const UploadPage: React.FC = () => {
           pauseOnHover
           theme="dark"
         />
-        <h1 className="mb-2 text-2xl font-bold">Upload Files</h1>
+        <h1 className="mb-2 text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-600 text-transparent bg-clip-text">
+          Upload Files
+        </h1>
         <p className="mb-8 text-gray-400">
           Use the dropzone below to upload files to your account.
         </p>

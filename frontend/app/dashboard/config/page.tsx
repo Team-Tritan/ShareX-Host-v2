@@ -83,7 +83,9 @@ const Config: React.FC = () => {
           pauseOnHover
           theme="dark"
         />
-        <h1 className="mb-2 text-2xl font-bold">Configuration Generator</h1>
+        <h1 className="mb-2 text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-600 text-transparent bg-clip-text">
+          ShareX Config Generator
+        </h1>
         <div className="text-gray-400 mb-12">
           Use the buttons below to generate ShareX configs for uploading files
           or shortening URLs.
