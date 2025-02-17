@@ -5,6 +5,7 @@
       "name": "frontend",
       "dependencies": {
         "@eslint/eslintrc": "^3",
+        "@types/js-cookie": "^3.0.6",
         "@types/node": "^20",
         "@types/react": "^19",
         "@types/react-dom": "^19",
@@ -23,9 +24,6 @@
         "tailwindcss": "^3.4.1",
         "typescript": "^5",
         "zustand": "^5.0.3",
-      },
-      "devDependencies": {
-        "@types/js-cookie": "^3.0.6",
       },
     },
   },
