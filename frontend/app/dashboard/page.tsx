@@ -49,6 +49,10 @@ const Dashboard: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const userStore = useTokenStore();
 
+  const totalStorageUsed = imageList.reduce((acc, image) => acc + image.Metadata.FileSize, 0);
+  const totalFilesUploaded = imageList.length;
+  const totalViews = imageList.reduce((acc, image) => acc + image.Metadata.Views, 0);
+
   if (!userStore.apiToken) {
     return (
       <div className="flex items-center justify-center h-screen bg-[#0d0c0e] text-gray-100">
@@ -162,6 +166,21 @@ const Dashboard: React.FC = () => {
         >
           You can view and manage your uploads below.
         </motion.div>
+
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 mb-12">
+          <div className="p-4 bg-purple-500 rounded-lg shadow-lg">
+            <h3 className="text-lg font-semibold text-white">Total Storage Used</h3>
+            <p className="text-2xl font-bold text-white">{formatFileSize(totalStorageUsed)}</p>
+          </div>
+          <div className="p-4 bg-pink-500 rounded-lg shadow-lg">
+            <h3 className="text-lg font-semibold text-white">Total Files Uploaded</h3>
+            <p className="text-2xl font-bold text-white">{totalFilesUploaded}</p>
+          </div>
+          <div className="p-4 bg-green-500 rounded-lg shadow-lg">
+            <h3 className="text-lg font-semibold text-white">Total Views</h3>
+            <p className="text-2xl font-bold text-white">{totalViews}</p>
+          </div>
+        </div>
 
         {loading ? (
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">

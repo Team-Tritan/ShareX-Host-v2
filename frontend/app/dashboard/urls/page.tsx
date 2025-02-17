@@ -79,9 +79,9 @@ const Urls: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userStore.apiToken]);
 
-  const handleDelete = async (Key: string) => {
+  const handleDelete = async (slug: string) => {
     try {
-      const response = await fetch(`/api/delete-url/${Key}`, {
+      const response = await fetch(`/api/delete-url/${slug}`, {
         headers: {
           key: userStore.apiToken,
         },
@@ -89,7 +89,7 @@ const Urls: React.FC = () => {
       });
 
       if (response.ok) {
-        setUrlList((prevList) => prevList.filter((url) => url.Key !== Key));
+        setUrlList((prevList) => prevList.filter((url) => url.Slug !== slug));
         toast.info("URL deleted successfully!");
       } else {
         console.error("Failed to delete URL");

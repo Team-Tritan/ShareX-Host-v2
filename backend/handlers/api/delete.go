@@ -57,7 +57,7 @@ func DeleteUpload(c *fiber.Ctx) error {
 		Region:           aws.String(config.AppConfigInstance.S3_RegionName),
 		S3ForcePathStyle: aws.Bool(true),
 	})
-	
+
 	if err != nil {
 		log.Println("Failed to create AWS session:", err)
 		return c.Status(500).JSON(fiber.Map{
@@ -86,7 +86,7 @@ func DeleteUpload(c *fiber.Ctx) error {
 		Bucket: aws.String(config.AppConfigInstance.S3_BucketName),
 		Key:    aws.String(fullKey),
 	})
-	
+
 	if err != nil {
 		log.Println("Failed to wait for object deletion:", err)
 		return c.Status(500).JSON(fiber.Map{
