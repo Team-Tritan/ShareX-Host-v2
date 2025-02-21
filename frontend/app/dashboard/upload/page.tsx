@@ -1,10 +1,10 @@
 "use client";
 
+import Unauthenticated from "@/components/unauth";
 import { Sidebar } from "@/components/sidebar";
 import { useTokenStore } from "@/stores/session.store";
 import { motion } from "framer-motion";
 import { FileUp, Upload } from "lucide-react";
-import Link from "next/link";
 import React from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -14,25 +14,7 @@ const UploadPage: React.FC = () => {
   const userStore = useTokenStore();
   const dropzoneRef = React.useRef<HTMLDivElement>(null);
 
-  if (!userStore.apiToken) {
-    return (
-      <div className="flex items-center justify-center h-screen bg-[#0d0c0e] text-gray-100">
-        <div className="max-w-md w-full space-y-8 p-8 bg-[#121114] rounded-xl shadow-md">
-          <div className="text-center">
-            <h1 className="text-3xl font-bold text-white">ShareX Host</h1>
-          </div>
-          <p className="text-center">Please log in to view this page.</p>
-          <div className="flex justify-center">
-            <Link href="/">
-              <button className="w-full rounded bg-purple-500 py-2 px-4 text-white font-bold shadow hover:bg-purple-600 transition duration-200">
-                Home Page
-              </button>
-            </Link>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  if (!userStore.apiToken) return <Unauthenticated />;
 
   const handleDrop = async (e: React.DragEvent) => {
     e.preventDefault();

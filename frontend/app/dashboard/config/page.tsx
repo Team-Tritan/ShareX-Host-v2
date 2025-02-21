@@ -1,11 +1,11 @@
 /* eslint-disable jsx-a11y/alt-text */
 "use client";
 
+import Unauthenticated from "@/components/unauth";
 import { Sidebar } from "@/components/sidebar";
 import { useTokenStore } from "@/stores/session.store";
 import { motion } from "framer-motion";
 import { Download, Image, Link } from "lucide-react";
-import NextLink from "next/link";
 import * as React from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -23,25 +23,7 @@ const Config: React.FC = () => {
     "https://cdn.cockz.me",
   ];
 
-  if (!userStore.apiToken) {
-    return (
-      <div className="flex items-center justify-center h-screen bg-[#0d0c0e] text-gray-100">
-        <div className="max-w-md w-full space-y-8 p-8 bg-[#121114] rounded-xl shadow-md">
-          <div className="text-center">
-            <h1 className="text-3xl font-bold text-white">ShareX Host</h1>
-          </div>
-          <p className="text-center">Please log in to view this page.</p>
-          <div className="flex justify-center">
-            <NextLink href="/">
-              <button className="w-full rounded bg-purple-500 py-2 px-4 text-white font-bold shadow hover:bg-purple-600 transition duration-200">
-                Home Page
-              </button>
-            </NextLink>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  if (!userStore.apiToken) return <Unauthenticated />;
 
   const generateConfig = async (type: string) => {
     try {
@@ -89,8 +71,9 @@ const Config: React.FC = () => {
     <div className="flex h-screen bg-[#0d0c0e] text-gray-100">
       <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
       <main
-        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"
-          }`}
+        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${
+          sidebarOpen ? "ml-64" : "ml-0"
+        }`}
       >
         <ToastContainer
           position="top-right"

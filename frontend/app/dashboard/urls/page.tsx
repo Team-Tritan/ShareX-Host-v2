@@ -1,5 +1,6 @@
 "use client";
 
+import Unauthenticated from "@/components/unauth";
 import { Sidebar } from "@/components/sidebar";
 import { useTokenStore } from "@/stores/session.store";
 import { motion } from "framer-motion";
@@ -37,25 +38,7 @@ const Urls: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const userStore = useTokenStore();
 
-  if (!userStore.apiToken) {
-    return (
-      <div className="flex items-center justify-center h-screen bg-[#0d0c0e] text-gray-100">
-        <div className="max-w-md w-full space-y-8 p-8 bg-[#121114] rounded-xl shadow-md">
-          <div className="text-center">
-            <h1 className="text-3xl font-bold text-white">ShareX Host</h1>
-          </div>
-          <p className="text-center">Please log in to view this page.</p>
-          <div className="flex justify-center">
-            <Link href="/">
-              <button className="w-full rounded bg-purple-500 py-2 px-4 text-white font-bold shadow hover:bg-purple-600 transition duration-200">
-                Home Page
-              </button>
-            </Link>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  if (!userStore.apiToken) return <Unauthenticated />;
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
@@ -178,9 +161,8 @@ const Urls: React.FC = () => {
     <div className="flex h-screen bg-[#0d0c0e] text-gray-100">
       <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
       <motion.main
-        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${
-          sidebarOpen ? "ml-64" : "ml-0"
-        }`}
+        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"
+          }`}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
