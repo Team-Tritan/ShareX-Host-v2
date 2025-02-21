@@ -18,6 +18,8 @@ const Config: React.FC = () => {
   const domains = [
     "https://i.tritan.gg",
     "https://i.cockz.me",
+    "https://footjobs.today",
+    "https://giving.footjobs.today",
     "https://fakyuu.tritan.gg",
     "https://big.cockz.me",
     "https://cdn.cockz.me",
@@ -89,8 +91,9 @@ const Config: React.FC = () => {
     <div className="flex h-screen bg-[#0d0c0e] text-gray-100">
       <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
       <main
-        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"
-          }`}
+        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${
+          sidebarOpen ? "ml-64" : "ml-0"
+        }`}
       >
         <ToastContainer
           position="top-right"
