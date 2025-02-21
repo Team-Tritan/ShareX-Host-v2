@@ -18,6 +18,8 @@ const Config: React.FC = () => {
   const domains = [
     "https://i.tritan.gg",
     "https://i.cockz.me",
+    "https://footjobs.today",
+    "https://giving.footjobs.today",
     "https://fakyuu.tritan.gg",
     "https://big.cockz.me",
     "https://cdn.cockz.me",
