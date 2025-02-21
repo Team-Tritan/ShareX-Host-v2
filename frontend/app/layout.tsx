@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Tritan Uploader",
+  title: "Tritan Uploader - Free ShareX Host",
   description: "A place to put screenshots, images, gifs, and more.",
 };
 

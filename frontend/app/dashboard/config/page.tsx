@@ -18,13 +18,9 @@ const Config: React.FC = () => {
   const domains = [
     "https://i.tritan.gg",
     "https://i.cockz.me",
-    "https://cdn.cockz.me",
-    "https://cdn.tritan.gg",
     "https://fakyuu.tritan.gg",
-    "https://files.tritan.gg",
-    "https://files.cockz.me",
-    "https://uploads.tritan.gg",
     "https://big.cockz.me",
+    "https://cdn.cockz.me",
   ];
 
   if (!userStore.apiToken) {
@@ -93,9 +89,8 @@ const Config: React.FC = () => {
     <div className="flex h-screen bg-[#0d0c0e] text-gray-100">
       <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
       <main
-        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${
-          sidebarOpen ? "ml-64" : "ml-0"
-        }`}
+        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"
+          }`}
       >
         <ToastContainer
           position="top-right"
@@ -118,7 +113,7 @@ const Config: React.FC = () => {
           ShareX Config Generator
         </motion.h1>
         <motion.div
-          className="text-gray-400 mb-12"
+          className="text-gray-400 mb-12 text-lg"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2, duration: 0.5 }}

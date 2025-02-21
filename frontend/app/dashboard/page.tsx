@@ -144,9 +144,8 @@ const Dashboard: React.FC = () => {
     <div className="flex h-screen bg-[#0d0c0e] text-gray-100">
       <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
       <motion.main
-        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${
-          sidebarOpen ? "ml-64" : "ml-0"
-        }`}
+        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"
+          }`}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
@@ -180,7 +179,7 @@ const Dashboard: React.FC = () => {
           You can view and manage your uploads below.
         </motion.div>
 
-        <p className="text-gray-400 text-lg mb-4">Your Stats</p>
+        <p className="text-gray-400 text-md mb-2 font-semibold">Your Stats:</p>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 mb-12">
           <div className="p-4 bg-purple-500 rounded-lg shadow-lg">
             <h3 className="text-lg font-semibold text-white">
@@ -203,6 +202,8 @@ const Dashboard: React.FC = () => {
             <p className="text-2xl font-bold text-white">{totalViews}</p>
           </div>
         </div>
+
+        <p className="text-gray-400 text-md mb-2 font-semibold">Your Uploads:</p>
 
         {loading ? (
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -248,6 +249,7 @@ const Dashboard: React.FC = () => {
               </>
             ) : (
               imageList.map((image) => (
+
                 <div
                   key={image.Key}
                   className="relative overflow-hidden rounded-lg bg-[#121114] group shadow-2xl shadow-indigo-500/20 transition-all duration-300 hover:shadow-indigo-500/40 hover:scale-105"
