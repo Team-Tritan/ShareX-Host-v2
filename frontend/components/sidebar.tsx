@@ -1,6 +1,6 @@
-import { Image, LinkIcon, Menu, Settings, Upload, User2Icon } from "lucide-react";
+import { Image, LinkIcon, Menu, Settings, Upload, User2Icon, LogOut } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 const menuItems = [
   { icon: Image, label: "Your Uploads", href: "/dashboard" },
@@ -17,6 +17,7 @@ interface SidebarProps {
 
 export function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
   const path = usePathname();
+  const router = useRouter();
   return (
     <>
       <button
@@ -53,6 +54,16 @@ export function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
               );
             })}
           </nav>
+
+          <hr className="border-zinc-800" />
+
+          <button
+            onClick={() => router.push("/")}
+            className="flex items-center rounded-md px-4 py-2 text-gray-300 hover:text-white"
+          >
+            <LogOut className="mr-3 h-6 w-6" />
+            Logout
+          </button>
         </div>
       </aside>
     </>
