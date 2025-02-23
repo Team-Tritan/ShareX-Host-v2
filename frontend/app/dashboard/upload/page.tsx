@@ -3,7 +3,6 @@
 import Unauthenticated from "@/components/unauth";
 import { Sidebar } from "@/components/sidebar";
 import { useTokenStore } from "@/stores/session.store";
-import { motion } from "framer-motion";
 import { FileUp, Upload } from "lucide-react";
 import React from "react";
 import { ToastContainer, toast } from "react-toastify";
@@ -84,31 +83,20 @@ const UploadPage: React.FC = () => {
           pauseOnHover
           theme="dark"
         />
-        <motion.h1
+        <h1
           className="mb-2 text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-600 text-transparent bg-clip-text"
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
         >
           Upload Files
-        </motion.h1>
-        <motion.p
-          className="text-gray-400 mb-12 text-lg"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.2, duration: 0.5 }}
-        >
+        </h1>
+        <p className="text-gray-400 mb-12 text-lg">
           Use the dropzone below to upload files to your account.
-        </motion.p>
+        </p>
 
-        <motion.div
+        <div
           ref={dropzoneRef}
-          className="flex flex-col items-center justify-center w-full h-[75%] border-2 border-dashed border-zinc-600 rounded-lg cursor-pointer group shadow-2xl shadow-indigo-500/20 transition-all duration-300 hover:shadow-indigo-500/40 hover:scale-105"
+          className="flex flex-col items-center justify-center w-full h-[75%] border-2 border-dashed border-zinc-600 rounded-lg cursor-pointer group shadow-2xl shadow-indigo-500/20 transition-all duration-300"
           onDrop={handleDrop}
           onClick={handleClick}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.4, duration: 0.5 }}
         >
           <Upload className="w-12 h-12 mb-4 text-gray-400" />
           <p className="text-lg font-medium text-gray-300 mb-2">
@@ -119,7 +107,7 @@ const UploadPage: React.FC = () => {
             <FileUp className="w-4 h-4 mr-2" />
             Select Files
           </button>
-        </motion.div>
+        </div>
       </main>
     </div>
   );

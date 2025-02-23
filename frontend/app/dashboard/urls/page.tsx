@@ -3,7 +3,6 @@
 import Unauthenticated from "@/components/unauth";
 import { Sidebar } from "@/components/sidebar";
 import { useTokenStore } from "@/stores/session.store";
-import { motion } from "framer-motion";
 import {
   AlertCircle,
   ChevronRight,
@@ -160,12 +159,9 @@ const Urls: React.FC = () => {
   return (
     <div className="flex h-screen bg-[#0d0c0e] text-gray-100">
       <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
-      <motion.main
+      <main
         className={`flex-1 overflow-auto p-6 transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"
           }`}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5 }}
       >
         <ToastContainer
           position="top-right"
@@ -179,32 +175,23 @@ const Urls: React.FC = () => {
           pauseOnHover
           theme="dark"
         />
-        <motion.h1
+        <h1
           className="mb-2 text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-600 text-transparent bg-clip-text"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
         >
           Welcome, {userStore.displayName}!
-        </motion.h1>
-        <motion.div
+        </h1>
+        <div
           className="text-gray-400 mb-8 text-lg"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
         >
           You can view and manage your URLs below.
-        </motion.div>
+        </div>
 
-        <motion.button
+        <button
           className="mb-12 px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600 transition-colors duration-300"
           onClick={handleCreateUrl}
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
         >
           Shorten a URL
-        </motion.button>
+        </button>
 
         {loading ? (
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -302,7 +289,7 @@ const Urls: React.FC = () => {
             )}
           </div>
         )}
-      </motion.main>
+      </main>
     </div>
   );
 };
