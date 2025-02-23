@@ -48,6 +48,8 @@ const Dashboard: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const userStore = useTokenStore();
 
+  if (!userStore.apiToken) return <Unauthenticated />;
+  
   const totalStorageUsed: number = uploads.reduce(
     (acc, image) => acc + image.Metadata.FileSize,
     0
@@ -57,8 +59,6 @@ const Dashboard: React.FC = () => {
     (acc, image) => acc + image.Metadata.Views,
     0
   );
-
-  if (!userStore.apiToken) return <Unauthenticated />;
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
