@@ -59,7 +59,7 @@ export function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
 
           <button
             onClick={() => router.push("/")}
-            className="flex items-center rounded-md px-4 py-2 text-gray-300 hover:text-white"
+            className="mx-auto mb-4 flex w-full max-w-xs items-center justify-center rounded-md px-4 py-2 text-gray-300 hover:text-white"
           >
             Logout
           </button>
