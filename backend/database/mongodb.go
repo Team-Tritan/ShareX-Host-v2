@@ -309,3 +309,33 @@ func GetUploadBySlug(slug string) (UploadEntry, error) {
 	err := collection.FindOne(ctx, filter).Decode(&uploadEntry)
 	return uploadEntry, err
 }
+
+func UpdateUserKey(oldKey, newKey string) error {
+	collection := db.Collection("users")
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	filter := bson.M{"api_key": oldKey}
+	update := bson.M{"$set": bson.M{"api_key": newKey}}
+
+	_, err := collection.UpdateOne(ctx, filter, update)
+	if err != nil {
+		return err
+	}
+
+	uploadCollection := db.Collection("uploads")
+	uploadFilter := bson.M{"api_key": oldKey}
+	uploadUpdate := bson.M{"$set": bson.M{"api_key": newKey}}
+
+	_, err = uploadCollection.UpdateMany(ctx, uploadFilter, uploadUpdate)
+	if err != nil {
+		return err
+	}
+
+	urlCollection := db.Collection("urls")
+	urlFilter := bson.M{"api_key": oldKey}
+	urlUpdate := bson.M{"$set": bson.M{"api_key": newKey}}
+
+	_, err = urlCollection.UpdateMany(ctx, urlFilter, urlUpdate)
+	return err
+}
