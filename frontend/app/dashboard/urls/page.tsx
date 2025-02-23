@@ -32,7 +32,8 @@ interface ApiResponse {
 }
 
 const Urls: React.FC = () => {
-  const { urls, setUrls, removeUrl, updateUrl, setLoading, loading } = useUrlsStore();
+  const { urls, setUrls, removeUrl, updateUrl, setLoading, loading } =
+    useUrlsStore();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const userStore = useTokenStore();
 
@@ -41,16 +42,14 @@ const Urls: React.FC = () => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
     const fetchUrls = async () => {
+      setLoading(true);
       try {
         const response = await fetch("/api/urls", {
-          headers: {
-            key: userStore.apiToken,
-          },
+          headers: { key: userStore.apiToken },
           method: "GET",
         });
 
         const data: ApiResponse = await response.json();
-
         setUrls(data.urls || []);
       } catch (error) {
         console.error("Error fetching URLs:", error);
@@ -60,18 +59,14 @@ const Urls: React.FC = () => {
     };
 
     fetchUrls();
-
     const intervalId = setInterval(fetchUrls, 10000);
     return () => clearInterval(intervalId);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userStore.apiToken]);
+  }, [userStore.apiToken, setUrls, setLoading]);
 
   const handleDelete = async (slug: string) => {
     try {
       const response = await fetch(`/api/delete-url/${slug}`, {
-        headers: {
-          key: userStore.apiToken,
-        },
+        headers: { key: userStore.apiToken },
         method: "DELETE",
       });
 
@@ -79,7 +74,6 @@ const Urls: React.FC = () => {
         removeUrl(slug);
         toast.info("URL deleted successfully!");
       } else {
-        console.error("Failed to delete URL");
         toast.error("Failed to delete URL");
       }
     } catch (error) {
@@ -110,18 +104,16 @@ const Urls: React.FC = () => {
       } else {
         toast.error("Error updating slug.");
       }
-    } catch (error) {
-      console.error("Error updating slug:", error);
+    } catch {
       toast.error("Error updating slug.");
     }
   };
 
   const handleCreateUrl = async () => {
     const newUrl = prompt("Enter the URL to shorten:");
+    if (!newUrl) return toast.error("URL cannot be empty.");
 
-    if (!newUrl) return;
-
-    if (!newUrl.startsWith("http") || !newUrl.startsWith("https"))
+    if (!newUrl.startsWith("http://") && !newUrl.startsWith("https://"))
       return toast.error("URL must start with http:// or https://");
 
     try {
@@ -145,16 +137,15 @@ const Urls: React.FC = () => {
     }
   };
 
-  const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen);
-  };
+  const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
 
   return (
     <div className="flex h-screen bg-[#0d0c0e] text-gray-100">
       <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
       <main
-        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"
-          }`}
+        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${
+          sidebarOpen ? "ml-64" : "ml-0"
+        }`}
       >
         <ToastContainer
           position="top-right"
@@ -168,24 +159,18 @@ const Urls: React.FC = () => {
           pauseOnHover
           theme="dark"
         />
-        <h1
-          className="mb-2 text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-600 text-transparent bg-clip-text"
-        >
+        <h1 className="mb-2 text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-600 text-transparent bg-clip-text">
           Welcome, {userStore.displayName}!
         </h1>
-        <div
-          className="text-gray-400 mb-8 text-lg"
-        >
+        <div className="text-gray-400 mb-8 text-lg">
           You can view and manage your URLs below.
         </div>
-
         <button
           className="mb-12 px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600 transition-colors duration-300"
           onClick={handleCreateUrl}
         >
           Shorten a URL
         </button>
-
         {loading ? (
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {Array.from({ length: 6 }).map((_, index) => (
@@ -208,12 +193,10 @@ const Urls: React.FC = () => {
               <>
                 <div className="col-span-full flex items-center justify-center text-gray-400 rounded-lg">
                   <AlertCircle className="h-6 w-6 mr-2" />
-
                   <div className="col-span-full text-gray-400 rounded-lg">
                     You do not have any shortened URLs.
                   </div>
                 </div>
-
                 {Array.from({ length: 12 }).map((_, index) => (
                   <div
                     key={index}
@@ -244,19 +227,15 @@ const Urls: React.FC = () => {
                         {url.URL}
                       </Link>
                     </h3>
-
                     <p className="text-sm text-gray-400 mt-2">
                       Created on {new Date(url.CreatedAt).toLocaleString()}
                     </p>
-
                     <p className="text-sm text-gray-400 mt-1">
                       <span className="text-pink-400">{url.Clicks}</span> Clicks
                     </p>
-
                     <div className="absolute top-2 right-2 text-white opacity-75 group-hover:opacity-100 transition-opacity duration-300">
                       <InfoIcon className="h-6 w-6 text-purple-400" />
                     </div>
-
                     <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                       <Link href={`/u/${url.Slug}`}>
                         <button className="flex items-center rounded bg-purple-500 px-3 py-2 text-sm font-semibold text-white hover:bg-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-800 mr-2 transition-colors duration-300">

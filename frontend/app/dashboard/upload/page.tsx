@@ -17,9 +17,9 @@ const UploadPage: React.FC = () => {
 
   const handleDrop = async (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
-    if (e.dataTransfer.files.length > 0) {
+    if (e.dataTransfer.files.length > 0) 
       await uploadFile(e.dataTransfer.files[0]);
-    }
+    
   };
 
   const handleClick = () => {
@@ -28,10 +28,10 @@ const UploadPage: React.FC = () => {
     fileInput.style.display = "none";
 
     fileInput.onchange = async () => {
-      if (fileInput.files && fileInput.files.length > 0) {
+      if (fileInput.files && fileInput.files.length > 0) 
         await uploadFile(fileInput.files[0]);
-      }
     };
+    
     fileInput.click();
   };
 
