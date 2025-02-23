@@ -4,24 +4,22 @@ import Unauthenticated from "@/components/unauth";
 import { Sidebar } from "@/components/sidebar";
 import { useTokenStore } from "@/stores/session.store";
 import { FileUp, Upload } from "lucide-react";
-import React from "react";
+import React, { useState, useRef, DragEvent } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const UploadPage: React.FC = () => {
-  const [sidebarOpen, setSidebarOpen] = React.useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
   const userStore = useTokenStore();
-  const dropzoneRef = React.useRef<HTMLDivElement>(null);
+  const dropzoneRef = useRef<HTMLDivElement>(null);
 
   if (!userStore.apiToken) return <Unauthenticated />;
 
-  const handleDrop = async (e: React.DragEvent) => {
+  const handleDrop = async (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
-
-    const formData = new FormData();
-    formData.append("sharex", e.dataTransfer.files[0]);
-
-    await uploadFile(formData);
+    if (e.dataTransfer.files.length > 0) {
+      await uploadFile(e.dataTransfer.files[0]);
+    }
   };
 
   const handleClick = () => {
@@ -30,17 +28,17 @@ const UploadPage: React.FC = () => {
     fileInput.style.display = "none";
 
     fileInput.onchange = async () => {
-      const formData = new FormData();
-
-      if (fileInput.files) {
-        formData.append("sharex", fileInput.files[0]);
-        await uploadFile(formData);
+      if (fileInput.files && fileInput.files.length > 0) {
+        await uploadFile(fileInput.files[0]);
       }
     };
     fileInput.click();
   };
 
-  const uploadFile = async (formData: FormData) => {
+  const uploadFile = async (file: File) => {
+    const formData = new FormData();
+    formData.append("sharex", file);
+
     try {
       const response = await fetch("/api/upload", {
         method: "POST",
@@ -68,8 +66,9 @@ const UploadPage: React.FC = () => {
     <div className="flex h-screen bg-[#0d0c0e] text-gray-100">
       <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
       <main
-        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"
-          }`}
+        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${
+          sidebarOpen ? "ml-64" : "ml-0"
+        }`}
       >
         <ToastContainer
           position="top-right"
@@ -83,9 +82,7 @@ const UploadPage: React.FC = () => {
           pauseOnHover
           theme="dark"
         />
-        <h1
-          className="mb-2 text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-600 text-transparent bg-clip-text"
-        >
+        <h1 className="mb-2 text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-600 text-transparent bg-clip-text">
           Upload Files
         </h1>
         <p className="text-gray-400 mb-12 text-lg">
