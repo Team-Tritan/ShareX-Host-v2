@@ -50,7 +50,6 @@ const Dashboard: React.FC = () => {
   const userStore = useTokenStore();
 
   const totalStorageUsed: number = uploads.reduce(
-
     (acc, image) => acc + image.Metadata.FileSize,
     0
   );
@@ -60,7 +59,7 @@ const Dashboard: React.FC = () => {
     0
   );
 
-  if (!userStore.apiToken) return <Unauthenticated />
+  if (!userStore.apiToken) return <Unauthenticated />;
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
@@ -125,8 +124,9 @@ const Dashboard: React.FC = () => {
     <div className="flex h-screen bg-[#0d0c0e] text-gray-100">
       <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
       <main
-        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"
-          }`}
+        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${
+          sidebarOpen ? "ml-64" : "ml-0"
+        }`}
       >
         <ToastContainer
           position="top-right"
@@ -140,14 +140,10 @@ const Dashboard: React.FC = () => {
           pauseOnHover
           theme="dark"
         />
-        <h1
-          className="mb-2 text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-600 text-transparent bg-clip-text"
-        >
+        <h1 className="mb-2 text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-600 text-transparent bg-clip-text">
           Welcome, {userStore.displayName}!
         </h1>
-        <div
-          className="text-gray-400 mb-12 text-lg"
-        >
+        <div className="text-gray-400 mb-12 text-lg">
           You can view and manage your uploads below.
         </div>
 
@@ -175,7 +171,9 @@ const Dashboard: React.FC = () => {
           </div>
         </div>
 
-        <p className="text-gray-400 text-md mb-2 font-semibold">Your Uploads:</p>
+        <p className="text-gray-400 text-md mb-2 font-semibold">
+          Your Uploads:
+        </p>
 
         {loading ? (
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -221,7 +219,6 @@ const Dashboard: React.FC = () => {
               </>
             ) : (
               uploads.map((image: Upload) => (
-
                 <div
                   key={image.Key}
                   className="relative overflow-hidden rounded-lg bg-[#121114] group shadow-2xl shadow-indigo-500/20 transition-all duration-300 hover:shadow-indigo-500/40 hover:scale-105"

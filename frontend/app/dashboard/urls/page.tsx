@@ -3,6 +3,7 @@
 import Unauthenticated from "@/components/unauth";
 import { Sidebar } from "@/components/sidebar";
 import { useTokenStore } from "@/stores/session.store";
+import { useUrlsStore } from "@/stores/urls.store";
 import {
   AlertCircle,
   ChevronRight,
@@ -32,9 +33,8 @@ interface ApiResponse {
 }
 
 const Urls: React.FC = () => {
-  const [urlList, setUrlList] = useState<Url[]>([]);
+  const { urls, setUrls, removeUrl, updateUrl, setLoading, loading } = useUrlsStore();
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [loading, setLoading] = useState(true);
   const userStore = useTokenStore();
 
   if (!userStore.apiToken) return <Unauthenticated />;
@@ -53,7 +53,7 @@ const Urls: React.FC = () => {
         const data: ApiResponse = await response.json();
 
         userStore.setDisplayName(data.displayName);
-        setUrlList(data.urls || []);
+        setUrls(data.urls || []);
       } catch (error) {
         console.error("Error fetching URLs:", error);
       } finally {
@@ -78,7 +78,7 @@ const Urls: React.FC = () => {
       });
 
       if (response.ok) {
-        setUrlList((prevList) => prevList.filter((url) => url.Slug !== slug));
+        removeUrl(slug);
         toast.info("URL deleted successfully!");
       } else {
         console.error("Failed to delete URL");
@@ -105,12 +105,7 @@ const Urls: React.FC = () => {
       });
 
       if (response.status === 200) {
-        setUrlList((prevList) =>
-          prevList.map((url) =>
-            url.Key === Key ? { ...url, Slug: newSlug } : url
-          )
-        );
-
+        updateUrl(Key, newSlug);
         toast.success("Slug updated successfully!");
       } else if (response.status === 409) {
         toast.error("Slug is already taken. Please enter a new slug.");
@@ -211,7 +206,7 @@ const Urls: React.FC = () => {
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {urlList.length === 0 ? (
+            {urls.length === 0 ? (
               <>
                 <div className="col-span-full flex items-center justify-center text-gray-400 rounded-lg">
                   <AlertCircle className="h-6 w-6 mr-2" />
@@ -236,7 +231,7 @@ const Urls: React.FC = () => {
                 ))}
               </>
             ) : (
-              urlList.map((url) => (
+              urls.map((url) => (
                 <div
                   key={url.Key}
                   className="relative overflow-hidden rounded-lg bg-[#121114] group shadow-2xl shadow-indigo-500/20 transition-all duration-300 hover:shadow-indigo-500/40 hover:scale-105"
