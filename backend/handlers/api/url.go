@@ -63,6 +63,23 @@ func CreateURL(c *fiber.Ctx) error {
 }
 
 func UpdateSlug(c *fiber.Ctx) error {
+	key := c.Get("key")
+	validUsers, err := database.LoadUsersFromDB()
+	if err != nil {
+		return c.Status(500).JSON(fiber.Map{
+			"status":  500,
+			"message": "Failed to load users",
+			"error":   err.Error(),
+		})
+	}
+
+	if !functions.IsValidKey(key, validUsers) {
+		return c.Status(401).JSON(fiber.Map{
+			"status":  401,
+			"message": "Invalid key",
+		})
+	}
+
 	oldSlug := c.Params("slug")
 
 	var req struct {
@@ -80,6 +97,21 @@ func UpdateSlug(c *fiber.Ctx) error {
 		return c.Status(400).JSON(fiber.Map{
 			"status":  400,
 			"message": "New slug is required",
+		})
+	}
+
+	urlData, err := functions.GetURLBySlug(oldSlug)
+	if err != nil || urlData == nil {
+		return c.Status(404).JSON(fiber.Map{
+			"status":  404,
+			"message": "Slug not found",
+		})
+	}
+
+	if urlData.Key != key {
+		return c.Status(403).JSON(fiber.Map{
+			"status":  403,
+			"message": "Unauthorized to change this slug",
 		})
 	}
 
