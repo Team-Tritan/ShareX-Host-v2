@@ -1,4 +1,4 @@
-import { Image, LinkIcon, Menu, Settings, Upload, User2Icon, LogOut } from "lucide-react";
+import { Image, LinkIcon, Menu, Settings, Upload, User2Icon } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 
@@ -61,7 +61,6 @@ export function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
             onClick={() => router.push("/")}
             className="flex items-center rounded-md px-4 py-2 text-gray-300 hover:text-white"
           >
-            <LogOut className="mr-3 h-6 w-6" />
             Logout
           </button>
         </div>
