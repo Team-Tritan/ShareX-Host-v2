@@ -10,7 +10,7 @@ import (
 func SetupRoutes(app *fiber.App) error {
 
 	app.Get("/u/:slug", ui.RedirectBySlug)
-	app.Get("/:file", ui.DisplayImage)
+	app.Get("/i/:file", ui.DisplayImage)
 	app.Get("/api/account", api.GetAccountDataByKey)
 	app.Get("/api/image/:slug", api.GetImageBySlug)
 	app.Get("/api/uploads", api.GetUploadsByToken)
