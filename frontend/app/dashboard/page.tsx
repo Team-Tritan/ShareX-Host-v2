@@ -29,7 +29,6 @@ interface Upload {
 }
 
 interface ApiResponse {
-  displayName: string;
   uploads: Upload[];
 }
 
@@ -74,7 +73,6 @@ const Dashboard: React.FC = () => {
 
         const data: ApiResponse = await response.json();
 
-        userStore.setDisplayName(data.displayName);
         setUploads(data.uploads || []);
       } catch (error) {
         console.error("Error fetching images:", error);
