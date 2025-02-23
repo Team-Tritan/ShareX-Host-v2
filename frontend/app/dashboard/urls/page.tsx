@@ -29,7 +29,6 @@ interface Url {
 interface ApiResponse {
   status: number;
   urls: Url[];
-  displayName: string;
 }
 
 const Urls: React.FC = () => {
@@ -52,7 +51,6 @@ const Urls: React.FC = () => {
 
         const data: ApiResponse = await response.json();
 
-        userStore.setDisplayName(data.displayName);
         setUrls(data.urls || []);
       } catch (error) {
         console.error("Error fetching URLs:", error);
