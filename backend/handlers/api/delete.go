@@ -39,7 +39,22 @@ func DeleteUpload(c *fiber.Ctx) error {
 		})
 	}
 
-	logEntry, err := database.DeleteUploadFromDB(key, id)
+	logEntry, err := database.GetUploadBySlug(id)
+	if err != nil || logEntry == (database.UploadEntry{}) {
+		return c.Status(404).JSON(fiber.Map{
+			"status":  404,
+			"message": "Upload not found",
+		})
+	}
+
+	if logEntry.Key != key {
+		return c.Status(403).JSON(fiber.Map{
+			"status":  403,
+			"message": "Unauthorized to delete this upload",
+		})
+	}
+
+	logEntry, err = database.DeleteUploadFromDB(key, id)
 	if err != nil {
 		log.Printf("Error deleting upload from DB: %v\n", err)
 		return c.Status(500).JSON(fiber.Map{
@@ -128,6 +143,21 @@ func DeleteURL(c *fiber.Ctx) error {
 		})
 	}
 
+	urlData, err := functions.GetURLBySlug(slug)
+	if err != nil || urlData == nil {
+		return c.Status(404).JSON(fiber.Map{
+			"status":  404,
+			"message": "URL not found",
+		})
+	}
+
+	if urlData.Key != key {
+		return c.Status(403).JSON(fiber.Map{
+			"status":  403,
+			"message": "Unauthorized to delete this URL",
+		})
+	}
+
 	url, err := database.DeleteURLFromDB(key, slug)
 	if err != nil {
 		log.Printf("Error deleting URL from DB: %v\n", err)
@@ -141,6 +171,6 @@ func DeleteURL(c *fiber.Ctx) error {
 	return c.Status(200).JSON(fiber.Map{
 		"status":  200,
 		"message": "URL deleted successfully",
-		"url":     url,
+		"url":     url.URL,
 	})
 }
