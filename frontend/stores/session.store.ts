@@ -8,38 +8,37 @@ interface TokenState {
   setDisplayName: (name: string) => void;
 }
 
-function encodeBase64(str: string): string {
-  return btoa(str);
-}
+const encodeBase64 = (str: string): string => btoa(str);
 
-function decodeBase64(str: string): string {
+const decodeBase64 = (str: string): string => {
   try {
     return atob(str);
   } catch (e) {
     console.error("Failed to decode Base64 string:", e);
     return "";
   }
-}
+};
+
+const getCookie = (key: string): string =>
+  decodeBase64(Cookies.get(encodeBase64(key)) || "");
+
+const setCookie = (key: string, value: string): void => {
+  Cookies.set(encodeBase64(key), encodeBase64(value), {
+    expires: 1,
+    secure: typeof window !== "undefined" && window.location.protocol === "https:",
+    sameSite: "strict",
+  });
+};
 
 export const useTokenStore = create<TokenState>((set) => ({
-  apiToken: decodeBase64(Cookies.get(encodeBase64("api_key")) || ""),
+  apiToken: getCookie("api_key"),
   setToken: (token: string) => {
-    Cookies.set(encodeBase64("api_key"), encodeBase64(token), {
-      expires: 1,
-      secure:
-        typeof window !== "undefined" && window.location.protocol === "https:",
-      sameSite: "strict",
-    });
+    setCookie("api_key", token);
     set({ apiToken: token });
   },
-  displayName: decodeBase64(Cookies.get(encodeBase64("display_name")) || ""),
+  displayName: getCookie("display_name"),
   setDisplayName: (name: string) => {
-    Cookies.set(encodeBase64("display_name"), encodeBase64(name), {
-      expires: 1,
-      secure:
-        typeof window !== "undefined" && window.location.protocol === "https:",
-      sameSite: "strict",
-    });
+    setCookie("display_name", name);
     set({ displayName: name });
   },
 }));
