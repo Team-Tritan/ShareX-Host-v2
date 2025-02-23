@@ -1,4 +1,4 @@
-import { Image, LinkIcon, Menu, Settings, Upload } from "lucide-react";
+import { Image, LinkIcon, Menu, Settings, Upload, User2Icon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -7,6 +7,7 @@ const menuItems = [
   { icon: LinkIcon, label: "Shortened URLs", href: "/dashboard/urls" },
   { icon: Upload, label: "Upload Files", href: "/dashboard/upload" },
   { icon: Settings, label: "ShareX Configs", href: "/dashboard/config" },
+  { icon: User2Icon, label: "Account Settings", href: "/dashboard/account" },
 ];
 
 interface SidebarProps {
