@@ -119,3 +119,27 @@ func CreateAccount(c *fiber.Ctx) error {
 		"key":     newUser.Key,
 	})
 }
+
+func RegenerateToken(c *fiber.Ctx) error {
+	apiKey := c.Get("key")
+	if apiKey == "" {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"status":  fiber.StatusUnauthorized,
+			"message": "API key is required",
+		})
+	}
+
+	newKey := functions.GenerateRandomKey(10)
+	err := database.UpdateUserKey(apiKey, newKey)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"status":  fiber.StatusInternalServerError,
+			"message": "Failed to regenerate token",
+		})
+	}
+
+	return c.JSON(fiber.Map{
+		"status": 200,
+		"key":    newKey,
+	})
+}
