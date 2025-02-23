@@ -4,6 +4,7 @@
 import Unauthenticated from "@/components/unauth";
 import { Sidebar } from "@/components/sidebar";
 import { useTokenStore } from "@/stores/session.store";
+import { useUploadsStore } from "@/stores/uploads.store";
 import { AlertCircle, Eye, InfoIcon, Trash2 } from "lucide-react";
 import Link from "next/link";
 import type React from "react";
@@ -32,7 +33,7 @@ interface ApiResponse {
   uploads: Upload[];
 }
 
-const formatFileSize = (size: number) => {
+const formatFileSize = (size: number): string => {
   if (size >= 1e9) {
     return (size / 1e9).toFixed(2) + " GB";
   } else if (size >= 1e6) {
@@ -43,17 +44,18 @@ const formatFileSize = (size: number) => {
 };
 
 const Dashboard: React.FC = () => {
-  const [imageList, setImageList] = useState<Upload[]>([]);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [loading, setLoading] = useState(true);
+  const { uploads, setUploads, removeUpload } = useUploadsStore();
+  const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(true);
   const userStore = useTokenStore();
 
-  const totalStorageUsed = imageList.reduce(
+  const totalStorageUsed: number = uploads.reduce(
+
     (acc, image) => acc + image.Metadata.FileSize,
     0
   );
-  const totalFilesUploaded = imageList.length;
-  const totalViews = imageList.reduce(
+  const totalFilesUploaded: number = uploads.length;
+  const totalViews: number = uploads.reduce(
     (acc, image) => acc + image.Metadata.Views,
     0
   );
@@ -62,7 +64,7 @@ const Dashboard: React.FC = () => {
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
-    const fetchImages = async () => {
+    const fetchImages = async (): Promise<void> => {
       try {
         const response = await fetch("/api/uploads", {
           headers: {
@@ -74,7 +76,7 @@ const Dashboard: React.FC = () => {
         const data: ApiResponse = await response.json();
 
         userStore.setDisplayName(data.displayName);
-        setImageList(data.uploads || []);
+        setUploads(data.uploads || []);
       } catch (error) {
         console.error("Error fetching images:", error);
         toast.error("Failed to fetch images");
@@ -90,7 +92,7 @@ const Dashboard: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userStore.apiToken]);
 
-  const handleDelete = async (FileName: string) => {
+  const handleDelete = async (FileName: string): Promise<void> => {
     try {
       const response = await fetch(`/api/delete-upload/${FileName}`, {
         headers: {
@@ -100,10 +102,7 @@ const Dashboard: React.FC = () => {
       });
 
       if (response.ok) {
-        setImageList((prevList) =>
-          prevList.filter((image) => image.FileName !== FileName)
-        );
-
+        removeUpload(FileName);
         toast.info("File deleted successfully!");
       } else {
         const errorData = await response.json();
@@ -118,7 +117,7 @@ const Dashboard: React.FC = () => {
     }
   };
 
-  const toggleSidebar = () => {
+  const toggleSidebar = (): void => {
     setSidebarOpen(!sidebarOpen);
   };
 
@@ -196,7 +195,7 @@ const Dashboard: React.FC = () => {
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {imageList.length === 0 ? (
+            {uploads.length === 0 ? (
               <>
                 <div className="col-span-full flex items-center justify-center text-gray-400 rounded-lg">
                   <AlertCircle className="h-6 w-6 mr-2" />
@@ -221,7 +220,7 @@ const Dashboard: React.FC = () => {
                 ))}
               </>
             ) : (
-              imageList.map((image) => (
+              uploads.map((image: Upload) => (
 
                 <div
                   key={image.Key}
