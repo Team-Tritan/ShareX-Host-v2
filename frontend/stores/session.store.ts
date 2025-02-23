@@ -22,9 +22,9 @@ function decodeBase64(str: string): string {
 }
 
 export const useTokenStore = create<TokenState>((set) => ({
-  apiToken: decodeBase64(Cookies.get("api_key") || ""),
+  apiToken: decodeBase64(Cookies.get(encodeBase64("api_key")) || ""),
   setToken: (token: string) => {
-    Cookies.set("api_key", encodeBase64(token), {
+    Cookies.set(encodeBase64("api_key"), encodeBase64(token), {
       expires: 1,
       secure:
         typeof window !== "undefined" && window.location.protocol === "https:",
@@ -32,9 +32,9 @@ export const useTokenStore = create<TokenState>((set) => ({
     });
     set({ apiToken: token });
   },
-  displayName: decodeBase64(Cookies.get("display_name") || ""),
+  displayName: decodeBase64(Cookies.get(encodeBase64("display_name")) || ""),
   setDisplayName: (name: string) => {
-    Cookies.set("display_name", encodeBase64(name), {
+    Cookies.set(encodeBase64("display_name"), encodeBase64(name), {
       expires: 1,
       secure:
         typeof window !== "undefined" && window.location.protocol === "https:",
