@@ -10,7 +10,9 @@ Tritan's ShareX Host is a self-hosted solution for managing and sharing images a
 - **Upload Management**: View, delete, and manage uploaded images.
 - **URL Management**: View, edit, and delete shortened URLs.
 - **Statistics**: Track views and clicks for uploads and URLs.
-- **Responsive Design**: Mobile-friendly interface.
+- **User Management**: Delete your account, change your upload token, and change your display name.
+- **ShareX Config Generation**: Download preconfigured ShareX uploader files based on the domains you select!
+- **Responsive Design**: Mobile-friendly interface (mostly).
 
 ## Getting Started
 
