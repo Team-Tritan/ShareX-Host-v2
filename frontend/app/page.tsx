@@ -9,12 +9,17 @@ import { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+interface AccountResponse {
+  DisplayName: string;
+  key?: string;
+}
+
 const LoginPage: React.FC = () => {
   const router = useRouter();
   const apiToken = useTokenStore((state) => state.apiToken);
   const setToken = useTokenStore((state) => state.setToken);
   const setDisplayName = useTokenStore((state) => state.setDisplayName);
-  const [apiKey, setApiKey] = useState(apiToken);
+  const [apiKey, setApiKey] = useState<string>(apiToken);
 
   useEffect(() => {
     setApiKey(apiToken);
@@ -31,7 +36,7 @@ const LoginPage: React.FC = () => {
 
       if (!response.ok) throw new Error("You've entered an invalid API key.");
 
-      const data = await response.json();
+      const data: AccountResponse = await response.json();
 
       setToken(apiKey);
       setDisplayName(data.DisplayName);
@@ -58,11 +63,10 @@ const LoginPage: React.FC = () => {
 
       if (!response.ok) throw new Error("Failed to create API key");
 
-      const data = await response.json();
-      setToken(data.key);
+      const data: AccountResponse = await response.json();
+      setToken(data.key!);
       setDisplayName(displayName);
       alert(`Your API key is ${data.key}. Please save it somewhere safe.`);
-
     } catch (error: any) {
       alert(error.message);
     }
