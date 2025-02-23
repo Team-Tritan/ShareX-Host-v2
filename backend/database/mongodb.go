@@ -83,6 +83,37 @@ func SaveUserToDB(user User) error {
 	return err
 }
 
+func GetUserByKey(key string) (User, error) {
+	var user User
+	collection := db.Collection("users")
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	err := collection.FindOne(ctx, bson.M{"api_key": key}).Decode(&user)
+	return user, err
+}
+
+func UpdateUserDisplayName(key, displayName string) error {
+	collection := db.Collection("users")
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	filter := bson.M{"api_key": key}
+	update := bson.M{"$set": bson.M{"display_name": displayName}}
+
+	_, err := collection.UpdateOne(ctx, filter, update)
+	return err
+}
+
+func DeleteUserByKey(key string) error {
+	collection := db.Collection("users")
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	filter := bson.M{"api_key": key}
+	_, err := collection.DeleteOne(ctx, filter)
+	return err
+}
+
 func SaveURLToDB(url URL) error {
 	collection := db.Collection("urls")
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
