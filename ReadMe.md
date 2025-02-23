@@ -68,11 +68,11 @@ To configure ShareX for image uploading and URL shortening, use the provided con
 
 ### Images
 
-<img src="https://s3.tritan.gg/images/FuyRJyWyZu.png" alt="img1" width="300" />
-<img src="https://s3.tritan.gg/images/mb5vHE4hMb.png" alt="img2" width="300" />
-<img src="https://s3.tritan.gg/images/DLYmqGgyGY.png" alt="img3" width="300" />
-<img src="https://s3.tritan.gg/images/HsQXSHK16j.png" alt="img4" width="300" />
-<img src="https://s3.tritan.gg/images/s2XVOmijvo.png" alt="img5" width="300" />
+[Image 1](https://s3.tritan.gg/images/FuyRJyWyZu.png)  
+[Image 2](https://s3.tritan.gg/images/mb5vHE4hMb.png)  
+[Image 3](https://s3.tritan.gg/images/DLYmqGgyGY.png)  
+[Image 4](https://s3.tritan.gg/images/HsQXSHK16j.png)  
+[Image 5](https://s3.tritan.gg/images/s2XVOmijvo.png)
 
 ### Contributing
 
