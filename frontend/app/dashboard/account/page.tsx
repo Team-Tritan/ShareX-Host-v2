@@ -5,16 +5,20 @@ import { motion } from 'framer-motion';
 import { Copy, RefreshCw, Trash2 } from 'lucide-react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Unauthenticated from '@/components/unauth';
 import { useTokenStore } from '@/stores/session.store';
 import { Sidebar } from '@/components/sidebar';
 import { useRouter } from 'next/navigation';
 
 export default function AccountSettings() {
-    const router = useRouter();
     const { apiToken, displayName, setToken, setDisplayName } = useTokenStore();
     const [sidebarOpen, setSidebarOpen] = React.useState(true);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = React.useState(false);
     const [isSaving, setIsSaving] = React.useState(false);
+    const router = useRouter();
+
+    if (!apiToken)
+        return <Unauthenticated />;
 
     const handleDisplayNameChange = async () => {
         try {
