@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useTokenStore } from "@/stores/session.store";
@@ -28,17 +29,17 @@ const LoginPage: React.FC = () => {
         method: "GET",
       });
 
-      if (!response.ok) {
-        throw new Error("Auth failure");
-      }
+      if (!response.ok) throw new Error("You've entered an invalid API key.");
 
       const data = await response.json();
+
       setToken(apiKey);
-      setDisplayName(data.displayName);
+      setDisplayName(data.DisplayName);
+
       router.push("/dashboard");
-    } catch (error) {
-      console.error("Error verifying account:", error);
-      toast.error("Auth failure");
+    } catch (error: any) {
+      toast.error(error.message);
+      setApiKey("");
     }
   };
 
@@ -59,8 +60,9 @@ const LoginPage: React.FC = () => {
 
       const data = await response.json();
       setToken(data.key);
+      setDisplayName(displayName);
       alert(`Your API key is ${data.key}. Please save it somewhere safe.`);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     } catch (error: any) {
       alert(error.message);
     }
