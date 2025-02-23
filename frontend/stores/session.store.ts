@@ -8,10 +8,23 @@ interface TokenState {
   setDisplayName: (name: string) => void;
 }
 
+function encodeBase64(str: string): string {
+  return btoa(str);
+}
+
+function decodeBase64(str: string): string {
+  try {
+    return atob(str);
+  } catch (e) {
+    console.error("Failed to decode Base64 string:", e);
+    return "";
+  }
+}
+
 export const useTokenStore = create<TokenState>((set) => ({
-  apiToken: Cookies.get("api_key") || "",
+  apiToken: decodeBase64(Cookies.get("api_key") || ""),
   setToken: (token: string) => {
-    Cookies.set("api_key", token, {
+    Cookies.set("api_key", encodeBase64(token), {
       expires: 1,
       secure:
         typeof window !== "undefined" && window.location.protocol === "https:",
@@ -19,8 +32,14 @@ export const useTokenStore = create<TokenState>((set) => ({
     });
     set({ apiToken: token });
   },
-  displayName: "User",
+  displayName: decodeBase64(Cookies.get("display_name") || ""),
   setDisplayName: (name: string) => {
+    Cookies.set("display_name", encodeBase64(name), {
+      expires: 1,
+      secure:
+        typeof window !== "undefined" && window.location.protocol === "https:",
+      sameSite: "strict",
+    });
     set({ displayName: name });
   },
 }));
