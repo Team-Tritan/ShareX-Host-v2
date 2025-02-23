@@ -51,6 +51,5 @@ func GetURLsByToken(c *fiber.Ctx) error {
 	return c.Status(200).JSON(fiber.Map{
 		"status":      200,
 		"urls":        urls,
-		"displayName": displayName,
 	})
 }

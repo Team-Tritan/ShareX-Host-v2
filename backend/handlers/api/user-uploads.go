@@ -41,8 +41,7 @@ func GetUploadsByToken(c *fiber.Ctx) error {
 	}
 
 	return c.JSON(fiber.Map{
-		"uploads":     matchingLogs,
-		"displayName": displayName,
+		"uploads": matchingLogs,
 	})
 }
 
