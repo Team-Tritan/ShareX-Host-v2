@@ -66,6 +66,14 @@ To configure ShareX for image uploading and URL shortening, use the provided con
 - **Delete URL**: `/api/delete-url/{slug}`
 - **Update URL Slug**: `/api/url/{slug}`
 
+### Images
+
+![img](https://s3.tritan.gg/images/FuyRJyWyZu.png)
+![img](https://s3.tritan.gg/images/mb5vHE4hMb.png)
+![img](https://s3.tritan.gg/images/DLYmqGgyGY.png)
+![img](https://s3.tritan.gg/images/HsQXSHK16j.png)
+![img](https://s3.tritan.gg/images/s2XVOmijvo.png)
+
 ### Contributing
 
 Contributions are welcome! Please open an issue or submit a pull request.
