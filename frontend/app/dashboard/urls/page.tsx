@@ -47,7 +47,7 @@ const Urls: React.FC = () => {
           headers: {
             key: userStore.apiToken,
           },
-          method: "POST",
+          method: "GET",
         });
 
         const data: ApiResponse = await response.json();

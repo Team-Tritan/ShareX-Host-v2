@@ -5,20 +5,41 @@ import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const LoginPage: React.FC = () => {
   const router = useRouter();
   const apiToken = useTokenStore((state) => state.apiToken);
   const setToken = useTokenStore((state) => state.setToken);
+  const setDisplayName = useTokenStore((state) => state.setDisplayName);
   const [apiKey, setApiKey] = useState(apiToken);
 
   useEffect(() => {
     setApiKey(apiToken);
   }, [apiToken]);
 
-  const handleLogin = () => {
-    setToken(apiKey);
-    router.push("/dashboard");
+  const handleLogin = async () => {
+    try {
+      const response = await fetch("/api/account", {
+        headers: {
+          key: apiKey,
+        },
+        method: "GET",
+      });
+
+      if (!response.ok) {
+        throw new Error("Auth failure");
+      }
+
+      const data = await response.json();
+      setToken(apiKey);
+      setDisplayName(data.displayName);
+      router.push("/dashboard");
+    } catch (error) {
+      console.error("Error verifying account:", error);
+      toast.error("Auth failure");
+    }
   };
 
   const handleCreateKey = async () => {
@@ -26,7 +47,7 @@ const LoginPage: React.FC = () => {
     if (!displayName) return alert("Display name is required.");
 
     try {
-      const response = await fetch("/api/create-key", {
+      const response = await fetch("/api/account", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -47,6 +68,18 @@ const LoginPage: React.FC = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#0d0c0e]">
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
       <motion.div
         className="max-w-md w-full space-y-8 p-8 bg-[#121114] rounded-xl shadow-md"
         initial={{ opacity: 0, y: 50 }}

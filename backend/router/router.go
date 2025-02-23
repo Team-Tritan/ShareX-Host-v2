@@ -11,15 +11,15 @@ func SetupRoutes(app *fiber.App) error {
 
 	app.Get("/u/:slug", ui.RedirectBySlug)
 	app.Get("/:dir/:file", ui.DisplayImage)
-
+	app.Get("/api/account", api.GetAccountDataByKey)
 	app.Get("/api/image/:slug", api.GetImageBySlug)
+	app.Get("/api/uploads", api.GetUploadsByToken)
+	app.Get("/api/urls", api.GetURLsByToken)
+
+	app.Post("/api/account", api.CreateAccount)
 	app.Post("/api/upload", api.Upload)
-	app.Post("/api/create-key", api.CreateKey)
 	app.Post("/api/config", api.GetShareXConfig)
-	app.Post("/api/uploads", api.GetUploadsByToken)
 	app.Post("/api/url", api.CreateURL)
-	app.Post("/api/urls", api.GetURLsByToken)
-	app.Post("/api/account", api.GetAccountDataByKey)
 
 	app.Put("/api/url/:slug", api.UpdateSlug)
 	app.Put("/api/account", api.PutAccountDisplayNameByKey)
