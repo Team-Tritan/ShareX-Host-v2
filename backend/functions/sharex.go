@@ -63,6 +63,18 @@ func GenerateURLShortenerConfig(key string, domain string) ShareXConfig {
 	}
 }
 
+func GenerateTextUploaderConfig() ShareXConfig {
+	return ShareXConfig{
+		Version:         "15.0.0",
+		Name:            "Lazy Uploader - Text Uploader",
+		DestinationType: "TextUploader",
+		RequestMethod:   "POST",
+		RequestURL:      "https://paste.tritan.gg/api/quick",
+		Body:            "Binary",
+		URL:             "https://paste.tritan.gg/{json:data.id}",
+	}
+}
+
 func SendConfig(c *fiber.Ctx, config ShareXConfig) error {
 	file, err := json.MarshalIndent(config, "", "  ")
 	if err != nil {

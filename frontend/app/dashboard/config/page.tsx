@@ -5,12 +5,12 @@ import Unauthenticated from "@/components/unauth";
 import { Sidebar } from "@/components/sidebar";
 import { useTokenStore } from "@/stores/session.store";
 import { motion } from "framer-motion";
-import { Download, Image, Link } from "lucide-react";
+import { Download, Image, Link, PencilIcon } from "lucide-react";
 import * as React from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-type ConfigType = "upload" | "url";
+type ConfigType = "upload" | "url" | "text";
 
 const domains = [
   "https://i.tritan.gg",
@@ -50,7 +50,9 @@ const Config: React.FC = () => {
       const fileName =
         type === "upload"
           ? "sharex-img-config.sxcu"
-          : "sharex-shortener-config.sxcu";
+          : type === "url"
+            ? "sharex-shortener-config.sxcu"
+            : "sharex-text-config.sxcu";
 
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
@@ -75,9 +77,8 @@ const Config: React.FC = () => {
     <div className="flex h-screen bg-[#0d0c0e] text-gray-100">
       <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
       <main
-        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${
-          sidebarOpen ? "ml-64" : "ml-0"
-        }`}
+        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"
+          }`}
       >
         <ToastContainer
           position="top-right"
@@ -131,6 +132,16 @@ const Config: React.FC = () => {
             setSelectedDomain={setSelectedDomain}
             generateConfig={() => generateConfig("url")}
             buttonColor="bg-fuchsia-500 hover:bg-fuchsia-600"
+          />
+
+          <ConfigCard
+            title="Pastebin (Text Uploader)"
+            icon={<PencilIcon className="w-6 h-6 text-indigo-400" />}
+            domainId="domain-text"
+            selectedDomain={selectedDomain}
+            setSelectedDomain={setSelectedDomain}
+            generateConfig={() => generateConfig("text")}
+            buttonColor="bg-indigo-500 hover:bg-indigo-600"
           />
         </motion.div>
       </main>

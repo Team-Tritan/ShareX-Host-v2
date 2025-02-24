@@ -44,5 +44,10 @@ func GetShareXConfig(c *fiber.Ctx) error {
 		functions.SendConfig(c, urlConfig)
 	}
 
+	if queryType == "text" {
+		config := functions.GenerateTextUploaderConfig()
+		functions.SendConfig(c, config)
+	}
+
 	return nil
 }
