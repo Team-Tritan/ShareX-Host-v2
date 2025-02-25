@@ -101,7 +101,7 @@ func CreateAccount(c *fiber.Ctx) error {
 	}
 
 	newUser := database.User{
-		Key:         functions.GenerateRandomKey(10),
+		Key:         functions.GenerateRandomKey(20),
 		DisplayName: userRequest.DisplayName,
 		CreatedAt:   time.Now().Format(time.RFC3339),
 		IP:          ip,
@@ -125,7 +125,7 @@ func CreateAccount(c *fiber.Ctx) error {
 }
 
 func regenerateToken(c *fiber.Ctx, apiKey string) error {
-	newKey := functions.GenerateRandomKey(10)
+	newKey := functions.GenerateRandomKey(20)
 	err := database.UpdateUserKey(apiKey, newKey)
 	if err != nil {
 		return errorResponse(c, StatusInternalServerError, MessageFailedRegenToken)
