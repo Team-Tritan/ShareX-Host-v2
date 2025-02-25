@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 "use client";
 
-import Unauthenticated from "@/components/Unauth";
-import { useUser } from "@/stores/user";
-import { Sidebar } from "@/components/Sidebar";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { Copy, RefreshCw, Trash2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useUser } from "@/stores/user";
+import Unauthenticated from "@/components/Unauth";
+import { Sidebar } from "@/components/Sidebar";
 import { motion } from "framer-motion";
+import { Copy, RefreshCw, Trash2 } from "lucide-react";
 import { toast } from "react-hot-toast";
 
 const domains = [

@@ -1,13 +1,13 @@
 /* eslint-disable jsx-a11y/alt-text */
 "use client";
 
+import { useState } from "react";
 import type { ConfigType } from "@/typings";
+import { useUser } from "@/stores/user";
 import Unauthenticated from "@/components/Unauth";
 import { Sidebar } from "@/components/Sidebar";
-import { useUser } from "@/stores/user";
-import { useState } from "react";
-import { Download, Image, Link, PencilIcon } from "lucide-react";
 import { motion } from "framer-motion";
+import { Download, Image, Link, PencilIcon } from "lucide-react";
 import { toast } from "react-hot-toast";
 
 

@@ -1,11 +1,11 @@
 "use client";
 
+import { useState, useRef, DragEvent } from "react";
+import { useUser } from "@/stores/user";
 import Unauthenticated from "@/components/Unauth";
 import { Sidebar } from "@/components/Sidebar";
-import { useUser } from "@/stores/user";
-import { useState, useRef, DragEvent } from "react";
-import { FileUp, Upload } from "lucide-react";
 import { motion } from "framer-motion";
+import { FileUp, Upload } from "lucide-react";
 import { toast } from "react-hot-toast";
 
 const UploadPage: React.FC = () => {

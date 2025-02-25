@@ -1,17 +1,16 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import type React from "react";
+import React, { useEffect, useState } from "react";
+import Link from "next/link";
 import type { Upload, ApiResponse } from "@/typings";
+import { useUser } from "@/stores/user";
 import Unauthenticated from "@/components/Unauth";
 import { Sidebar } from "@/components/Sidebar";
-import { useUser } from "@/stores/user";
 import { formatFileSize } from "@/lib/utils";
-import { AlertCircle, CopyIcon, Eye, Trash2, Search } from "lucide-react";
-import { useEffect, useState } from "react";
-import { toast } from "react-hot-toast";
 import { motion } from "framer-motion";
-import Link from "next/link";
+import { AlertCircle, CopyIcon, Eye, Trash2, Search } from "lucide-react";
+import { toast } from "react-hot-toast";
 
 const fetchImages = async (
   apiToken: string,

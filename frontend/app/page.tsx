@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
+import { useEffect, useState, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import type { NewAccount } from "@/typings";
 import { useUser } from "@/stores/user";
 import Prompter from "@/components/Prompt";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useEffect, useState, useCallback } from "react";
 import { toast } from "react-hot-toast";
 
 const LoginPage: React.FC = () => {
