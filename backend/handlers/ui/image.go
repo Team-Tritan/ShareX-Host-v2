@@ -80,6 +80,8 @@ func DisplayImage(c *fiber.Ctx) error {
 
 		database.IncrementViewCount(uploadEntry.FileName)
 
+		fileSizeMB := float64(uploadEntry.Metadata.FileSize) / (1024 * 1024)
+
 		log.Printf("Image found: %s\n", fullURL)
 		data := map[string]interface{}{
 			"Data": map[string]string{
@@ -88,6 +90,7 @@ func DisplayImage(c *fiber.Ctx) error {
 				"UploadTime":  uploadTime,
 				"DisplayName": uploadEntry.DisplayName,
 				"Views":       fmt.Sprintf("%d", uploadEntry.Metadata.Views),
+				"FileSizeMB":  fmt.Sprintf("%.2f MB", fileSizeMB),
 			},
 		}
 		return c.Render("./pages/image.html", data)

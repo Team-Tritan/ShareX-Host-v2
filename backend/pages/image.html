@@ -38,16 +38,15 @@
     <div
       class="max-w-4xl w-full bg-[#171619] p-10 rounded-2xl shadow-xl border border-zinc-800"
     >
-      <h1 class="text-4xl font-semibold text-center text-white mb-6">
+      <h1 class="text-4xl font-semibold text-center text-white mb-3">
         {{.Data.Name}}
       </h1>
-      <div class="text-sm text-zinc-400 text-center mb-6">
-        <div>{{.Data.UploadTime}}</div>
+
+      <div class="text-lg text-zinc-400 text-center mb-6">
         <div>
           Uploaded by
           <span class="underline text-purple-300">{{.Data.DisplayName}}</span>
         </div>
-        <div>{{.Data.Views}} Views</div>
       </div>
 
       <a href="{{.Data.fullURL}}" target="_blank">
@@ -58,12 +57,25 @@
         />
       </a>
 
-      <div class="flex justify-center mt-6">
+      <div class="text-sm text-zinc-400 text-center mb-6">
+        <div>({{.Data.FileSizeMB}})</div>
+        <div>{{.Data.UploadTime}}</div>
+        <div>{{.Data.Views}} Views</div>
+      </div>
+
+      <div class="flex justify-center mt-6 space-x-4">
         <a
-          class="inline-block px-4 py-2 rounded-md bg-purple-500 text-white text-lg font-semibold hover:bg-purple-600 transition duration-300 ease-in-out"
+          class="inline-block px-4 py-2 rounded-md bg-red-500 text-white text-lg font-semibold hover:bg-red-600 transition duration-300 ease-in-out"
           href="mailto:noc@tritan.gg?subject=REPORT: {{.Data.Name}}&body=Hi, I'd like to report {{.Data.Name}} which was uploaded onto your sharex image host."
         >
-          Report
+          Report Upload
+        </a>
+        <a
+          class="inline-block px-4 py-2 rounded-md bg-purple-500 text-white text-lg font-semibold hover:bg-purple-600 transition duration-300 ease-in-out"
+          href="{{.Data.fullURL}}"
+          download="{{.Data.Name}}"
+        >
+          Download
         </a>
       </div>
     </div>
