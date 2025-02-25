@@ -1,53 +1,6 @@
-import { create } from "zustand";
+import type { UserState } from "@/typings";
 import { getCookie, setCookie } from "@/lib/utils";
-
-interface Url {
-  Key: string;
-  URL: string;
-  CreatedAt: string;
-  IP: string;
-  Slug: string;
-  Clicks: number;
-}
-
-interface Metadata {
-  FileType: string;
-  FileSize: number;
-  UploadDate: string;
-  Views: number;
-}
-
-interface Upload {
-  _id: string;
-  IP: string;
-  Key: string;
-  DisplayName: string;
-  FileName: string;
-  Metadata: Metadata;
-}
-
-interface UserState {
-  apiToken: string;
-  setToken: (token: string) => void;
-  displayName: string;
-  setDisplayName: (name: string) => void;
-  domain: string;
-  setDomain: (domain: string) => void;
-
-  loading: boolean;
-  setLoading: (loading: boolean) => void;
-
-  urls: Url[];
-  setUrls: (urls: Url[]) => void;
-  addUrl: (url: Url) => void;
-  removeUrl: (slug: string) => void;
-  updateUrl: (key: string, newSlug: string) => void;
-
-  uploads: Upload[];
-  setUploads: (uploads: Upload[]) => void;
-  addUpload: (upload: Upload) => void;
-  removeUpload: (fileName: string) => void;
-}
+import { create } from "zustand";
 
 export const useUser = create<UserState>((set) => ({
   apiToken: getCookie("api_key"),
