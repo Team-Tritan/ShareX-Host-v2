@@ -6,11 +6,11 @@ import { Sidebar } from "@/components/Sidebar";
 import { useUser } from "@/stores/user";
 import { formatFileSize } from "@/lib/utils";
 import { AlertCircle, CopyIcon, Eye, Trash2, Search } from "lucide-react";
-import Link from "next/link";
-import type React from "react";
 import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { motion } from "framer-motion";
+import Link from "next/link";
+import type React from "react";
 
 interface Metadata {
   FileType: string;

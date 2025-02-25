@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import Prompter from "@/components/Popup";
 import { useUser } from "@/stores/user";
+import Prompter from "@/components/Prompt";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -16,17 +16,14 @@ interface AccountResponse {
 }
 
 const LoginPage: React.FC = () => {
+  const user = useUser();
   const router = useRouter();
-  const apiToken = useUser((state) => state.apiToken);
-  const setToken = useUser((state) => state.setToken);
-  const setDomain = useUser((state) => state.setDomain);
-  const setDisplayName = useUser((state) => state.setDisplayName);
-  const [apiKey, setApiKey] = useState<string>(apiToken);
+  const [apiKey, setApiKey] = useState<string>(user.apiToken);
   const [isPrompterOpen, setIsPrompterOpen] = useState<boolean>(false);
 
   useEffect(() => {
-    setApiKey(apiToken);
-  }, [apiToken]);
+    setApiKey(user.apiToken);
+  }, [user.apiToken]);
 
   const handleLogin = useCallback(async () => {
     try {
@@ -45,16 +42,17 @@ const LoginPage: React.FC = () => {
 
       const data: AccountResponse = await response.json();
 
-      setToken(apiKey);
-      setDisplayName(data.DisplayName);
-      setDomain(data.Domain);
+      user.setToken(apiKey);
+      user.setDisplayName(data.DisplayName);
+      user.setDomain(data.Domain);
 
       router.push("/dashboard");
     } catch (error: any) {
       toast.error(error.message);
       setApiKey("");
     }
-  }, [apiKey, router, setDisplayName, setDomain, setToken]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleCreateKey = useCallback(async () => {
     setIsPrompterOpen(true);
@@ -82,8 +80,8 @@ const LoginPage: React.FC = () => {
         }
 
         const data: AccountResponse = await response.json();
-        setToken(data.key!);
-        setDisplayName(displayName);
+        user.setToken(data.key!);
+        user.setDisplayName(displayName);
         navigator.clipboard.writeText(data.key!);
         toast.success(
           `Your API key has been copied to your clipboard, please save it somewhere safe.`
@@ -92,7 +90,8 @@ const LoginPage: React.FC = () => {
         toast.error(error.message);
       }
     },
-    [setDisplayName, setToken]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
   );
 
   const handlePrompterCancel = () => {

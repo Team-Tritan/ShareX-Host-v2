@@ -3,10 +3,10 @@
 import Unauthenticated from "@/components/Unauth";
 import { Sidebar } from "@/components/Sidebar";
 import { useUser } from "@/stores/user";
+import { useState, useRef, DragEvent } from "react";
 import { FileUp, Upload } from "lucide-react";
-import React, { useState, useRef, DragEvent } from "react";
-import { toast } from "react-hot-toast";
 import { motion } from "framer-motion";
+import { toast } from "react-hot-toast";
 
 const UploadPage: React.FC = () => {
   const user = useUser();

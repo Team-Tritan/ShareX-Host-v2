@@ -1,12 +1,12 @@
 "use client";
 
-import React from "react";
-import { motion } from "framer-motion";
-import { Copy, RefreshCw, Trash2 } from "lucide-react";
 import Unauthenticated from "@/components/Unauth";
 import { useUser } from "@/stores/user";
 import { Sidebar } from "@/components/Sidebar";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { Copy, RefreshCw, Trash2 } from "lucide-react";
+import { motion } from "framer-motion";
 import { toast } from "react-hot-toast";
 
 const domains = [
@@ -23,15 +23,15 @@ const domains = [
 
 const AccountSettings: React.FC = () => {
   const user = useUser()
-  const [sidebarOpen, setSidebarOpen] = React.useState(true);
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = React.useState(false);
-  const [loadingStates, setLoadingStates] = React.useState({
+  const router = useRouter();
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [loadingStates, setLoadingStates] = useState({
     displayName: false,
     apiToken: false,
     domain: false,
     deleteAccount: false,
   });
-  const router = useRouter();
 
   if (!user.apiToken) return <Unauthenticated />;
 

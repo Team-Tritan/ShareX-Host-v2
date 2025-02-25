@@ -1,8 +1,13 @@
 "use client";
 
 import Unauthenticated from "@/components/Unauth";
+import Prompter from "@/components/Prompt";
 import { Sidebar } from "@/components/Sidebar";
 import { useUser } from "@/stores/user";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { toast } from "react-hot-toast";
+import { motion } from "framer-motion";
 import {
   AlertCircle,
   ChevronRight,
@@ -11,11 +16,6 @@ import {
   Eye,
   Trash2,
 } from "lucide-react";
-import Link from "next/link";
-import { useEffect, useState } from "react";
-import { toast } from "react-hot-toast";
-import Prompter from "@/components/Popup";
-import { motion } from "framer-motion";
 
 interface Url {
   Key: string;
@@ -181,8 +181,9 @@ const Urls: React.FC = () => {
     <div className="flex h-screen bg-[#0d0c0e] text-gray-100">
       <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
       <main
-        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"
-          }`}
+        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${
+          sidebarOpen ? "ml-64" : "ml-0"
+        }`}
       >
         <motion.h1
           className="mb-2 text-4xl font-bold bg-gradient-to-r from-violet-400 to-fuchsia-400 text-transparent bg-clip-text"

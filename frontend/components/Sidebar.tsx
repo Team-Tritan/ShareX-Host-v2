@@ -1,6 +1,6 @@
 import { Image, LinkIcon, LogOutIcon, MailIcon, Menu, Settings, Upload, User2Icon } from "lucide-react";
-import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import Link from "next/link";
 
 const menuItems = [
   { icon: Image, label: "Your Uploads", href: "/dashboard" },

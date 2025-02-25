@@ -4,16 +4,16 @@
 import Unauthenticated from "@/components/Unauth";
 import { Sidebar } from "@/components/Sidebar";
 import { useUser } from "@/stores/user";
-import { motion } from "framer-motion";
+import { useState } from "react";
 import { Download, Image, Link, PencilIcon } from "lucide-react";
-import * as React from "react";
+import { motion } from "framer-motion";
 import { toast } from "react-hot-toast";
 
 type ConfigType = "upload" | "url" | "text";
 
 const Config: React.FC = () => {
   const user = useUser();
-  const [sidebarOpen, setSidebarOpen] = React.useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
 
   if (!user.apiToken) return <Unauthenticated />;
 
