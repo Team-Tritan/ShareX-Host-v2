@@ -14,8 +14,8 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from 'react-hot-toast';
+
 
 interface Url {
   Key: string;
@@ -72,7 +72,7 @@ const Urls: React.FC = () => {
 
       if (response.ok) {
         removeUrl(slug);
-        toast.info("URL deleted successfully!");
+        toast.success("URL deleted successfully!");
       } else {
         toast.error("Failed to delete URL");
       }
@@ -146,18 +146,6 @@ const Urls: React.FC = () => {
         className={`flex-1 overflow-auto p-6 transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"
           }`}
       >
-        <ToastContainer
-          position="top-right"
-          autoClose={5000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="dark"
-        />
         <h1 className="mb-2 text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-600 text-transparent bg-clip-text">
           Welcome, {userStore.displayName}!
         </h1>
@@ -243,7 +231,7 @@ const Urls: React.FC = () => {
                       <button className="flex items-center rounded bg-purple-500 px-3 py-2 text-sm font-semibold text-white hover:bg-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-800 mr-2 transition-colors duration-300">
                         <CopyIcon className="h-4 w-4" onClick={() => {
                           navigator.clipboard.writeText(`https://i.tritan.gg/u/${url.Slug}`)
-                          toast.info("Copied URL to clipboard!", { autoClose: 2000 })
+                          toast.success("Copied URL to clipboard!")
                         }} />
                       </button>
 

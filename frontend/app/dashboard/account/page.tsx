@@ -3,12 +3,11 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Copy, RefreshCw, Trash2 } from "lucide-react";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import Unauthenticated from "@/components/unauth";
 import { useTokenStore } from "@/stores/session.store";
 import { Sidebar } from "@/components/sidebar";
 import { useRouter } from "next/navigation";
+import { toast } from 'react-hot-toast';
 
 const AccountSettings: React.FC = () => {
   const { apiToken, displayName, setToken, setDisplayName } = useTokenStore();
@@ -45,7 +44,7 @@ const AccountSettings: React.FC = () => {
     });
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     response?.ok
-      ? toast.info("Display name updated successfully")
+      ? toast.success("Display name updated successfully")
       : toast.error("Failed to update display name");
   };
 
@@ -54,7 +53,7 @@ const AccountSettings: React.FC = () => {
     if (response?.ok) {
       const data = await response.json();
       setToken(data.key);
-      toast.info("Token regenerated successfully.");
+      toast.success("Token regenerated successfully.");
       alert(
         `Your new api key is: ${data.key}, please save this key as it will not be shown again.`
       );
@@ -66,7 +65,7 @@ const AccountSettings: React.FC = () => {
   const handleDeleteAccount = async () => {
     const response = await handleApiRequest("/api/account", "DELETE");
     if (response?.ok) {
-      toast.info("Account deleted successfully.");
+      toast.success("Account deleted successfully.");
       setIsDeleteModalOpen(false);
       router.push("/");
     } else {
@@ -76,7 +75,7 @@ const AccountSettings: React.FC = () => {
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(apiToken);
-    toast.info("API token copied to clipboard");
+    toast.success("API token copied to clipboard");
   };
 
   return (
@@ -89,18 +88,6 @@ const AccountSettings: React.FC = () => {
         className={`flex-1 overflow-auto p-6 transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"
           }`}
       >
-        <ToastContainer
-          position="top-right"
-          autoClose={5000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="dark"
-        />
         <motion.h1
           className="mb-2 text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-600 text-transparent bg-clip-text"
           initial={{ opacity: 0, y: 50 }}

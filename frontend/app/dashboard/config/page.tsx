@@ -7,8 +7,7 @@ import { useTokenStore } from "@/stores/session.store";
 import { motion } from "framer-motion";
 import { Download, Image, Link, PencilIcon } from "lucide-react";
 import * as React from "react";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from 'react-hot-toast';
 
 type ConfigType = "upload" | "url" | "text";
 
@@ -65,7 +64,7 @@ const Config: React.FC = () => {
       link.click();
       document.body.removeChild(link);
 
-      toast.info("Config generated successfully!");
+      toast.success("Config generated successfully!");
     } catch (error) {
       toast.error(`Error generating ShareX config: ${error}`);
     }
@@ -82,17 +81,6 @@ const Config: React.FC = () => {
         className={`flex-1 overflow-auto p-6 transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"
           }`}
       >
-        <ToastContainer
-          position="top-right"
-          autoClose={5000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          draggable
-          pauseOnHover
-          theme="dark"
-        />
 
         <motion.h1
           className="mb-2 text-4xl font-bold bg-gradient-to-r from-violet-400 to-fuchsia-400 text-transparent bg-clip-text"

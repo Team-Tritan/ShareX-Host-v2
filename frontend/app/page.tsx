@@ -6,8 +6,7 @@ import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from 'react-hot-toast';
 
 interface AccountResponse {
   DisplayName: string;
@@ -43,7 +42,7 @@ const LoginPage: React.FC = () => {
 
       router.push("/dashboard");
     } catch (error: any) {
-      toast.error(error.message);
+      toast.error(error.message)
       setApiKey("");
     }
   };
@@ -74,18 +73,7 @@ const LoginPage: React.FC = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#0d0c0e]">
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="dark"
-      />
+
       <motion.div
         className="max-w-md w-full space-y-8 p-8 bg-[#121114] rounded-xl shadow-md"
         initial={{ opacity: 0, y: 50 }}

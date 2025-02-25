@@ -5,8 +5,7 @@ import { Sidebar } from "@/components/sidebar";
 import { useTokenStore } from "@/stores/session.store";
 import { FileUp, Upload } from "lucide-react";
 import React, { useState, useRef, DragEvent } from "react";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from 'react-hot-toast';
 
 const UploadPage: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
@@ -49,7 +48,7 @@ const UploadPage: React.FC = () => {
       });
 
       if (response.ok) {
-        toast.info("File uploaded successfully!");
+        toast.success("File uploaded successfully!");
       } else {
         toast.error("Error uploading file");
       }
@@ -70,18 +69,6 @@ const UploadPage: React.FC = () => {
           sidebarOpen ? "ml-64" : "ml-0"
         }`}
       >
-        <ToastContainer
-          position="top-right"
-          autoClose={5000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="dark"
-        />
         <h1 className="mb-2 text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-600 text-transparent bg-clip-text">
           Upload Files
         </h1>
