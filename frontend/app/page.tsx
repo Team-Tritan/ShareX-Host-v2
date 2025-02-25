@@ -84,8 +84,9 @@ const LoginPage: React.FC = () => {
         const data: AccountResponse = await response.json();
         setToken(data.key!);
         setDisplayName(displayName);
+        navigator.clipboard.writeText(data.key!);
         toast.success(
-          `Your API key is ${data.key}. Please save it somewhere safe.`
+          `Your API key has been copied to your clipboard, please save it somewhere safe.`
         );
       } catch (error: any) {
         toast.error(error.message);
