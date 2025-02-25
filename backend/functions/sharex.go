@@ -37,7 +37,7 @@ func GenerateUploaderConfig(key string, domain string) ShareXConfig {
 		Arguments: map[string]string{
 			"url": "{input}",
 		},
-		URL: domain + "{json:url}",
+		URL: domain + "/{json:url}",
 	}
 }
 
