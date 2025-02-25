@@ -22,7 +22,7 @@ const domains = [
 ];
 
 const AccountSettings: React.FC = () => {
-  const user = useUser()
+  const user = useUser();
   const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -98,7 +98,9 @@ const AccountSettings: React.FC = () => {
       "PUT"
     );
     if (response?.ok) {
-      toast.success("Domain changed successfully, please redownload your ShareX configs.");
+      toast.success(
+        "Domain changed successfully, please redownload your ShareX configs."
+      );
     } else {
       toast.error("Failed to change domain.");
     }
@@ -117,8 +119,9 @@ const AccountSettings: React.FC = () => {
         toggleSidebar={() => setSidebarOpen(!sidebarOpen)}
       />
       <main
-        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"
-          }`}
+        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${
+          sidebarOpen ? "ml-64" : "ml-0"
+        }`}
       >
         <motion.h1
           className="mb-2 text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-600 text-transparent bg-clip-text"

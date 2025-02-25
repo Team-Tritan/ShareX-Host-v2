@@ -113,7 +113,10 @@ const LoginPage: React.FC = () => {
           transition={{ delay: 0.2, duration: 0.5 }}
         >
           <h1 className="text-3xl font-bold text-white">Tritan Uploader</h1>
-          <p className="mt-4 text-gray-400">A free ShareX host where you can put screenshots, images, gifs, and more.</p>
+          <p className="mt-4 text-gray-400">
+            A free ShareX host where you can put screenshots, images, gifs, and
+            more.
+          </p>
         </motion.div>
 
         <motion.div

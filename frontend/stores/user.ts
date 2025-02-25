@@ -43,13 +43,11 @@ interface UserState {
   removeUrl: (slug: string) => void;
   updateUrl: (key: string, newSlug: string) => void;
 
-
   uploads: Upload[];
   setUploads: (uploads: Upload[]) => void;
   addUpload: (upload: Upload) => void;
   removeUpload: (fileName: string) => void;
 }
-
 
 export const useUser = create<UserState>((set) => ({
   apiToken: getCookie("api_key"),
@@ -67,7 +65,6 @@ export const useUser = create<UserState>((set) => ({
     setCookie("domain", domain);
     set({ domain });
   },
-
 
   loading: true,
   setLoading: (loading) => set({ loading }),

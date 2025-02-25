@@ -7,7 +7,9 @@ const NotAuthenticated: React.FC = () => {
         <div className="text-center">
           <h1 className="text-3xl font-bold text-white">Tritan Uploader</h1>
         </div>
-        <p className="text-center text-gray-200">You need to be authenticated to view this page.</p>
+        <p className="text-center text-gray-200">
+          You need to be authenticated to view this page.
+        </p>
         <div className="flex justify-center">
           <Link href="/">
             <button className="w-full rounded bg-purple-500 py-2 px-4 text-white font-bold shadow hover:bg-purple-600 transition duration-200">
