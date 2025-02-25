@@ -98,7 +98,7 @@ const AccountSettings: React.FC = () => {
       "PUT"
     );
     if (response?.ok) {
-      toast.success("Domain chnaged successfully.");
+      toast.success("Domain chnaged successfully, please redownload your ShareX configs.");
     } else {
       toast.error("Failed to change domain.");
     }
