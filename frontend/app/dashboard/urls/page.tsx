@@ -2,8 +2,7 @@
 
 import Unauthenticated from "@/components/Unauth";
 import { Sidebar } from "@/components/Sidebar";
-import { useUser } from "@/stores/session.store";
-import { useUrls } from "@/stores/urls.store";
+import { useUser } from "@/stores/user";
 import {
   AlertCircle,
   ChevronRight,
@@ -84,10 +83,8 @@ const handleDelete = async (
 };
 
 const Urls: React.FC = () => {
-  const { urls, setUrls, removeUrl, updateUrl, setLoading, loading } =
-  useUrls();
-  const [sidebarOpen, setSidebarOpen] = useState(true);
   const user = useUser();
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   const [editUrl, setEditUrl] = useState<Url | null>(null);
   const [createUrlOpen, setCreateUrlOpen] = useState<boolean>(false);
 
@@ -95,13 +92,13 @@ const Urls: React.FC = () => {
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
-    fetchUrls(user.apiToken, setUrls, setLoading);
+    fetchUrls(user.apiToken, user.setUrls, user.setLoading);
     const intervalId = setInterval(
-      () => fetchUrls(user.apiToken, setUrls, setLoading),
+      () => fetchUrls(user.apiToken, user.setUrls, user.setLoading),
       10000
     );
     return () => clearInterval(intervalId);
-  }, [user.apiToken, setUrls, setLoading]);
+  }, [user.apiToken, user.setUrls, user.setLoading]);
 
   const handleEdit = async (Key: string, currentSlug: string) => {
     setEditUrl({
@@ -131,7 +128,7 @@ const Urls: React.FC = () => {
       });
 
       if (response.status === 200) {
-        updateUrl(editUrl.Key, newSlug);
+        user.updateUrl(editUrl.Key, newSlug);
         toast.success("Slug updated successfully!");
       } else if (response.status === 409) {
         toast.error("Slug is already taken. Please enter a new slug.");
@@ -198,7 +195,7 @@ const Urls: React.FC = () => {
         >
           Shorten a URL
         </button>
-        {loading ? (
+        {user.loading ? (
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {Array.from({ length: 6 }).map((_, index) => (
               <div
@@ -216,7 +213,7 @@ const Urls: React.FC = () => {
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {urls.length === 0 ? (
+            {user.urls.length === 0 ? (
               <>
                 <div className="col-span-full flex items-center justify-center text-gray-400 rounded-lg">
                   <AlertCircle className="h-6 w-6 mr-2" />
@@ -239,7 +236,7 @@ const Urls: React.FC = () => {
                 ))}
               </>
             ) : (
-              urls.map((url) => (
+              user.urls.map((url) => (
                 <div
                   key={url.Slug}
                   className="relative overflow-hidden rounded-lg bg-[#121114] group shadow-2xl shadow-indigo-500/20 transition-all duration-300 hover:shadow-indigo-500/40 hover:scale-105"
@@ -289,7 +286,7 @@ const Urls: React.FC = () => {
                       <button
                         className="flex items-center rounded bg-pink-500 px-3 py-2 text-sm font-semibold text-white hover:bg-pink-600 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-colors duration-300"
                         onClick={() =>
-                          handleDelete(user.apiToken, url.Slug, removeUrl)
+                          handleDelete(user.apiToken, url.Slug, user.removeUrl)
                         }
                       >
                         <Trash2 className="h-4 w-4" />

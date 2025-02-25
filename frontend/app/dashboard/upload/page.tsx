@@ -2,7 +2,7 @@
 
 import Unauthenticated from "@/components/Unauth";
 import { Sidebar } from "@/components/Sidebar";
-import { useUser } from "@/stores/session.store";
+import { useUser } from "@/stores/user";
 import { FileUp, Upload } from "lucide-react";
 import React, { useState, useRef, DragEvent } from "react";
 import { toast } from "react-hot-toast";

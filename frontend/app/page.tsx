@@ -2,7 +2,7 @@
 "use client";
 
 import Prompter from "@/components/Popup";
-import { useUser } from "@/stores/session.store";
+import { useUser } from "@/stores/user";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { useRouter } from "next/navigation";

@@ -4,7 +4,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Copy, RefreshCw, Trash2 } from "lucide-react";
 import Unauthenticated from "@/components/Unauth";
-import { useUser } from "@/stores/session.store";
+import { useUser } from "@/stores/user";
 import { Sidebar } from "@/components/Sidebar";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
@@ -22,8 +22,7 @@ const domains = [
 ];
 
 const AccountSettings: React.FC = () => {
-  const { apiToken, displayName, setToken, setDisplayName, domain, setDomain } =
-    useUser();
+  const user = useUser()
   const [sidebarOpen, setSidebarOpen] = React.useState(true);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = React.useState(false);
   const [loadingStates, setLoadingStates] = React.useState({
@@ -34,7 +33,7 @@ const AccountSettings: React.FC = () => {
   });
   const router = useRouter();
 
-  if (!apiToken) return <Unauthenticated />;
+  if (!user.apiToken) return <Unauthenticated />;
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleApiRequest = async (url: string, method: string, body?: any) => {
@@ -43,7 +42,7 @@ const AccountSettings: React.FC = () => {
         method,
         headers: {
           "Content-Type": "application/json",
-          key: apiToken,
+          key: user.apiToken,
         },
         body: body ? JSON.stringify(body) : undefined,
       });
@@ -56,7 +55,7 @@ const AccountSettings: React.FC = () => {
   const handleDisplayNameChange = async () => {
     setLoadingStates((prev) => ({ ...prev, displayName: true }));
     const response = await handleApiRequest("/api/account/name", "PUT", {
-      display_name: displayName,
+      display_name: user.displayName,
     });
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     response?.ok
@@ -71,7 +70,7 @@ const AccountSettings: React.FC = () => {
     const response = await handleApiRequest("/api/account/token", "PUT");
     if (response?.ok) {
       const data = await response.json();
-      setToken(data.key);
+      user.setToken(data.key);
       toast.success("Token regenerated successfully.");
     } else {
       toast.error("Failed to regenerate token");
@@ -95,7 +94,7 @@ const AccountSettings: React.FC = () => {
   const handleDomainChange = async () => {
     setLoadingStates((prev) => ({ ...prev, domain: true }));
     const response = await handleApiRequest(
-      `/api/account/domain?value=${domain}`,
+      `/api/account/domain?value=${user.domain}`,
       "PUT"
     );
     if (response?.ok) {
@@ -107,7 +106,7 @@ const AccountSettings: React.FC = () => {
   };
 
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(apiToken);
+    navigator.clipboard.writeText(user.apiToken);
     toast.success("API token copied to clipboard");
   };
 
@@ -118,9 +117,8 @@ const AccountSettings: React.FC = () => {
         toggleSidebar={() => setSidebarOpen(!sidebarOpen)}
       />
       <main
-        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${
-          sidebarOpen ? "ml-64" : "ml-0"
-        }`}
+        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"
+          }`}
       >
         <motion.h1
           className="mb-2 text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-600 text-transparent bg-clip-text"
@@ -151,8 +149,8 @@ const AccountSettings: React.FC = () => {
           >
             <input
               type="text"
-              value={displayName}
-              onChange={(e) => setDisplayName(e.target.value)}
+              value={user.displayName}
+              onChange={(e) => user.setDisplayName(e.target.value)}
               className="w-full px-4 py-2 bg-[#171619] border border-zinc-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-white"
               placeholder="Enter your display name"
             />
@@ -176,8 +174,8 @@ const AccountSettings: React.FC = () => {
               description="This is the domain that your media will be uploaded to."
             >
               <select
-                value={domain}
-                onChange={(e) => setDomain(e.target.value)}
+                value={user.domain}
+                onChange={(e) => user.setDomain(e.target.value)}
                 className="w-full px-4 py-2 bg-[#171619] border border-zinc-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-white"
               >
                 {domains.map((domain) => (
@@ -205,7 +203,7 @@ const AccountSettings: React.FC = () => {
               <input
                 type="password"
                 readOnly
-                value={apiToken}
+                value={user.apiToken}
                 className="w-full px-4 py-2 bg-[#171619] border border-zinc-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-white"
               />
               <button

@@ -3,7 +3,7 @@
 
 import Unauthenticated from "@/components/Unauth";
 import { Sidebar } from "@/components/Sidebar";
-import { useUser } from "@/stores/session.store";
+import { useUser } from "@/stores/user";
 import { motion } from "framer-motion";
 import { Download, Image, Link, PencilIcon } from "lucide-react";
 import * as React from "react";
