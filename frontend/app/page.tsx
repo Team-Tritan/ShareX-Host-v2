@@ -2,7 +2,7 @@
 "use client";
 
 import Prompter from "@/components/Popup";
-import { useTokenStore } from "@/stores/session.store";
+import { useUser } from "@/stores/session.store";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -17,10 +17,10 @@ interface AccountResponse {
 
 const LoginPage: React.FC = () => {
   const router = useRouter();
-  const apiToken = useTokenStore((state) => state.apiToken);
-  const setToken = useTokenStore((state) => state.setToken);
-  const setDomain = useTokenStore((state) => state.setDomain);
-  const setDisplayName = useTokenStore((state) => state.setDisplayName);
+  const apiToken = useUser((state) => state.apiToken);
+  const setToken = useUser((state) => state.setToken);
+  const setDomain = useUser((state) => state.setDomain);
+  const setDisplayName = useUser((state) => state.setDisplayName);
   const [apiKey, setApiKey] = useState<string>(apiToken);
   const [isPrompterOpen, setIsPrompterOpen] = useState<boolean>(false);
 
@@ -164,7 +164,7 @@ const LoginPage: React.FC = () => {
           </button>
         </motion.div>
       </motion.div>
-      
+
       {isPrompterOpen && (
         <Prompter
           title="Enter Display Name"

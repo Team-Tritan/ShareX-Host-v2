@@ -4,7 +4,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Copy, RefreshCw, Trash2 } from "lucide-react";
 import Unauthenticated from "@/components/Unauth";
-import { useTokenStore } from "@/stores/session.store";
+import { useUser } from "@/stores/session.store";
 import { Sidebar } from "@/components/Sidebar";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
@@ -23,7 +23,7 @@ const domains = [
 
 const AccountSettings: React.FC = () => {
   const { apiToken, displayName, setToken, setDisplayName, domain, setDomain } =
-    useTokenStore();
+    useUser();
   const [sidebarOpen, setSidebarOpen] = React.useState(true);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = React.useState(false);
   const [loadingStates, setLoadingStates] = React.useState({

@@ -62,7 +62,9 @@ export function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
               My Account
             </Link>
             <button
-              onClick={() => router.push("/")}
+              onClick={() => {
+                router.push("/")
+              }}
               className="flex w-full items-center justify-start rounded-md text-gray-400 hover:text-white"
             >
               <LogOutIcon className="mr-3 h-5 w-5" />

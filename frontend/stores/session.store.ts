@@ -27,12 +27,13 @@ const getCookie = (key: string): string =>
 const setCookie = (key: string, value: string): void => {
   Cookies.set(encodeBase64(key), encodeBase64(value), {
     expires: 1,
-    secure: typeof window !== "undefined" && window.location.protocol === "https:",
+    secure:
+      typeof window !== "undefined" && window.location.protocol === "https:",
     sameSite: "strict",
   });
 };
 
-export const useTokenStore = create<TokenState>((set) => ({
+export const useUser = create<TokenState>((set) => ({
   apiToken: getCookie("api_key"),
   setToken: (token: string) => {
     setCookie("api_key", token);

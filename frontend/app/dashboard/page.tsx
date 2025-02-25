@@ -3,8 +3,8 @@
 
 import Unauthenticated from "@/components/Unauth";
 import { Sidebar } from "@/components/Sidebar";
-import { useTokenStore } from "@/stores/session.store";
-import { useUploadsStore } from "@/stores/uploads.store";
+import { useUser } from "@/stores/session.store";
+import { useUploads } from "@/stores/uploads.store";
 import { formatFileSize } from "@/lib/utils";
 import { AlertCircle, CopyIcon, Eye, Trash2 } from "lucide-react";
 import Link from "next/link";
@@ -85,12 +85,12 @@ const handleDelete = async (
 };
 
 const Dashboard: React.FC = () => {
-  const { uploads, setUploads, removeUpload } = useUploadsStore();
+  const { uploads, setUploads, removeUpload } = useUploads();
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
   const [loading, setLoading] = useState<boolean>(true);
-  const userStore = useTokenStore();
+  const user = useUser();
 
-  if (!userStore.apiToken) return <Unauthenticated />;
+  if (!user.apiToken) return <Unauthenticated />;
 
   const totalStorageUsed: number = uploads.reduce(
     (acc, image) => acc + image.Metadata.FileSize,
@@ -104,13 +104,13 @@ const Dashboard: React.FC = () => {
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
-    fetchImages(userStore.apiToken, setUploads, setLoading);
+    fetchImages(user.apiToken, setUploads, setLoading);
     const intervalId = setInterval(
-      () => fetchImages(userStore.apiToken, setUploads, setLoading),
+      () => fetchImages(user.apiToken, setUploads, setLoading),
       10000
     );
     return () => clearInterval(intervalId);
-  }, [userStore.apiToken, setUploads, setLoading]);
+  }, [user.apiToken, setUploads, setLoading]);
 
   const toggleSidebar = (): void => {
     setSidebarOpen(!sidebarOpen);
@@ -124,7 +124,7 @@ const Dashboard: React.FC = () => {
           }`}
       >
         <h1 className="mb-2 text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-600 text-transparent bg-clip-text">
-          Welcome, {userStore.displayName}!
+          Welcome, {user.displayName}!
         </h1>
         <div className="text-gray-400 mb-12 text-lg">
           You can view and manage your uploads below.
@@ -216,7 +216,7 @@ const Dashboard: React.FC = () => {
                         className="h-4 w-4"
                         onClick={() => {
                           navigator.clipboard.writeText(
-                            `${userStore.domain}/i/${image.FileName.split(".")
+                            `${user.domain}/i/${image.FileName.split(".")
                               .slice(0, -1)
                               .join(".")}`
                           );
@@ -226,7 +226,7 @@ const Dashboard: React.FC = () => {
                     </button>
 
                     <Link
-                      href={`${userStore.domain}/i/${image.FileName.split(".")
+                      href={`${user.domain}/i/${image.FileName.split(".")
                         .slice(0, -1)
                         .join(".")}`}
                     >
@@ -239,7 +239,7 @@ const Dashboard: React.FC = () => {
                       className="flex items-center rounded bg-pink-500 px-3 py-2 text-sm font-semibold text-white hover:bg-pink-600 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-colors duration-300"
                       onClick={() =>
                         handleDelete(
-                          userStore.apiToken,
+                          user.apiToken,
                           `${image.FileName.split(".").slice(0, -1).join(".")}`,
                           removeUpload
                         )

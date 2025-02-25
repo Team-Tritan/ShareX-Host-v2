@@ -3,7 +3,7 @@
 
 import Unauthenticated from "@/components/Unauth";
 import { Sidebar } from "@/components/Sidebar";
-import { useTokenStore } from "@/stores/session.store";
+import { useUser } from "@/stores/session.store";
 import { motion } from "framer-motion";
 import { Download, Image, Link, PencilIcon } from "lucide-react";
 import * as React from "react";
@@ -12,10 +12,10 @@ import { toast } from "react-hot-toast";
 type ConfigType = "upload" | "url" | "text";
 
 const Config: React.FC = () => {
-  const userStore = useTokenStore();
+  const user = useUser();
   const [sidebarOpen, setSidebarOpen] = React.useState(true);
 
-  if (!userStore.apiToken) return <Unauthenticated />;
+  if (!user.apiToken) return <Unauthenticated />;
 
   const generateConfig = async (type: ConfigType) => {
     try {
@@ -23,7 +23,7 @@ const Config: React.FC = () => {
         `/api/config?type=${type}`,
         {
           headers: {
-            key: userStore.apiToken,
+            key: user.apiToken,
           },
           method: "POST",
         }

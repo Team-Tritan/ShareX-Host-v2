@@ -2,17 +2,17 @@
 
 import Unauthenticated from "@/components/Unauth";
 import { Sidebar } from "@/components/Sidebar";
-import { useTokenStore } from "@/stores/session.store";
+import { useUser } from "@/stores/session.store";
 import { FileUp, Upload } from "lucide-react";
 import React, { useState, useRef, DragEvent } from "react";
 import { toast } from "react-hot-toast";
 
 const UploadPage: React.FC = () => {
-  const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
-  const userStore = useTokenStore();
+  const user = useUser();
   const dropzoneRef = useRef<HTMLDivElement>(null);
+  const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
 
-  if (!userStore.apiToken) return <Unauthenticated />;
+  if (!user.apiToken) return <Unauthenticated />;
 
   const handleDrop = async (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -42,7 +42,7 @@ const UploadPage: React.FC = () => {
         method: "POST",
         body: formData,
         headers: {
-          key: userStore.apiToken,
+          key: user.apiToken,
         },
       });
 
@@ -64,9 +64,8 @@ const UploadPage: React.FC = () => {
     <div className="flex h-screen bg-[#0d0c0e] text-gray-100">
       <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
       <main
-        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${
-          sidebarOpen ? "ml-64" : "ml-0"
-        }`}
+        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"
+          }`}
       >
         <h1 className="mb-2 text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-600 text-transparent bg-clip-text">
           Upload Files

@@ -2,8 +2,8 @@
 
 import Unauthenticated from "@/components/Unauth";
 import { Sidebar } from "@/components/Sidebar";
-import { useTokenStore } from "@/stores/session.store";
-import { useUrlsStore } from "@/stores/urls.store";
+import { useUser } from "@/stores/session.store";
+import { useUrls } from "@/stores/urls.store";
 import {
   AlertCircle,
   ChevronRight,
@@ -85,23 +85,23 @@ const handleDelete = async (
 
 const Urls: React.FC = () => {
   const { urls, setUrls, removeUrl, updateUrl, setLoading, loading } =
-    useUrlsStore();
+  useUrls();
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const userStore = useTokenStore();
+  const user = useUser();
   const [editUrl, setEditUrl] = useState<Url | null>(null);
   const [createUrlOpen, setCreateUrlOpen] = useState<boolean>(false);
 
-  if (!userStore.apiToken) return <Unauthenticated />;
+  if (!user.apiToken) return <Unauthenticated />;
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
-    fetchUrls(userStore.apiToken, setUrls, setLoading);
+    fetchUrls(user.apiToken, setUrls, setLoading);
     const intervalId = setInterval(
-      () => fetchUrls(userStore.apiToken, setUrls, setLoading),
+      () => fetchUrls(user.apiToken, setUrls, setLoading),
       10000
     );
     return () => clearInterval(intervalId);
-  }, [userStore.apiToken, setUrls, setLoading]);
+  }, [user.apiToken, setUrls, setLoading]);
 
   const handleEdit = async (Key: string, currentSlug: string) => {
     setEditUrl({
@@ -123,7 +123,7 @@ const Urls: React.FC = () => {
     try {
       const response = await fetch(`/api/url/${editUrl.Slug}`, {
         headers: {
-          key: userStore.apiToken,
+          key: user.apiToken,
           "Content-Type": "application/json",
         },
         method: "PUT",
@@ -159,7 +159,7 @@ const Urls: React.FC = () => {
     try {
       const response = await fetch("/api/url", {
         headers: {
-          key: userStore.apiToken,
+          key: user.apiToken,
           "Content-Type": "application/json",
         },
         method: "POST",
@@ -183,12 +183,11 @@ const Urls: React.FC = () => {
     <div className="flex h-screen bg-[#0d0c0e] text-gray-100">
       <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
       <main
-        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${
-          sidebarOpen ? "ml-64" : "ml-0"
-        }`}
+        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"
+          }`}
       >
         <h1 className="mb-2 text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-600 text-transparent bg-clip-text">
-          Welcome, {userStore.displayName}!
+          Welcome, {user.displayName}!
         </h1>
         <div className="text-gray-400 mb-8 text-lg">
           You can view and manage your URLs below.
@@ -263,7 +262,7 @@ const Urls: React.FC = () => {
                     </p>
 
                     <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <Link href={`${userStore.domain}/u/${url.Slug}`}>
+                      <Link href={`${user.domain}/u/${url.Slug}`}>
                         <button className="flex items-center rounded bg-purple-500 px-3 py-2 text-sm font-semibold text-white hover:bg-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-800 mr-2 transition-colors duration-300">
                           <Eye className="h-4 w-4" />
                         </button>
@@ -274,7 +273,7 @@ const Urls: React.FC = () => {
                           className="h-4 w-4"
                           onClick={() => {
                             navigator.clipboard.writeText(
-                              `${userStore.domain}/u/${url.Slug}`
+                              `${user.domain}/u/${url.Slug}`
                             );
                             toast.success("Copied URL to clipboard!");
                           }}
@@ -290,7 +289,7 @@ const Urls: React.FC = () => {
                       <button
                         className="flex items-center rounded bg-pink-500 px-3 py-2 text-sm font-semibold text-white hover:bg-pink-600 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-colors duration-300"
                         onClick={() =>
-                          handleDelete(userStore.apiToken, url.Slug, removeUrl)
+                          handleDelete(user.apiToken, url.Slug, removeUrl)
                         }
                       >
                         <Trash2 className="h-4 w-4" />

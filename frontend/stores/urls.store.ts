@@ -19,7 +19,7 @@ interface UrlsStore {
     setLoading: (loading: boolean) => void;
 }
 
-export const useUrlsStore = create<UrlsStore>((set) => ({
+export const useUrls = create<UrlsStore>((set) => ({
     urls: [],
     loading: true,
     setUrls: (urls) => set({ urls }),

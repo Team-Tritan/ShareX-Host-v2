@@ -23,7 +23,7 @@ interface UploadsStore {
   removeUpload: (fileName: string) => void;
 }
 
-export const useUploadsStore = create<UploadsStore>((set) => ({
+export const useUploads = create<UploadsStore>((set) => ({
   uploads: [],
   setUploads: (uploads) => set({ uploads }),
   addUpload: (upload) =>
