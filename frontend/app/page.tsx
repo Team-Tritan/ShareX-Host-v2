@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
+import type { NewAccount } from "@/typings";
 import { useUser } from "@/stores/user";
 import Prompter from "@/components/Prompt";
 import { motion } from "framer-motion";
@@ -8,12 +9,6 @@ import { ArrowRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useCallback } from "react";
 import { toast } from "react-hot-toast";
-
-interface AccountResponse {
-  DisplayName: string;
-  key?: string;
-  Domain: string;
-}
 
 const LoginPage: React.FC = () => {
   const user = useUser();
@@ -40,7 +35,7 @@ const LoginPage: React.FC = () => {
         return;
       }
 
-      const data: AccountResponse = await response.json();
+      const data: NewAccount = await response.json();
 
       user.setToken(apiKey);
       user.setDisplayName(data.DisplayName);
@@ -79,7 +74,7 @@ const LoginPage: React.FC = () => {
           return;
         }
 
-        const data: AccountResponse = await response.json();
+        const data: NewAccount = await response.json();
         user.setToken(data.key!);
         user.setDisplayName(displayName);
         navigator.clipboard.writeText(data.key!);

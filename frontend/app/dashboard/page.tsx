@@ -1,6 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
+import type React from "react";
+import type { Upload, ApiResponse } from "@/typings";
 import Unauthenticated from "@/components/Unauth";
 import { Sidebar } from "@/components/Sidebar";
 import { useUser } from "@/stores/user";
@@ -10,27 +12,6 @@ import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import type React from "react";
-
-interface Metadata {
-  FileType: string;
-  FileSize: number;
-  UploadDate: string;
-  Views: number;
-}
-
-interface Upload {
-  _id: string;
-  IP: string;
-  Key: string;
-  DisplayName: string;
-  FileName: string;
-  Metadata: Metadata;
-}
-
-interface ApiResponse {
-  uploads: Upload[];
-}
 
 const fetchImages = async (
   apiToken: string,
@@ -124,9 +105,8 @@ const Dashboard: React.FC = () => {
     <div className="flex h-screen bg-[#0d0c0e] text-gray-100">
       <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
       <main
-        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${
-          sidebarOpen ? "ml-64" : "ml-0"
-        }`}
+        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"
+          }`}
       >
         <motion.h1
           className="mb-2 text-4xl font-bold bg-gradient-to-r from-violet-400 to-fuchsia-400 text-transparent bg-clip-text"

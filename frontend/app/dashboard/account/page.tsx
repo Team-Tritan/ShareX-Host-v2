@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 "use client";
 
 import Unauthenticated from "@/components/Unauth";
@@ -57,7 +58,6 @@ const AccountSettings: React.FC = () => {
     const response = await handleApiRequest("/api/account/name", "PUT", {
       display_name: user.displayName,
     });
-    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     response?.ok
       ? toast.success("Display name updated successfully")
       : toast.error("Failed to update display name");

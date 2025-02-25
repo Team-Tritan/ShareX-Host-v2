@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/alt-text */
 "use client";
 
+import type { ConfigType } from "@/typings";
 import Unauthenticated from "@/components/Unauth";
 import { Sidebar } from "@/components/Sidebar";
 import { useUser } from "@/stores/user";
@@ -9,7 +10,6 @@ import { Download, Image, Link, PencilIcon } from "lucide-react";
 import { motion } from "framer-motion";
 import { toast } from "react-hot-toast";
 
-type ConfigType = "upload" | "url" | "text";
 
 const Config: React.FC = () => {
   const user = useUser();
@@ -36,8 +36,8 @@ const Config: React.FC = () => {
         type === "upload"
           ? "sharex-img-config.sxcu"
           : type === "url"
-          ? "sharex-shortener-config.sxcu"
-          : "sharex-text-config.sxcu";
+            ? "sharex-shortener-config.sxcu"
+            : "sharex-text-config.sxcu";
 
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
@@ -69,9 +69,8 @@ const Config: React.FC = () => {
     <div className="flex h-screen bg-[#0d0c0e] text-gray-100">
       <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
       <main
-        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${
-          sidebarOpen ? "ml-64" : "ml-0"
-        }`}
+        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"
+          }`}
       >
         <motion.h1
           className="mb-2 text-4xl font-bold bg-gradient-to-r from-violet-400 to-fuchsia-400 text-transparent bg-clip-text"
