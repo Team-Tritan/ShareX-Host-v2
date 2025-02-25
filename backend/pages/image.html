@@ -4,11 +4,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{{.Data.Name}} - Uploaded by {{.Data.DisplayName}}</title>
     <script
-      src="https://code.jquery.com/jquery-3.6.0.min.js"
-      integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
-      crossorigin="anonymous"
-    ></script>
-    <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns"
       crossorigin="anonymous"
@@ -35,89 +30,42 @@
       content="{{.Data.DisplayName}} uploaded a {{.Data.FileSizeMB}} file at {{.Data.UploadTime}}."
     />
     <link type="application/json+oembed" href="{{.Data.fullURL}}" />
-    <style>
-      body {
-        color: white;
-        text-align: center;
-        font-family: Helvetica, Arial, sans-serif;
-        background: #0d0c0e;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        margin: 0;
-        padding: 20px;
-      }
-
-      .container {
-        max-width: 800px;
-        width: 100%;
-        background-color: #121114;
-        border-radius: 10px;
-        padding: 20px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-      }
-
-      h1 {
-        font-size: 2rem;
-        margin-bottom: 20px;
-      }
-
-      img {
-        max-height: 75vh;
-        width: auto;
-        max-width: 100%;
-        border-radius: 10px;
-        margin-bottom: 20px;
-      }
-
-      a {
-        text-decoration: none;
-        color: rgb(168 85 247);
-      }
-
-      .report-link {
-        margin-top: 20px;
-        display: inline-block;
-        padding: 10px 20px;
-        border: 1px solid rgb(168 85 247);
-        border-radius: 5px;
-        transition: background-color 0.3s, color 0.3s;
-        background-color: rgb(168 85 247);
-        color: white;
-      }
-
-      .data {
-        font-size: 0.9rem;
-        color: #cccccc;
-        margin-top: 3px;
-        margin-bottom: 20px;
-      }
-    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
   </head>
-  <body>
-    <div class="container">
-      <h1>{{.Data.Name}}</h1>
-      <div class="data">
+  <body
+    class="bg-[#0d0c0e] text-[#171619] flex justify-center items-center h-screen"
+  >
+    <div
+      class="max-w-4xl w-full bg-[#171619] p-10 rounded-2xl shadow-xl border border-zinc-800"
+    >
+      <h1 class="text-4xl font-semibold text-center text-white mb-6">
+        {{.Data.Name}}
+      </h1>
+      <div class="text-sm text-zinc-400 text-center mb-6">
         <div>{{.Data.UploadTime}}</div>
-        <div>Uploaded by {{.Data.DisplayName}}</div>
+        <div>
+          Uploaded by
+          <span class="underline text-purple-300">{{.Data.DisplayName}}</span>
+        </div>
         <div>{{.Data.Views}} Views</div>
-        <div>{{.Data.FileSizeMB}}</div>
       </div>
 
       <a href="{{.Data.fullURL}}" target="_blank">
         <img
+          class="max-h-[75vh] w-auto mx-auto rounded-lg mb-6"
           src="{{.Data.fullURL}}"
           alt="Cannot preview this file in the browser, click here to open."
         />
       </a>
-      <br />
-      <a
-        class="report-link text-purple-500"
-        href="mailto:noc@tritan.gg?subject=REPORT: {{.Data.Name}}&body=Hi, I'd like to report {{.Data.Name}} which was uploaded onto your sharex image host."
-        >Report</a
-      >
+
+      <div class="flex justify-center mt-6">
+        <a
+          class="inline-block px-4 py-2 rounded-md bg-purple-500 text-white text-lg font-semibold hover:bg-purple-600 transition duration-300 ease-in-out"
+          href="mailto:noc@tritan.gg?subject=REPORT: {{.Data.Name}}&body=Hi, I'd like to report {{.Data.Name}} which was uploaded onto your sharex image host."
+        >
+          Report
+        </a>
+      </div>
     </div>
   </body>
 </html>
