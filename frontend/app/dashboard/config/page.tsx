@@ -10,7 +10,6 @@ import { motion } from "framer-motion";
 import { Download, Image, Link, PencilIcon } from "lucide-react";
 import { toast } from "react-hot-toast";
 
-
 const Config: React.FC = () => {
   const user = useUser();
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -27,17 +26,19 @@ const Config: React.FC = () => {
       });
 
       let data = await response.json();
+
       if (typeof data === "object") {
         data = JSON.stringify(data, null, 2);
       }
 
       const blob = new Blob([data], { type: "application/json" });
+
       const fileName =
         type === "upload"
           ? "sharex-img-config.sxcu"
           : type === "url"
-            ? "sharex-shortener-config.sxcu"
-            : "sharex-text-config.sxcu";
+          ? "sharex-shortener-config.sxcu"
+          : "sharex-text-config.sxcu";
 
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
@@ -56,9 +57,8 @@ const Config: React.FC = () => {
 
   const downloadAllConfigs = async () => {
     const configTypes: ConfigType[] = ["upload", "url", "text"];
-    for (const type of configTypes) {
-      await generateConfig(type);
-    }
+
+    for (const type of configTypes) await generateConfig(type);
   };
 
   const toggleSidebar = () => {
@@ -69,8 +69,9 @@ const Config: React.FC = () => {
     <div className="flex h-screen bg-[#0d0c0e] text-gray-100">
       <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
       <main
-        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"
-          }`}
+        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${
+          sidebarOpen ? "ml-64" : "ml-0"
+        }`}
       >
         <motion.h1
           className="mb-2 text-4xl font-bold bg-gradient-to-r from-violet-400 to-fuchsia-400 text-transparent bg-clip-text"

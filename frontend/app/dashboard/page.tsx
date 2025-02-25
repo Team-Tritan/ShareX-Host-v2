@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
@@ -26,6 +27,7 @@ const fetchImages = async (
     });
 
     const data: ApiResponse = await response.json();
+
     setUploads(data.uploads || []);
   } catch (error) {
     console.error("Error fetching images:", error);
@@ -53,13 +55,12 @@ const handleDelete = async (
       toast.success("File deleted successfully!");
     } else {
       const errorData = await response.json();
-      console.error("Failed to delete image", errorData);
+
       toast.error(
         "Failed to delete image: " + (errorData.message || "Unknown error")
       );
     }
-  } catch (error) {
-    console.error("Error deleting image:", error);
+  } catch {
     toast.error("Error deleting image");
   }
 };
@@ -75,24 +76,24 @@ const Dashboard: React.FC = () => {
     upload.FileName.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const totalStorageUsed: number = user.uploads.reduce(
-    (acc, image) => acc + image.Metadata.FileSize,
-    0
-  );
-
   const totalFilesUploaded: number = user.uploads.length;
   const totalViews: number = user.uploads.reduce(
     (acc, image) => acc + image.Metadata.Views,
     0
   );
-
-  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const totalStorageUsed: number = user.uploads.reduce(
+    (acc, image) => acc + image.Metadata.FileSize,
+    0
+  );
+  
   useEffect(() => {
     fetchImages(user.apiToken, user.setUploads, user.setLoading);
+
     const intervalId = setInterval(
       () => fetchImages(user.apiToken, user.setUploads, user.setLoading),
       10000
     );
+    
     return () => clearInterval(intervalId);
   }, [user.apiToken, user.setUploads, user.setLoading]);
 
@@ -104,8 +105,9 @@ const Dashboard: React.FC = () => {
     <div className="flex h-screen bg-[#0d0c0e] text-gray-100">
       <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
       <main
-        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"
-          }`}
+        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${
+          sidebarOpen ? "ml-64" : "ml-0"
+        }`}
       >
         <motion.h1
           className="mb-2 text-4xl font-bold bg-gradient-to-r from-violet-400 to-fuchsia-400 text-transparent bg-clip-text"

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
@@ -46,48 +47,45 @@ const LoginPage: React.FC = () => {
       toast.error(error.message);
       setApiKey("");
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleCreateKey = useCallback(async () => {
     setIsPrompterOpen(true);
   }, []);
 
-  const handlePrompterConfirm = useCallback(
-    async (displayName: string) => {
-      setIsPrompterOpen(false);
-      if (!displayName) {
-        return toast.error("Display name is required.");
+  const handlePrompterConfirm = useCallback(async (displayName: string) => {
+    setIsPrompterOpen(false);
+
+    if (!displayName) return toast.error("Display name is required.");
+
+    try {
+      const response = await fetch("/api/account", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ display_name: displayName }),
+      });
+
+      if (!response.ok) {
+        toast.error("Failed to create API key.");
+        return;
       }
 
-      try {
-        const response = await fetch("/api/account", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ display_name: displayName }),
-        });
+      const data: NewAccount = await response.json();
 
-        if (!response.ok) {
-          toast.error("Failed to create API key.");
-          return;
-        }
+      user.setToken(data.key!);
+      user.setDisplayName(displayName);
 
-        const data: NewAccount = await response.json();
-        user.setToken(data.key!);
-        user.setDisplayName(displayName);
-        navigator.clipboard.writeText(data.key!);
-        toast.success(
-          `Your API key has been copied to your clipboard, please save it somewhere safe.`
-        );
-      } catch (error: any) {
-        toast.error(error.message);
-      }
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  );
+      navigator.clipboard.writeText(data.key!);
+
+      toast.success(
+        `Your API key has been copied to your clipboard, please save it somewhere safe.`
+      );
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  }, []);
 
   const handlePrompterCancel = () => {
     setIsPrompterOpen(false);

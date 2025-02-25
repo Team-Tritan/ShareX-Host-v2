@@ -17,12 +17,14 @@ const UploadPage: React.FC = () => {
 
   const handleDrop = async (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
+
     if (e.dataTransfer.files.length > 0)
       await uploadFile(e.dataTransfer.files[0]);
   };
 
   const handleClick = () => {
     const fileInput = document.createElement("input");
+
     fileInput.type = "file";
     fileInput.style.display = "none";
 
@@ -36,6 +38,7 @@ const UploadPage: React.FC = () => {
 
   const uploadFile = async (file: File) => {
     const formData = new FormData();
+    
     formData.append("sharex", file);
 
     try {

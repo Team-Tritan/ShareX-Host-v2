@@ -36,8 +36,11 @@ const AccountSettings: React.FC = () => {
 
   if (!user.apiToken) return <Unauthenticated />;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleApiRequest = async (url: string, method: string, body?: any) => {
+  const handleApiRequest = async (
+    url: string,
+    method: string,
+    body?: unknown
+  ) => {
     try {
       const response = await fetch(url, {
         method,
@@ -55,9 +58,11 @@ const AccountSettings: React.FC = () => {
 
   const handleDisplayNameChange = async () => {
     setLoadingStates((prev) => ({ ...prev, displayName: true }));
+
     const response = await handleApiRequest("/api/account/name", "PUT", {
       display_name: user.displayName,
     });
+
     response?.ok
       ? toast.success("Display name updated successfully")
       : toast.error("Failed to update display name");
@@ -67,7 +72,9 @@ const AccountSettings: React.FC = () => {
 
   const handleRegenerateToken = async () => {
     setLoadingStates((prev) => ({ ...prev, apiToken: true }));
+
     const response = await handleApiRequest("/api/account/token", "PUT");
+
     if (response?.ok) {
       const data = await response.json();
       user.setToken(data.key);
@@ -80,7 +87,9 @@ const AccountSettings: React.FC = () => {
 
   const handleDeleteAccount = async () => {
     setLoadingStates((prev) => ({ ...prev, deleteAccount: true }));
+
     const response = await handleApiRequest("/api/account/delete", "PUT");
+
     if (response?.ok) {
       toast.success("Account deleted successfully.");
       setIsDeleteModalOpen(false);
@@ -93,10 +102,12 @@ const AccountSettings: React.FC = () => {
 
   const handleDomainChange = async () => {
     setLoadingStates((prev) => ({ ...prev, domain: true }));
+    
     const response = await handleApiRequest(
       `/api/account/domain?value=${user.domain}`,
       "PUT"
     );
+
     if (response?.ok) {
       toast.success(
         "Domain changed successfully, please redownload your ShareX configs."

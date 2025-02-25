@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 "use client";
 
 import { useEffect, useState } from "react";
@@ -18,7 +19,6 @@ import {
   Trash2,
 } from "lucide-react";
 
-
 const fetchUrls = async (
   apiToken: string,
   setUrls: (urls: Url[]) => void,
@@ -33,6 +33,7 @@ const fetchUrls = async (
     });
 
     const data: ApiResponseUrl = await response.json();
+
     setUrls(data.urls || []);
   } catch (error) {
     console.error("Error fetching URLs:", error);
@@ -60,13 +61,12 @@ const handleDelete = async (
       toast.success("URL deleted successfully!");
     } else {
       const errorData = await response.json();
-      console.error("Failed to delete URL", errorData);
+
       toast.error(
         "Failed to delete URL: " + (errorData.message || "Unknown error")
       );
     }
-  } catch (error) {
-    console.error("Error deleting URL:", error);
+  } catch {
     toast.error("Error deleting URL");
   }
 };
@@ -79,13 +79,14 @@ const Urls: React.FC = () => {
 
   if (!user.apiToken) return <Unauthenticated />;
 
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
     fetchUrls(user.apiToken, user.setUrls, user.setLoading);
+
     const intervalId = setInterval(
       () => fetchUrls(user.apiToken, user.setUrls, user.setLoading),
       10000
     );
+
     return () => clearInterval(intervalId);
   }, [user.apiToken, user.setUrls, user.setLoading]);
 
@@ -101,10 +102,7 @@ const Urls: React.FC = () => {
   };
 
   const handleUpdateSlug = async (newSlug: string) => {
-    if (!editUrl || newSlug === editUrl.Slug) {
-      setEditUrl(null);
-      return;
-    }
+    if (!editUrl || newSlug === editUrl.Slug) return setEditUrl(null);
 
     try {
       const response = await fetch(`/api/url/${editUrl.Slug}`, {
@@ -169,8 +167,9 @@ const Urls: React.FC = () => {
     <div className="flex h-screen bg-[#0d0c0e] text-gray-100">
       <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
       <main
-        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"
-          }`}
+        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${
+          sidebarOpen ? "ml-64" : "ml-0"
+        }`}
       >
         <motion.h1
           className="mb-2 text-4xl font-bold bg-gradient-to-r from-violet-400 to-fuchsia-400 text-transparent bg-clip-text"
