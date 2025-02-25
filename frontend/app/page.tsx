@@ -77,13 +77,14 @@ const LoginPage: React.FC = () => {
         if (!response.ok)
           return toast.error("Failed to create API key.");
 
-
         const data: AccountResponse = await response.json();
         setToken(data.key!);
         setDisplayName(displayName);
 
+        navigator.clipboard.writeText(data.key!);
+
         toast.success(
-          `Your API key is ${data.key}. Please save it somewhere safe.`
+          `Your API key has been copied to your clipboard, please keep it safe.`
         );
       } catch (error: any) {
         toast.error(error.message);
