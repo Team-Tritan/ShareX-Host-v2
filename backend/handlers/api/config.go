@@ -17,11 +17,16 @@ func GetShareXConfig(c *fiber.Ctx) error {
 		return errorResponse(c, StatusInternalServerError, "Failed to load users")
 	}
 	queryType := c.Query("type")
-	domain := c.Query("domain")
 
 	if !functions.IsValidKey(key, validUsers) {
 		return errorResponse(c, StatusUnauthorized, "Invalid key")
 	}
+
+	user, err := database.GetUserByKey(key)
+	if err != nil {
+		return errorResponse(c, StatusInternalServerError, "Failed to get user")
+	}
+	domain := user.Domain
 
 	if queryType == "" || !(queryType == "upload" || queryType == "url" || queryType == "text") {
 		return errorResponse(c, StatusBadRequest, "The query type was invalid.")
