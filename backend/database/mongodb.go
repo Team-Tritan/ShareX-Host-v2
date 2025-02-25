@@ -375,7 +375,7 @@ func GetUploadBySlug(slug string) (UploadEntry, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	filter := bson.M{"file_name": bson.M{"$regex": "^" + slug + "\\..*$"}}
-	opts := options.FindOne().SetProjection(bson.M{"ip": 0})
+	opts := options.FindOne().SetProjection(bson.M{"ip": 0}).SetProjection(bson.M{"api_key": 0})
 	err := getCollection("uploads").FindOne(ctx, filter, opts).Decode(&uploadEntry)
 	return uploadEntry, err
 }

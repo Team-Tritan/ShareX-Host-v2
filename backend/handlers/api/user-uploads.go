@@ -37,14 +37,3 @@ func GetUploadsByToken(c *fiber.Ctx) error {
 		"uploads": matchingLogs,
 	})
 }
-
-func GetImageBySlug(c *fiber.Ctx) error {
-	slug := c.Params("slug")
-	upload, err := database.GetUploadBySlug(slug)
-
-	if err != nil {
-		return errorResponse(c, StatusInternalServerError, "Error fetching upload.")
-	}
-
-	return c.JSON(upload)
-}
