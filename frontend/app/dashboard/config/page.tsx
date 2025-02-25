@@ -8,6 +8,7 @@ import { motion } from "framer-motion";
 import { Download, Image, Link, PencilIcon } from "lucide-react";
 import * as React from "react";
 import { toast } from 'react-hot-toast';
+import { Input } from "@/components/select";
 
 type ConfigType = "upload" | "url" | "text";
 
@@ -179,9 +180,9 @@ const ConfigCard: React.FC<ConfigCardProps> = ({
           >
             Select Domain
           </label>
-          <select
+          {/* <select
             id={domainId}
-            className="w-full rounded-lg bg-zinc-900/50 border border-zinc-800 px-3 py-2 text-sm text-zinc-300 focus:outline-none focus:ring-2 focus:ring-violet-500/50 transition-colors"
+            className="w-full rounded-lg bg-[#0d0c0e] border border-zinc-800 px-3 py-2 text-sm text-gray-200 focus:outline-none focus:ring-2 focus:ring-violet-500/50 transition-colors"
             value={selectedDomain}
             onChange={(e) => setSelectedDomain(e.target.value)}
           >
@@ -191,7 +192,14 @@ const ConfigCard: React.FC<ConfigCardProps> = ({
                 {domain}
               </option>
             ))}
-          </select>
+          </select> */}
+          <Input
+            id={domainId}
+            value={selectedDomain}
+            onChange={(e) => setSelectedDomain(e.target.value)}
+            choices={domains.map((domain) => `${domain}`)}
+            placeholder="Select Domain"
+          />
         </div>
 
         <button
@@ -205,5 +213,7 @@ const ConfigCard: React.FC<ConfigCardProps> = ({
     </div>
   </motion.div>
 );
+
+
 
 export default Config;
