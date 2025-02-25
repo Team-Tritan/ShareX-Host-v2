@@ -20,12 +20,12 @@ const (
 	MessageInvalidPayload     = "Invalid request payload"
 	MessageFailedUpdateName   = "Failed to update display name"
 	MessageFailedDelete       = "Failed to delete account"
-	MessageFailedCreateUser   = "Failed to create user."
+	MessageFailedCreateUser   = "Failed to create user"
 	MessageFailedRegenToken   = "Failed to regenerate token"
 	MessageFailedUpdateDomain = "Failed to update domain"
 	MessageInvalidRequestType = "Invalid request type"
 	MessageUserNotFound       = "User not found"
-	MessageUserCreated        = "User created successfully."
+	MessageUserCreated        = "User created successfully"
 )
 
 func errorResponse(c *fiber.Ctx, status int, message string) error {
