@@ -10,7 +10,7 @@ import { AlertCircle, CopyIcon, Eye, Trash2 } from "lucide-react";
 import Link from "next/link";
 import type React from "react";
 import { useEffect, useState } from "react";
-import { toast } from 'react-hot-toast';
+import { toast } from "react-hot-toast";
 
 interface Metadata {
   FileType: string;
@@ -201,7 +201,7 @@ const Dashboard: React.FC = () => {
             ) : (
               uploads.map((image: Upload) => (
                 <div
-                  key={image.Key}
+                  key={image.FileName}
                   className="relative overflow-hidden rounded-lg bg-[#121114] group shadow-2xl shadow-indigo-500/20 transition-all duration-300 hover:shadow-indigo-500/40 hover:scale-105"
                 >
                   <img
@@ -211,12 +211,18 @@ const Dashboard: React.FC = () => {
                   />
 
                   <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-
                     <button className="flex items-center rounded bg-purple-500 px-3 py-2 text-sm font-semibold text-white hover:bg-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-800 mr-2 transition-colors duration-300">
-                      <CopyIcon className="h-4 w-4" onClick={() => {
-                        navigator.clipboard.writeText(`${userStore.domain}/i/${image.FileName.split(".").slice(0, -1).join(".")}`)
-                        toast.success("Copied URL to clipboard!")
-                      }} />
+                      <CopyIcon
+                        className="h-4 w-4"
+                        onClick={() => {
+                          navigator.clipboard.writeText(
+                            `${userStore.domain}/i/${image.FileName.split(".")
+                              .slice(0, -1)
+                              .join(".")}`
+                          );
+                          toast.success("Copied URL to clipboard!");
+                        }}
+                      />
                     </button>
 
                     <Link
