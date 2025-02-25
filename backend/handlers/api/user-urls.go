@@ -8,20 +8,17 @@ import (
 
 func GetURLsByToken(c *fiber.Ctx) error {
 	key := c.Get("key")
+	if key == "" {
+		return errorResponse(c, StatusUnauthorized, MessageAPIKeyRequired)
+	}
+
 	validUsers, err := database.LoadUsersFromDB()
 	if err != nil {
-		return c.Status(500).JSON(fiber.Map{
-			"status":  500,
-			"message": "Failed to load users",
-			"error":   err.Error(),
-		})
+		return errorResponse(c, StatusInternalServerError, "Failed to load users")
 	}
 
 	if !functions.IsValidKey(key, validUsers) {
-		return c.Status(401).JSON(fiber.Map{
-			"status":  401,
-			"message": "Invalid key",
-		})
+		return errorResponse(c, StatusUnauthorized, "Invalid key")
 	}
 
 	var displayName string
@@ -33,23 +30,16 @@ func GetURLsByToken(c *fiber.Ctx) error {
 	}
 
 	if displayName == "" {
-		return c.Status(401).JSON(fiber.Map{
-			"status":  401,
-			"message": "Invalid key",
-		})
+		return errorResponse(c, StatusUnauthorized, "Invalid key")
 	}
 
 	urls, err := database.LoadURLsFromDBByKey(key)
 	if err != nil {
-		return c.Status(500).JSON(fiber.Map{
-			"status":  500,
-			"message": "Failed to load URLs",
-			"error":   err.Error(),
-		})
+		return errorResponse(c, StatusInternalServerError, "Failed to load URLs")
 	}
 
-	return c.Status(200).JSON(fiber.Map{
-		"status":      200,
-		"urls":        urls,
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"status": fiber.StatusOK,
+		"urls":   urls,
 	})
 }

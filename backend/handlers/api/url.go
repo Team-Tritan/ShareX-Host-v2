@@ -10,35 +10,26 @@ import (
 
 func CreateURL(c *fiber.Ctx) error {
 	key := c.Get("key")
+	if key == "" {
+		return errorResponse(c, StatusUnauthorized, MessageAPIKeyRequired)
+	}
+
 	validUsers, err := database.LoadUsersFromDB()
 	if err != nil {
-		return c.Status(500).JSON(fiber.Map{
-			"status":  500,
-			"message": "Failed to load users",
-			"error":   err.Error(),
-		})
+		return errorResponse(c, StatusInternalServerError, "Failed to load users")
 	}
 
 	if !functions.IsValidKey(key, validUsers) {
-		return c.Status(401).JSON(fiber.Map{
-			"status":  401,
-			"message": "Invalid key",
-		})
+		return errorResponse(c, StatusUnauthorized, "Invalid key")
 	}
 
 	var urlRequest database.URL
 	if err := c.BodyParser(&urlRequest); err != nil {
-		return c.Status(400).JSON(fiber.Map{
-			"status":  400,
-			"message": "Invalid request body",
-		})
+		return errorResponse(c, StatusBadRequest, "Invalid request body")
 	}
 
 	if urlRequest.URL == "" {
-		return c.Status(400).JSON(fiber.Map{
-			"status":  400,
-			"message": "URL is required",
-		})
+		return errorResponse(c, StatusBadRequest, "URL is required")
 	}
 
 	urlRequest.Key = key
@@ -47,15 +38,11 @@ func CreateURL(c *fiber.Ctx) error {
 	urlRequest.Slug = functions.GenerateRandomKey(10)
 
 	if err := database.SaveURLToDB(urlRequest); err != nil {
-		return c.Status(500).JSON(fiber.Map{
-			"status":  500,
-			"message": "Failed to save the URL data",
-			"error":   err.Error(),
-		})
+		return errorResponse(c, StatusInternalServerError, "Failed to save the URL data")
 	}
 
 	return c.JSON(fiber.Map{
-		"status":  200,
+		"status":  fiber.StatusOK,
 		"message": "URL created successfully",
 		"url":     urlRequest.URL,
 		"slug":    urlRequest.Slug,
@@ -64,20 +51,17 @@ func CreateURL(c *fiber.Ctx) error {
 
 func UpdateSlug(c *fiber.Ctx) error {
 	key := c.Get("key")
+	if key == "" {
+		return errorResponse(c, StatusUnauthorized, MessageAPIKeyRequired)
+	}
+
 	validUsers, err := database.LoadUsersFromDB()
 	if err != nil {
-		return c.Status(500).JSON(fiber.Map{
-			"status":  500,
-			"message": "Failed to load users",
-			"error":   err.Error(),
-		})
+		return errorResponse(c, StatusInternalServerError, "Failed to load users")
 	}
 
 	if !functions.IsValidKey(key, validUsers) {
-		return c.Status(401).JSON(fiber.Map{
-			"status":  401,
-			"message": "Invalid key",
-		})
+		return errorResponse(c, StatusUnauthorized, "Invalid key")
 	}
 
 	oldSlug := c.Params("slug")
@@ -87,52 +71,33 @@ func UpdateSlug(c *fiber.Ctx) error {
 	}
 
 	if err := c.BodyParser(&req); err != nil {
-		return c.Status(400).JSON(fiber.Map{
-			"status":  400,
-			"message": "Invalid request body",
-		})
+		return errorResponse(c, StatusBadRequest, "Invalid request body")
 	}
 
 	if req.NewSlug == "" {
-		return c.Status(400).JSON(fiber.Map{
-			"status":  400,
-			"message": "New slug is required",
-		})
+		return errorResponse(c, StatusBadRequest, "New slug is required")
 	}
 
 	urlData, err := functions.GetURLBySlug(oldSlug)
 	if err != nil || urlData == nil {
-		return c.Status(404).JSON(fiber.Map{
-			"status":  404,
-			"message": "Slug not found",
-		})
+		return errorResponse(c, StatusNotFound, "Slug not found")
 	}
 
 	if urlData.Key != key {
-		return c.Status(403).JSON(fiber.Map{
-			"status":  403,
-			"message": "Unauthorized to change this slug",
-		})
+		return errorResponse(c, fiber.StatusForbidden, "Unauthorized to change this slug")
 	}
 
 	existing, _ := functions.GetURLBySlug(req.NewSlug)
 	if existing != nil {
-		return c.Status(409).JSON(fiber.Map{
-			"status":  409,
-			"message": "Slug already exists, choose another one",
-		})
+		return errorResponse(c, fiber.StatusConflict, "Slug already exists, choose another one")
 	}
 
 	if err := functions.UpdateURLSlug(oldSlug, req.NewSlug); err != nil {
-		return c.Status(500).JSON(fiber.Map{
-			"status":  500,
-			"message": "Failed to update slug",
-			"error":   err.Error(),
-		})
+		return errorResponse(c, StatusInternalServerError, "Failed to update slug")
 	}
 
 	return c.JSON(fiber.Map{
-		"status":  200,
+		"status":  fiber.StatusOK,
 		"message": "Slug updated successfully",
 	})
 }

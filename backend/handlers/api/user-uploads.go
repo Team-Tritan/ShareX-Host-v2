@@ -7,13 +7,13 @@ import (
 
 func GetUploadsByToken(c *fiber.Ctx) error {
 	key := c.Get("key")
+	if key == "" {
+		return errorResponse(c, StatusUnauthorized, MessageAPIKeyRequired)
+	}
+
 	validUsers, err := database.LoadUsersFromDB()
 	if err != nil {
-		return c.Status(500).JSON(fiber.Map{
-			"status":  500,
-			"message": "Failed to load users",
-			"error":   err.Error(),
-		})
+		return errorResponse(c, StatusInternalServerError, "Failed to load users")
 	}
 
 	var displayName string
@@ -25,19 +25,12 @@ func GetUploadsByToken(c *fiber.Ctx) error {
 	}
 
 	if displayName == "" {
-		return c.Status(401).JSON(fiber.Map{
-			"status":  401,
-			"message": "Invalid key",
-		})
+		return errorResponse(c, StatusUnauthorized, "Invalid key")
 	}
 
 	matchingLogs, err := database.LoadUploadsFromDB(key)
 	if err != nil {
-		return c.Status(500).JSON(fiber.Map{
-			"status":  500,
-			"message": "Error fetching uploads.",
-			"error":   err.Error(),
-		})
+		return errorResponse(c, StatusInternalServerError, "Error fetching uploads.")
 	}
 
 	return c.JSON(fiber.Map{
@@ -50,11 +43,7 @@ func GetImageBySlug(c *fiber.Ctx) error {
 	upload, err := database.GetUploadBySlug(slug)
 
 	if err != nil {
-		return c.Status(500).JSON(fiber.Map{
-			"status":  500,
-			"message": "Error fetching upload.",
-			"error":   err.Error(),
-		})
+		return errorResponse(c, StatusInternalServerError, "Error fetching upload.")
 	}
 
 	return c.JSON(upload)

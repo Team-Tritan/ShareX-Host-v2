@@ -16,6 +16,32 @@ import (
 	"tritan.dev/image-uploader/database"
 )
 
+const (
+	StatusUnauthorized        = fiber.StatusUnauthorized
+	StatusBadRequest          = fiber.StatusBadRequest
+	StatusInternalServerError = fiber.StatusInternalServerError
+	StatusNotFound            = fiber.StatusNotFound
+	StatusNoContent           = fiber.StatusNoContent
+
+	MessageAPIKeyRequired     = "API key is required"
+	MessageInvalidPayload     = "Invalid request payload"
+	MessageFailedUpdateName   = "Failed to update display name"
+	MessageFailedDelete       = "Failed to delete account"
+	MessageFailedCreateUser   = "Failed to create user"
+	MessageFailedRegenToken   = "Failed to regenerate token"
+	MessageFailedUpdateDomain = "Failed to update domain"
+	MessageInvalidRequestType = "Invalid request type"
+	MessageUserNotFound       = "User not found"
+	MessageUserCreated        = "User created successfully"
+)
+
+func errorResponse(c *fiber.Ctx, status int, message string) error {
+	return c.Status(status).JSON(fiber.Map{
+		"status":  status,
+		"message": message,
+	})
+}
+
 func DisplayImage(c *fiber.Ctx) error {
 	fileWithExtension := c.Params("file")
 	fileWithoutExtension := strings.TrimSuffix(fileWithExtension, path.Ext(fileWithExtension))
@@ -31,10 +57,7 @@ func DisplayImage(c *fiber.Ctx) error {
 	newSession, err := session.NewSession(s3Config)
 	if err != nil {
 		log.Printf("Error creating new session: %v\n", err)
-		return c.Status(500).JSON(fiber.Map{
-			"status":  500,
-			"message": "Internal server error",
-		})
+		return errorResponse(c, StatusInternalServerError, "Internal server error")
 	}
 
 	s3Client := s3.New(newSession)
@@ -52,10 +75,7 @@ func DisplayImage(c *fiber.Ctx) error {
 		uploadEntry, err := database.GetUploadEntryByFileName(fileWithExtension)
 		if err != nil {
 			log.Printf("Error fetching upload entry from DB: %v\n", err)
-			return c.Status(500).JSON(fiber.Map{
-				"status":  500,
-				"message": "Internal server error",
-			})
+			return errorResponse(c, StatusInternalServerError, "Internal server error")
 		}
 
 		database.IncrementViewCount(uploadEntry.FileName)
@@ -70,6 +90,7 @@ func DisplayImage(c *fiber.Ctx) error {
 				"UploadTime":  uploadTime,
 				"DisplayName": uploadEntry.DisplayName,
 				"FileSizeMB":  fmt.Sprintf("%.2f MB", fileSizeMB),
+				"Views":       fmt.Sprintf("%d", uploadEntry.Metadata.Views),
 			},
 		}
 		return c.Render("./pages/image.html", data)
@@ -81,10 +102,7 @@ func DisplayImage(c *fiber.Ctx) error {
 	})
 	if err != nil {
 		log.Printf("Error listing objects in S3: %v\n", err)
-		return c.Status(500).JSON(fiber.Map{
-			"status":  500,
-			"message": "Internal server error",
-		})
+		return errorResponse(c, StatusInternalServerError, "Internal server error")
 	}
 
 	for _, obj := range resp.Contents {
@@ -96,10 +114,7 @@ func DisplayImage(c *fiber.Ctx) error {
 			uploadEntry, err := database.GetUploadEntryByFileName(*obj.Key)
 			if err != nil {
 				log.Printf("Error fetching upload entry from DB: %v\n", err)
-				return c.Status(500).JSON(fiber.Map{
-					"status":  500,
-					"message": "Internal server error",
-				})
+				return errorResponse(c, StatusInternalServerError, "Internal server error")
 			}
 
 			database.IncrementViewCount(uploadEntry.FileName)
@@ -121,8 +136,5 @@ func DisplayImage(c *fiber.Ctx) error {
 	}
 
 	log.Printf("Image not found: %s\n", fileWithExtension)
-	return c.Status(404).JSON(fiber.Map{
-		"status":  404,
-		"message": "Content not found",
-	})
+	return errorResponse(c, StatusNotFound, "Content not found")
 }

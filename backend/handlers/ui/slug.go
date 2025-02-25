@@ -10,10 +10,7 @@ func RedirectBySlug(c *fiber.Ctx) error {
 
 	url, err := database.GetURLBySlug(slug)
 	if err != nil || url == nil {
-		return c.Status(404).JSON(fiber.Map{
-			"status":  404,
-			"message": "URL not found",
-		})
+		return errorResponse(c, StatusNotFound, "URL not found")
 	}
 
 	database.IncrementClickCount(slug)

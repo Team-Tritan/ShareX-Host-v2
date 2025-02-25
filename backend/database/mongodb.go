@@ -3,6 +3,7 @@ package database
 import (
 	"context"
 	"fmt"
+	"log"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -18,10 +19,86 @@ func init() {
 	var err error
 	client, err = mongo.Connect(context.Background(), options.Client().ApplyURI(config.AppConfigInstance.MongoDB_URI))
 	if err != nil {
-		panic(err)
+		log.Fatalf("Failed to connect to MongoDB: %v", err) 
+	}
+
+	// Test the connection
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+	defer cancel()
+
+	if err = client.Ping(ctx, nil); err != nil {
+		log.Fatalf("Failed to ping MongoDB: %v", err)
 	}
 
 	db = client.Database("ShareX-Uploader")
+	log.Println("Successfully connected to MongoDB!")
+}
+
+// Helper function to get a collection
+func getCollection(collectionName string) *mongo.Collection {
+	return db.Collection(collectionName)
+}
+
+// Helper function to execute a FindOne operation and decode the result
+func findOne(ctx context.Context, collectionName string, filter bson.M, result interface{}) error {
+	collection := getCollection(collectionName)
+	err := collection.FindOne(ctx, filter).Decode(result)
+	if err != nil && err != mongo.ErrNoDocuments {
+		log.Printf("Error finding document in %s: %v", collectionName, err)
+		return err
+	}
+	return err
+}
+
+// Helper function to execute a Find operation and decode the results
+func findMany(ctx context.Context, collectionName string, filter bson.M, opts *options.FindOptions, results interface{}) error {
+	collection := getCollection(collectionName)
+	cursor, err := collection.Find(ctx, filter, opts)
+	if err != nil {
+		log.Printf("Error finding documents in %s: %v", collectionName, err)
+		return err
+	}
+	defer cursor.Close(ctx)
+
+	if err := cursor.All(ctx, results); err != nil {
+		log.Printf("Error decoding documents from %s: %v", collectionName, err)
+		return err
+	}
+
+	return nil
+}
+
+// Helper function to execute an UpdateOne operation
+func updateOne(ctx context.Context, collectionName string, filter bson.M, update bson.M) error {
+	collection := getCollection(collectionName)
+	_, err := collection.UpdateOne(ctx, filter, update)
+	if err != nil {
+		log.Printf("Error updating document in %s: %v", collectionName, err)
+		return err
+	}
+	return nil
+}
+
+// Helper function to execute an UpdateMany operation
+func updateMany(ctx context.Context, collectionName string, filter bson.M, update bson.M) error {
+	collection := getCollection(collectionName)
+	_, err := collection.UpdateMany(ctx, filter, update)
+	if err != nil {
+		log.Printf("Error updating documents in %s: %v", collectionName, err)
+		return err
+	}
+	return nil
+}
+
+// Helper function to execute a DeleteOne operation
+func deleteOne(ctx context.Context, collectionName string, filter bson.M) error {
+	collection := getCollection(collectionName)
+	_, err := collection.DeleteOne(ctx, filter)
+	if err != nil {
+		log.Printf("Error deleting document in %s: %v", collectionName, err)
+		return err
+	}
+	return nil
 }
 
 type User struct {
@@ -58,176 +135,164 @@ type UploadEntry struct {
 
 func LoadUsersFromDB() ([]User, error) {
 	var users []User
-	collection := db.Collection("users")
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	cursor, err := collection.Find(ctx, bson.M{})
+
+	err := findMany(ctx, "users", bson.M{}, nil, &users)
 	if err != nil {
 		return nil, err
-	}
-	defer cursor.Close(ctx)
-	for cursor.Next(ctx) {
-		var user User
-		if err := cursor.Decode(&user); err != nil {
-			return nil, err
-		}
-		users = append(users, user)
 	}
 	return users, nil
 }
 
 func SaveUserToDB(user User) error {
-	collection := db.Collection("users")
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
+
+	collection := getCollection("users")
 	_, err := collection.InsertOne(ctx, user)
-	return err
+	if err != nil {
+		log.Printf("Error inserting user: %v", err)
+		return err
+	}
+	return nil
 }
 
 func GetUserByKey(key string) (User, error) {
 	var user User
-	collection := db.Collection("users")
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	err := collection.FindOne(ctx, bson.M{"api_key": key}).Decode(&user)
+
+	err := findOne(ctx, "users", bson.M{"api_key": key}, &user)
 	return user, err
 }
 
 func UpdateUserDisplayName(key, displayName string) error {
-	collection := db.Collection("users")
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
 	filter := bson.M{"api_key": key}
 	update := bson.M{"$set": bson.M{"display_name": displayName}}
 
-	collection.UpdateOne(ctx, filter, update)
+	err := updateOne(ctx, "users", filter, update)
+	if err != nil {
+		return err
+	}
 
-	uploadCollection := db.Collection("uploads")
 	uploadFilter := bson.M{"api_key": key}
 	uploadUpdate := bson.M{"$set": bson.M{"display_name": displayName}}
 
-	uploadCollection.UpdateMany(ctx, uploadFilter, uploadUpdate)
-
-	return nil
+	err = updateMany(ctx, "uploads", uploadFilter, uploadUpdate)
+	return err
 }
 
 func DeleteUserByKey(key string) error {
-	collection := db.Collection("users")
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
 	filter := bson.M{"api_key": key}
-	_, err := collection.DeleteOne(ctx, filter)
-	return err
+	return deleteOne(ctx, "users", filter)
 }
 
 func SaveURLToDB(url URL) error {
-	collection := db.Collection("urls")
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
+
+	collection := getCollection("urls")
 	_, err := collection.InsertOne(ctx, url)
-	return err
+	if err != nil {
+		log.Printf("Error inserting URL: %v", err)
+		return err
+	}
+	return nil
 }
 
 func LoadUploadsFromDB(key string) ([]UploadEntry, error) {
 	var logs []UploadEntry
-	collection := db.Collection("uploads")
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
+
 	filter := bson.M{"api_key": key}
 	opts := options.Find().SetSort(bson.D{{Key: "_id", Value: -1}})
-	cursor, err := collection.Find(ctx, filter, opts)
+
+	err := findMany(ctx, "uploads", filter, opts, &logs)
 	if err != nil {
 		return nil, err
-	}
-	defer cursor.Close(ctx)
-	for cursor.Next(ctx) {
-		var log UploadEntry
-		if err := cursor.Decode(&log); err != nil {
-			return nil, err
-		}
-		logs = append(logs, log)
 	}
 	return logs, nil
 }
 
 func SaveUploadToDB(log UploadEntry) error {
-	collection := db.Collection("uploads")
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
+
+	collection := getCollection("uploads")
 	_, err := collection.InsertOne(ctx, log)
-	return err
+	if err != nil {
+		fmt.Printf("Error inserting upload: %v", err)
+		return err
+	}
+	return nil
 }
 
 func DeleteUploadFromDB(key, fileName string) (UploadEntry, error) {
 	var logEntry UploadEntry
-	collection := db.Collection("uploads")
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
+
 	filter := bson.M{
 		"api_key":   key,
 		"file_name": bson.M{"$regex": "^" + fileName + "\\..*$"},
 	}
-	err := collection.FindOne(ctx, filter).Decode(&logEntry)
+
+	err := findOne(ctx, "uploads", filter, &logEntry)
 	if err != nil {
 		return logEntry, err
 	}
+
 	if logEntry.Key != key {
 		return logEntry, fmt.Errorf("unauthorized: key mismatch")
 	}
+
+	collection := getCollection("uploads")
 	err = collection.FindOneAndDelete(ctx, filter).Decode(&logEntry)
+
 	return logEntry, err
 }
 
 func LoadURLsFromDB() ([]URL, error) {
 	var urls []URL
-	collection := db.Collection("urls")
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	cursor, err := collection.Find(ctx, bson.M{})
+
+	err := findMany(ctx, "urls", bson.M{}, nil, &urls)
 	if err != nil {
 		return nil, err
-	}
-	defer cursor.Close(ctx)
-	for cursor.Next(ctx) {
-		var url URL
-		if err := cursor.Decode(&url); err != nil {
-			return nil, err
-		}
-		urls = append(urls, url)
 	}
 	return urls, nil
 }
 
 func LoadURLsFromDBByKey(key string) ([]URL, error) {
 	var urls []URL
-	collection := db.Collection("urls")
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
+
 	filter := bson.M{"api_key": key}
 	opts := options.Find().SetSort(bson.D{{Key: "_id", Value: -1}})
-	cursor, err := collection.Find(ctx, filter, opts)
+
+	err := findMany(ctx, "urls", filter, opts, &urls)
 	if err != nil {
 		return nil, err
-	}
-	defer cursor.Close(ctx)
-	for cursor.Next(ctx) {
-		var url URL
-		if err := cursor.Decode(&url); err != nil {
-			return nil, err
-		}
-		urls = append(urls, url)
 	}
 	return urls, nil
 }
 
 func GetURLBySlug(slug string) (*URL, error) {
 	var url URL
-	collection := db.Collection("urls")
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	err := collection.FindOne(ctx, bson.M{"slug": slug}).Decode(&url)
+
+	err := findOne(ctx, "urls", bson.M{"slug": slug}, &url)
 	if err != nil {
 		return nil, err
 	}
@@ -236,10 +301,10 @@ func GetURLBySlug(slug string) (*URL, error) {
 
 func GetDisplayNameByFileName(fileName string) (string, error) {
 	var uploadEntry UploadEntry
-	collection := db.Collection("uploads")
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	err := collection.FindOne(ctx, bson.M{"file_name": fileName}).Decode(&uploadEntry)
+
+	err := findOne(ctx, "uploads", bson.M{"file_name": fileName}, &uploadEntry)
 	if err != nil {
 		return "", err
 	}
@@ -248,114 +313,105 @@ func GetDisplayNameByFileName(fileName string) (string, error) {
 
 func GetUploadEntryByFileName(fileName string) (UploadEntry, error) {
 	var uploadEntry UploadEntry
-	collection := db.Collection("uploads")
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	err := collection.FindOne(ctx, bson.M{"file_name": fileName}).Decode(&uploadEntry)
+
+	err := findOne(ctx, "uploads", bson.M{"file_name": fileName}, &uploadEntry)
 	return uploadEntry, err
 }
 
 func DeleteURLFromDB(key, slug string) (URL, error) {
 	var url URL
-	collection := db.Collection("urls")
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
+
 	filter := bson.M{"api_key": key, "slug": slug}
-	err := collection.FindOne(ctx, filter).Decode(&url)
+	err := findOne(ctx, "urls", filter, &url)
 	if err != nil {
 		return url, err
 	}
+
 	if url.Key != key {
 		return url, fmt.Errorf("unauthorized: key mismatch")
 	}
+
+	collection := getCollection("urls")
 	err = collection.FindOneAndDelete(ctx, filter).Decode(&url)
 	return url, err
 }
 
 func UpdateURLSlugInDB(oldSlug, newSlug string) error {
-	collection := db.Collection("urls")
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
 	filter := bson.M{"slug": oldSlug}
 	update := bson.M{"$set": bson.M{"slug": newSlug}}
 
-	_, err := collection.UpdateOne(ctx, filter, update)
-	return err
+	return updateOne(ctx, "urls", filter, update)
 }
 
 func IncrementViewCount(fileName string) error {
-	collection := db.Collection("uploads")
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
 	filter := bson.M{"file_name": fileName}
 	update := bson.M{"$inc": bson.M{"metadata.views": 1}}
 
-	_, err := collection.UpdateOne(ctx, filter, update)
-	return err
+	return updateOne(ctx, "uploads", filter, update)
 }
 
 func IncrementClickCount(slug string) error {
-	collection := db.Collection("urls")
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
 	filter := bson.M{"slug": slug}
 	update := bson.M{"$inc": bson.M{"clicks": 1}}
 
-	_, err := collection.UpdateOne(ctx, filter, update)
-	return err
+	return updateOne(ctx, "urls", filter, update)
 }
 
 func GetUploadBySlug(slug string) (UploadEntry, error) {
 	var uploadEntry UploadEntry
-	collection := db.Collection("uploads")
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	filter := bson.M{"file_name": bson.M{"$regex": "^" + slug + "\\..*$"}}
-	err := collection.FindOne(ctx, filter).Decode(&uploadEntry)
+	err := findOne(ctx, "uploads", filter, &uploadEntry)
 	return uploadEntry, err
 }
 
 func UpdateUserKey(oldKey, newKey string) error {
-	collection := db.Collection("users")
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
 	filter := bson.M{"api_key": oldKey}
 	update := bson.M{"$set": bson.M{"api_key": newKey}}
 
-	_, err := collection.UpdateOne(ctx, filter, update)
+	err := updateOne(ctx, "users", filter, update)
 	if err != nil {
 		return err
 	}
 
-	uploadCollection := db.Collection("uploads")
 	uploadFilter := bson.M{"api_key": oldKey}
 	uploadUpdate := bson.M{"$set": bson.M{"api_key": newKey}}
 
-	_, err = uploadCollection.UpdateMany(ctx, uploadFilter, uploadUpdate)
+	err = updateMany(ctx, "uploads", uploadFilter, uploadUpdate)
 	if err != nil {
 		return err
 	}
 
-	urlCollection := db.Collection("urls")
 	urlFilter := bson.M{"api_key": oldKey}
 	urlUpdate := bson.M{"$set": bson.M{"api_key": newKey}}
 
-	_, err = urlCollection.UpdateMany(ctx, urlFilter, urlUpdate)
+	err = updateMany(ctx, "urls", urlFilter, urlUpdate)
 	return err
 }
 
 func UpdateUserDomain(key, domain string) error {
-	collection := db.Collection("users")
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
 	filter := bson.M{"api_key": key}
 	update := bson.M{"$set": bson.M{"domain": domain}}
 
-	_, err := collection.UpdateOne(ctx, filter, update)
-	return err
+	return updateOne(ctx, "users", filter, update)
 }

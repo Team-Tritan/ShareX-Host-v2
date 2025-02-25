@@ -15,53 +15,37 @@ import (
 
 func DeleteUpload(c *fiber.Ctx) error {
 	key := c.Get("key")
+	if key == "" {
+		return errorResponse(c, StatusUnauthorized, MessageAPIKeyRequired)
+	}
+
 	validUsers, err := database.LoadUsersFromDB()
 	if err != nil {
-		return c.Status(500).JSON(fiber.Map{
-			"status":  500,
-			"message": "Failed to load users",
-			"error":   err.Error(),
-		})
+		return errorResponse(c, StatusInternalServerError, "Failed to load users")
 	}
 
 	if !functions.IsValidKey(key, validUsers) {
-		return c.Status(401).JSON(fiber.Map{
-			"status":  401,
-			"message": "Invalid key",
-		})
+		return errorResponse(c, StatusUnauthorized, "Invalid key")
 	}
 
 	id := c.Params("id")
 	if id == "" {
-		return c.Status(400).JSON(fiber.Map{
-			"status":  400,
-			"message": "Missing upload ID",
-		})
+		return errorResponse(c, StatusBadRequest, "Missing upload ID")
 	}
 
 	logEntry, err := database.GetUploadBySlug(id)
 	if err != nil || logEntry == (database.UploadEntry{}) {
-		return c.Status(404).JSON(fiber.Map{
-			"status":  404,
-			"message": "Upload not found",
-		})
+		return errorResponse(c, StatusNotFound, "Upload not found")
 	}
 
 	if logEntry.Key != key {
-		return c.Status(403).JSON(fiber.Map{
-			"status":  403,
-			"message": "Unauthorized to delete this upload",
-		})
+		return errorResponse(c, fiber.StatusForbidden, "Unauthorized to delete this upload")
 	}
 
 	logEntry, err = database.DeleteUploadFromDB(key, id)
 	if err != nil {
 		log.Printf("Error deleting upload from DB: %v\n", err)
-		return c.Status(500).JSON(fiber.Map{
-			"status":  500,
-			"message": "Error deleting upload.",
-			"error":   err.Error(),
-		})
+		return errorResponse(c, StatusInternalServerError, "Error deleting upload.")
 	}
 
 	fullKey := logEntry.FileName
@@ -75,11 +59,7 @@ func DeleteUpload(c *fiber.Ctx) error {
 
 	if err != nil {
 		log.Println("Failed to create AWS session:", err)
-		return c.Status(500).JSON(fiber.Map{
-			"status":  500,
-			"message": "Error deleting upload.",
-			"error":   err.Error(),
-		})
+		return errorResponse(c, StatusInternalServerError, "Error deleting upload.")
 	}
 
 	svc := s3.New(sess)
@@ -90,11 +70,7 @@ func DeleteUpload(c *fiber.Ctx) error {
 
 	if err != nil {
 		log.Println("Failed to delete object from S3:", err)
-		return c.Status(500).JSON(fiber.Map{
-			"status":  500,
-			"message": "Error deleting upload.",
-			"error":   err.Error(),
-		})
+		return errorResponse(c, StatusInternalServerError, "Error deleting upload.")
 	}
 
 	err = svc.WaitUntilObjectNotExists(&s3.HeadObjectInput{
@@ -104,72 +80,52 @@ func DeleteUpload(c *fiber.Ctx) error {
 
 	if err != nil {
 		log.Println("Failed to wait for object deletion:", err)
-		return c.Status(500).JSON(fiber.Map{
-			"status":  500,
-			"message": "Error deleting upload.",
-			"error":   err.Error(),
-		})
+		return errorResponse(c, StatusInternalServerError, "Error deleting upload.")
 	}
 
-	return c.Status(200).JSON(fiber.Map{
-		"status":  200,
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"status":  fiber.StatusOK,
 		"message": "Upload deleted successfully",
 	})
 }
 
 func DeleteURL(c *fiber.Ctx) error {
 	key := c.Get("key")
+	if key == "" {
+		return errorResponse(c, StatusUnauthorized, MessageAPIKeyRequired)
+	}
+
 	validUsers, err := database.LoadUsersFromDB()
 	if err != nil {
-		return c.Status(500).JSON(fiber.Map{
-			"status":  500,
-			"message": "Failed to load users",
-			"error":   err.Error(),
-		})
+		return errorResponse(c, StatusInternalServerError, "Failed to load users")
 	}
 
 	if !functions.IsValidKey(key, validUsers) {
-		return c.Status(401).JSON(fiber.Map{
-			"status":  401,
-			"message": "Invalid key",
-		})
+		return errorResponse(c, StatusUnauthorized, "Invalid key")
 	}
 
 	slug := c.Params("slug")
 	if slug == "" {
-		return c.Status(400).JSON(fiber.Map{
-			"status":  400,
-			"message": "Missing URL slug",
-		})
+		return errorResponse(c, StatusBadRequest, "Missing URL slug")
 	}
 
 	urlData, err := functions.GetURLBySlug(slug)
 	if err != nil || urlData == nil {
-		return c.Status(404).JSON(fiber.Map{
-			"status":  404,
-			"message": "URL not found",
-		})
+		return errorResponse(c, StatusNotFound, "URL not found")
 	}
 
 	if urlData.Key != key {
-		return c.Status(403).JSON(fiber.Map{
-			"status":  403,
-			"message": "Unauthorized to delete this URL",
-		})
+		return errorResponse(c, fiber.StatusForbidden, "Unauthorized to delete this URL")
 	}
 
 	url, err := database.DeleteURLFromDB(key, slug)
 	if err != nil {
 		log.Printf("Error deleting URL from DB: %v\n", err)
-		return c.Status(500).JSON(fiber.Map{
-			"status":  500,
-			"message": "Error deleting URL.",
-			"error":   err.Error(),
-		})
+		return errorResponse(c, StatusInternalServerError, "Error deleting URL.")
 	}
 
-	return c.Status(200).JSON(fiber.Map{
-		"status":  200,
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"status":  fiber.StatusOK,
 		"message": "URL deleted successfully",
 		"url":     url.URL,
 	})
