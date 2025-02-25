@@ -1,25 +1,32 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import type { NewAccount } from "@/typings";
-import { useUser } from "@/stores/user";
 import Prompter from "@/components/Prompt";
+import { useUser } from "@/stores/user";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { toast } from "react-hot-toast";
 
+interface AccountResponse {
+  DisplayName: string;
+  key?: string;
+  Domain: string;
+}
+
 const LoginPage: React.FC = () => {
-  const user = useUser();
   const router = useRouter();
-  const [apiKey, setApiKey] = useState<string>(user.apiToken);
+  const apiToken = useUser((state) => state.apiToken);
+  const setToken = useUser((state) => state.setToken);
+  const setDomain = useUser((state) => state.setDomain);
+  const setDisplayName = useUser((state) => state.setDisplayName);
+  const [apiKey, setApiKey] = useState<string>(apiToken);
   const [isPrompterOpen, setIsPrompterOpen] = useState<boolean>(false);
 
   useEffect(() => {
-    setApiKey(user.apiToken);
-  }, [user.apiToken]);
+    setApiKey(apiToken);
+  }, [apiToken]);
 
   const handleLogin = useCallback(async () => {
     try {
@@ -36,56 +43,56 @@ const LoginPage: React.FC = () => {
         return;
       }
 
-      const data: NewAccount = await response.json();
+      const data: AccountResponse = await response.json();
 
-      user.setToken(apiKey);
-      user.setDisplayName(data.DisplayName);
-      user.setDomain(data.Domain);
+      setToken(apiKey);
+      setDisplayName(data.DisplayName);
+      setDomain(data.Domain);
 
       router.push("/dashboard");
     } catch (error: any) {
       toast.error(error.message);
       setApiKey("");
     }
-  }, []);
+  }, [apiKey, router, setDisplayName, setDomain, setToken]);
 
   const handleCreateKey = useCallback(async () => {
     setIsPrompterOpen(true);
   }, []);
 
-  const handlePrompterConfirm = useCallback(async (displayName: string) => {
-    setIsPrompterOpen(false);
-
-    if (!displayName) return toast.error("Display name is required.");
-
-    try {
-      const response = await fetch("/api/account", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ display_name: displayName }),
-      });
-
-      if (!response.ok) {
-        toast.error("Failed to create API key.");
-        return;
+  const handlePrompterConfirm = useCallback(
+    async (displayName: string) => {
+      setIsPrompterOpen(false);
+      if (!displayName) {
+        return toast.error("Display name is required.");
       }
 
-      const data: NewAccount = await response.json();
+      try {
+        const response = await fetch("/api/account", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ display_name: displayName }),
+        });
 
-      user.setToken(data.key!);
-      user.setDisplayName(displayName);
+        if (!response.ok) {
+          toast.error("Failed to create API key.");
+          return;
+        }
 
-      navigator.clipboard.writeText(data.key!);
-
-      toast.success(
-        `Your API key has been copied to your clipboard, please save it somewhere safe.`
-      );
-    } catch (error: any) {
-      toast.error(error.message);
-    }
-  }, []);
+        const data: AccountResponse = await response.json();
+        setToken(data.key!);
+        setDisplayName(displayName);
+        toast.success(
+          `Your API key is ${data.key}. Please save it somewhere safe.`
+        );
+      } catch (error: any) {
+        toast.error(error.message);
+      }
+    },
+    [setDisplayName, setToken]
+  );
 
   const handlePrompterCancel = () => {
     setIsPrompterOpen(false);
@@ -106,10 +113,6 @@ const LoginPage: React.FC = () => {
           transition={{ delay: 0.2, duration: 0.5 }}
         >
           <h1 className="text-3xl font-bold text-white">Tritan Uploader</h1>
-          <p className="mt-4 text-gray-400">
-            A free ShareX host where you can put screenshots, images, gifs, and
-            more.
-          </p>
         </motion.div>
 
         <motion.div
@@ -157,7 +160,7 @@ const LoginPage: React.FC = () => {
           transition={{ delay: 0.8, duration: 0.5 }}
         >
           <button onClick={handleCreateKey} className="text-sm text-purple-500">
-            Create an account
+            Create an API Key
           </button>
         </motion.div>
       </motion.div>
