@@ -39,6 +39,7 @@ func DeleteUpload(c *fiber.Ctx) error {
 	}
 
 	if logEntry.Key != key {
+		log.Printf("Key: %s, logEntry.Key: %s\n", key, logEntry.Key)
 		return errorResponse(c, fiber.StatusForbidden, "Unauthorized to delete this upload")
 	}
 

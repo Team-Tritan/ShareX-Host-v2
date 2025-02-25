@@ -213,7 +213,7 @@ func LoadUploadsFromDB(key string) ([]UploadEntry, error) {
 	defer cancel()
 
 	filter := bson.M{"api_key": key}
-	opts := options.Find().SetSort(bson.D{{Key: "_id", Value: -1}}).SetProjection(bson.M{"ip": 0}).SetProjection(bson.M{"api_key": 0})
+	opts := options.Find().SetSort(bson.D{{Key: "_id", Value: -1}})
 
 	err := findMany(ctx, "uploads", filter, opts, &logs)
 	if err != nil {
@@ -278,7 +278,7 @@ func LoadURLsFromDBByKey(key string) ([]URL, error) {
 	defer cancel()
 
 	filter := bson.M{"api_key": key}
-	opts := options.Find().SetSort(bson.D{{Key: "_id", Value: -1}}).SetProjection(bson.M{"ip": 0}).SetProjection(bson.M{"api_key": 0})
+	opts := options.Find().SetSort(bson.D{{Key: "_id", Value: -1}})
 
 	err := findMany(ctx, "urls", filter, opts, &urls)
 	if err != nil {
@@ -375,7 +375,7 @@ func GetUploadBySlug(slug string) (UploadEntry, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	filter := bson.M{"file_name": bson.M{"$regex": "^" + slug + "\\..*$"}}
-	opts := options.FindOne().SetProjection(bson.M{"ip": 0}).SetProjection(bson.M{"api_key": 0})
+	opts := options.FindOne()
 	err := getCollection("uploads").FindOne(ctx, filter, opts).Decode(&uploadEntry)
 	return uploadEntry, err
 }

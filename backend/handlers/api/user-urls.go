@@ -38,6 +38,11 @@ func GetURLsByToken(c *fiber.Ctx) error {
 		return errorResponse(c, StatusInternalServerError, "Failed to load URLs")
 	}
 
+	for i := range urls {
+		urls[i].IP = "[Redacted]"
+		urls[i].Key = "[Redacted]"
+	}
+
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
 		"status": fiber.StatusOK,
 		"urls":   urls,

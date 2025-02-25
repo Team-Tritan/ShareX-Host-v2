@@ -33,6 +33,11 @@ func GetUploadsByToken(c *fiber.Ctx) error {
 		return errorResponse(c, StatusInternalServerError, "Error fetching uploads.")
 	}
 
+	for i := range matchingLogs {
+		matchingLogs[i].IP = "[Redacted]"
+		matchingLogs[i].Key = "[Redacted]"
+	}
+
 	return c.JSON(fiber.Map{
 		"uploads": matchingLogs,
 	})
