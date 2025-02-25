@@ -39,12 +39,10 @@ const LoginPage: React.FC = () => {
 
       if (!response.ok) {
         toast.error("You've entered an invalid API key.");
-        setApiKey("");
-        return;
+        return setApiKey("");
       }
 
       const data: AccountResponse = await response.json();
-
       setToken(apiKey);
       setDisplayName(data.DisplayName);
       setDomain(data.Domain);
@@ -63,9 +61,9 @@ const LoginPage: React.FC = () => {
   const handlePrompterConfirm = useCallback(
     async (displayName: string) => {
       setIsPrompterOpen(false);
-      if (!displayName) {
+
+      if (!displayName)
         return toast.error("Display name is required.");
-      }
 
       try {
         const response = await fetch("/api/account", {
@@ -76,14 +74,14 @@ const LoginPage: React.FC = () => {
           body: JSON.stringify({ display_name: displayName }),
         });
 
-        if (!response.ok) {
-          toast.error("Failed to create API key.");
-          return;
-        }
+        if (!response.ok)
+          return toast.error("Failed to create API key.");
+
 
         const data: AccountResponse = await response.json();
         setToken(data.key!);
         setDisplayName(displayName);
+
         toast.success(
           `Your API key is ${data.key}. Please save it somewhere safe.`
         );
@@ -113,6 +111,7 @@ const LoginPage: React.FC = () => {
           transition={{ delay: 0.2, duration: 0.5 }}
         >
           <h1 className="text-3xl font-bold text-white">Tritan Uploader</h1>
+          <div className="mt-4 text-gray-400">A free ShareX host where you can put screenshots, images, gifs, and more.</div>
         </motion.div>
 
         <motion.div
