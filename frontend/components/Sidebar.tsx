@@ -34,9 +34,10 @@ export function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
         <div className="flex h-full flex-col">
           <div className="flex items-center justify-center p-6">
             <Link href="/dashboard" className="flex items-center space-x-2">
-              <h1 className="text-2xl font-bold text-white">Tritan Uploader</h1>
-            </Link
-            >
+              <h1 className="text-2xl font-bold text-white bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 bg-clip-text text-transparent animate-gradient-flow">
+                Tritan Uploader
+              </h1>
+            </Link>
           </div>
           <nav className="flex-1 space-y-2 p-4">
             {menuItems.map((item) => {

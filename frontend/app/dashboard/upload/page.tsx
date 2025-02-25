@@ -82,7 +82,7 @@ const UploadPage: React.FC = () => {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2, duration: 0.5 }}
         >
-          Upload your media files here
+          You can upload images, videos, and more here.
         </motion.div>
 
         <div

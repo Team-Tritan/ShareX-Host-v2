@@ -145,7 +145,7 @@ const Dashboard: React.FC = () => {
         </motion.div>
 
         <p className="text-gray-400 text-md mb-2 font-semibold">Your Stats:</p>
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 mb-12">
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 mb-8">
           <div className="p-4 bg-purple-500 rounded-lg shadow-lg">
             <h3 className="text-lg font-semibold text-white">
               Total Storage Used

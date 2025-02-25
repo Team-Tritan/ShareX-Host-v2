@@ -114,6 +114,7 @@ const LoginPage: React.FC = () => {
           transition={{ delay: 0.2, duration: 0.5 }}
         >
           <h1 className="text-3xl font-bold text-white">Tritan Uploader</h1>
+          <p className="mt-4 text-gray-400">A free ShareX host where you can put screenshots, images, gifs, and more.</p>
         </motion.div>
 
         <motion.div
@@ -161,7 +162,7 @@ const LoginPage: React.FC = () => {
           transition={{ delay: 0.8, duration: 0.5 }}
         >
           <button onClick={handleCreateKey} className="text-sm text-purple-500">
-            Create an API Key
+            Create an account
           </button>
         </motion.div>
       </motion.div>
