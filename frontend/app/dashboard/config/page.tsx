@@ -20,6 +20,8 @@ const domains = [
   "https://fakyuu.tritan.gg",
   "https://big.cockz.me",
   "https://cdn.cockz.me",
+  "https://pics.cock-measuring-contest.com",
+  "https://pajeet.indiainternet.cam"
 ];
 
 const Config: React.FC = () => {

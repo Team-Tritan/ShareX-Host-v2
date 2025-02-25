@@ -5,7 +5,7 @@ import Unauthenticated from "@/components/unauth";
 import { Sidebar } from "@/components/sidebar";
 import { useTokenStore } from "@/stores/session.store";
 import { useUploadsStore } from "@/stores/uploads.store";
-import { AlertCircle, Eye, InfoIcon, Trash2 } from "lucide-react";
+import { AlertCircle, CopyIcon, Eye, Trash2 } from "lucide-react";
 import Link from "next/link";
 import type React from "react";
 import { useEffect, useState } from "react";
@@ -233,6 +233,14 @@ const Dashboard: React.FC = () => {
                   />
 
                   <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+
+                    <button className="flex items-center rounded bg-purple-500 px-3 py-2 text-sm font-semibold text-white hover:bg-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-800 mr-2 transition-colors duration-300">
+                      <CopyIcon className="h-4 w-4" onClick={() => {
+                        navigator.clipboard.writeText(`https://tritan.gg/i/${image.FileName.split(".").slice(0, -1).join(".")}`)
+                        toast.info("Copied URL to clipboard!", { autoClose: 2000 })
+                      }} />
+                    </button>
+
                     <Link
                       href={`/i/${image.FileName.split(".")
                         .slice(0, -1)
@@ -242,6 +250,7 @@ const Dashboard: React.FC = () => {
                         <Eye className="h-4 w-4" />
                       </button>
                     </Link>
+
                     <button
                       className="flex items-center rounded bg-pink-500 px-3 py-2 text-sm font-semibold text-white hover:bg-pink-600 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-colors duration-300"
                       onClick={() =>

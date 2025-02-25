@@ -7,6 +7,7 @@ import { useUrlsStore } from "@/stores/urls.store";
 import {
   AlertCircle,
   ChevronRight,
+  CopyIcon,
   Edit3,
   Eye,
   InfoIcon,
@@ -143,9 +144,8 @@ const Urls: React.FC = () => {
     <div className="flex h-screen bg-[#0d0c0e] text-gray-100">
       <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
       <main
-        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${
-          sidebarOpen ? "ml-64" : "ml-0"
-        }`}
+        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"
+          }`}
       >
         <ToastContainer
           position="top-right"
@@ -233,15 +233,21 @@ const Urls: React.FC = () => {
                     <p className="text-sm text-gray-400 mt-1">
                       <span className="text-pink-400">{url.Clicks}</span> Clicks
                     </p>
-                    <div className="absolute top-2 right-2 text-white opacity-75 group-hover:opacity-100 transition-opacity duration-300">
-                      <InfoIcon className="h-6 w-6 text-purple-400" />
-                    </div>
+
                     <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                       <Link href={`/u/${url.Slug}`}>
                         <button className="flex items-center rounded bg-purple-500 px-3 py-2 text-sm font-semibold text-white hover:bg-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-800 mr-2 transition-colors duration-300">
                           <Eye className="h-4 w-4" />
                         </button>
                       </Link>
+
+                      <button className="flex items-center rounded bg-purple-500 px-3 py-2 text-sm font-semibold text-white hover:bg-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-800 mr-2 transition-colors duration-300">
+                        <CopyIcon className="h-4 w-4" onClick={() => {
+                          navigator.clipboard.writeText(`https://i.tritan.gg/u/${url.Slug}`)
+                          toast.info("Copied URL to clipboard!", { autoClose: 2000 })
+                        }} />
+                      </button>
+
                       <button
                         className="flex items-center rounded bg-pink-500 px-3 py-2 text-sm font-semibold text-white hover:bg-pink-600 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2 focus:ring-offset-gray-800 mr-2 transition-colors duration-300"
                         onClick={() => handleEdit(url.Key, url.Slug)}

@@ -86,9 +86,8 @@ const AccountSettings: React.FC = () => {
         toggleSidebar={() => setSidebarOpen(!sidebarOpen)}
       />
       <main
-        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${
-          sidebarOpen ? "ml-64" : "ml-0"
-        }`}
+        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"
+          }`}
       >
         <ToastContainer
           position="top-right"
@@ -154,7 +153,7 @@ const AccountSettings: React.FC = () => {
                 type="password"
                 readOnly
                 value={apiToken}
-                className="flex-1 px-4 py-2 bg-[#171619] border border-zinc-800 rounded-lg text-white"
+                className="w-full px-4 py-2 bg-[#171619] border border-zinc-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-white"
               />
               <button
                 onClick={copyToClipboard}
