@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
+import Prompter from "@/components/Popup";
 import { useTokenStore } from "@/stores/session.store";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useCallback } from "react";
-import { toast } from 'react-hot-toast';
+import { toast } from "react-hot-toast";
 
 interface AccountResponse {
   DisplayName: string;
@@ -21,6 +22,7 @@ const LoginPage: React.FC = () => {
   const setDomain = useTokenStore((state) => state.setDomain);
   const setDisplayName = useTokenStore((state) => state.setDisplayName);
   const [apiKey, setApiKey] = useState<string>(apiToken);
+  const [isPrompterOpen, setIsPrompterOpen] = useState<boolean>(false);
 
   useEffect(() => {
     setApiKey(apiToken);
@@ -55,34 +57,46 @@ const LoginPage: React.FC = () => {
   }, [apiKey, router, setDisplayName, setDomain, setToken]);
 
   const handleCreateKey = useCallback(async () => {
-    const displayName = prompt("Please enter a display name:");
-    if (!displayName) {
-      toast.error("Display name is required.");
-      return;
-    }
+    setIsPrompterOpen(true);
+  }, []);
 
-    try {
-      const response = await fetch("/api/account", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ display_name: displayName }),
-      });
-
-      if (!response.ok) {
-        toast.error("Failed to create API key.");
-        return;
+  const handlePrompterConfirm = useCallback(
+    async (displayName: string) => {
+      setIsPrompterOpen(false);
+      if (!displayName) {
+        return toast.error("Display name is required.");
       }
 
-      const data: AccountResponse = await response.json();
-      setToken(data.key!);
-      setDisplayName(displayName);
-      toast.success(`Your API key is ${data.key}. Please save it somewhere safe.`);
-    } catch (error: any) {
-      toast.error(error.message);
-    }
-  }, [setDisplayName, setToken]);
+      try {
+        const response = await fetch("/api/account", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ display_name: displayName }),
+        });
+
+        if (!response.ok) {
+          toast.error("Failed to create API key.");
+          return;
+        }
+
+        const data: AccountResponse = await response.json();
+        setToken(data.key!);
+        setDisplayName(displayName);
+        toast.success(
+          `Your API key is ${data.key}. Please save it somewhere safe.`
+        );
+      } catch (error: any) {
+        toast.error(error.message);
+      }
+    },
+    [setDisplayName, setToken]
+  );
+
+  const handlePrompterCancel = () => {
+    setIsPrompterOpen(false);
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#0d0c0e]">
@@ -150,6 +164,15 @@ const LoginPage: React.FC = () => {
           </button>
         </motion.div>
       </motion.div>
+      
+      {isPrompterOpen && (
+        <Prompter
+          title="Enter Display Name"
+          message="Please enter a display name for your account."
+          onConfirm={handlePrompterConfirm}
+          onCancel={handlePrompterCancel}
+        />
+      )}
     </div>
   );
 };
