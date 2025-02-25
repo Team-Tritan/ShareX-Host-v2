@@ -3,9 +3,9 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Copy, RefreshCw, Trash2 } from "lucide-react";
-import Unauthenticated from "@/components/unauth";
+import Unauthenticated from "@/components/Unauth";
 import { useTokenStore } from "@/stores/session.store";
-import { Sidebar } from "@/components/sidebar";
+import { Sidebar } from "@/components/Sidebar";
 import { useRouter } from "next/navigation";
 import { toast } from 'react-hot-toast';
 

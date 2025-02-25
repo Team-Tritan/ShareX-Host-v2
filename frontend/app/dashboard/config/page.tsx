@@ -1,8 +1,8 @@
 /* eslint-disable jsx-a11y/alt-text */
 "use client";
 
-import Unauthenticated from "@/components/unauth";
-import { Sidebar } from "@/components/sidebar";
+import Unauthenticated from "@/components/Unauth";
+import { Sidebar } from "@/components/Sidebar";
 import { useTokenStore } from "@/stores/session.store";
 import { motion } from "framer-motion";
 import { Download, Image, Link, PencilIcon } from "lucide-react";

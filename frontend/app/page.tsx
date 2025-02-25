@@ -5,7 +5,7 @@ import { useTokenStore } from "@/stores/session.store";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { toast } from 'react-hot-toast';
 
 interface AccountResponse {
@@ -26,7 +26,7 @@ const LoginPage: React.FC = () => {
     setApiKey(apiToken);
   }, [apiToken]);
 
-  const handleLogin = async () => {
+  const handleLogin = useCallback(async () => {
     try {
       const response = await fetch("/api/account", {
         headers: {
@@ -35,7 +35,11 @@ const LoginPage: React.FC = () => {
         method: "GET",
       });
 
-      if (!response.ok) throw new Error("You've entered an invalid API key.");
+      if (!response.ok) {
+        toast.error("You've entered an invalid API key.");
+        setApiKey("");
+        return;
+      }
 
       const data: AccountResponse = await response.json();
 
@@ -45,14 +49,17 @@ const LoginPage: React.FC = () => {
 
       router.push("/dashboard");
     } catch (error: any) {
-      toast.error(error.message)
+      toast.error(error.message);
       setApiKey("");
     }
-  };
+  }, [apiKey, router, setDisplayName, setDomain, setToken]);
 
-  const handleCreateKey = async () => {
+  const handleCreateKey = useCallback(async () => {
     const displayName = prompt("Please enter a display name:");
-    if (!displayName) return alert("Display name is required.");
+    if (!displayName) {
+      toast.error("Display name is required.");
+      return;
+    }
 
     try {
       const response = await fetch("/api/account", {
@@ -63,20 +70,22 @@ const LoginPage: React.FC = () => {
         body: JSON.stringify({ display_name: displayName }),
       });
 
-      if (!response.ok) throw new Error("Failed to create API key");
+      if (!response.ok) {
+        toast.error("Failed to create API key.");
+        return;
+      }
 
       const data: AccountResponse = await response.json();
       setToken(data.key!);
       setDisplayName(displayName);
-      alert(`Your API key is ${data.key}. Please save it somewhere safe.`);
+      toast.success(`Your API key is ${data.key}. Please save it somewhere safe.`);
     } catch (error: any) {
-      alert(error.message);
+      toast.error(error.message);
     }
-  };
+  }, [setDisplayName, setToken]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#0d0c0e]">
-
       <motion.div
         className="max-w-md w-full space-y-8 p-8 bg-[#121114] rounded-xl shadow-md"
         initial={{ opacity: 0, y: 50 }}

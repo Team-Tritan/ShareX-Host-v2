@@ -1,4 +1,4 @@
-import { Image, LinkIcon, Menu, Settings, Upload, User2Icon } from "lucide-react";
+import { Image, LinkIcon, LogOutIcon, Menu, Settings, Upload, User2Icon } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 
@@ -27,14 +27,15 @@ export function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
         <Menu className="h-6 w-6" />
       </button>
       <aside
-        className={`fixed left-0 top-0 z-10 h-full w-45 bg-gradient-to-b from-[#1c1b1e] to-[#171619] shadow-lg transition-transform duration-300 ease-in-out ${isOpen ? "translate-x-0" : "-translate-x-full"
+        className={`fixed left-0 top-0 z-10 h-full w-64 bg-[#171619] shadow-lg transition-transform duration-300 ease-in-out ${isOpen ? "translate-x-0" : "-translate-x-full"
           }`}
       >
         <div className="flex h-full flex-col">
-          <div className="flex items-center justify-between p-4">
-            <h2 className="text-xl font-semibold text-white ml-6 mt-3">
-              Tritan Uploader
-            </h2>
+          <div className="flex items-center justify-center p-6">
+            <Link href="/dashboard" className="flex items-center space-x-2">
+              <h1 className="text-2xl font-bold text-white">Tritan Uploader</h1>
+            </Link
+            >
           </div>
           <nav className="flex-1 space-y-2 p-4">
             {menuItems.map((item) => {
@@ -44,23 +45,30 @@ export function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
                   key={item.label}
                   href={item.href}
                   className={`flex items-center rounded-md px-4 py-2 ${active
-                    ? "bg-purple-500 text-white"
-                    : "text-gray-300 hover:bg-purple-500 hover:text-white"
+                    ? "bg-purple-600 text-white"
+                    : "text-gray-400 hover:bg-purple-700 hover:text-white"
                     }`}
                 >
-                  <item.icon className="mr-3 h-6 w-6" />
+                  <item.icon className="mr-3 h-5 w-5" />
                   {item.label}
                 </Link>
               );
             })}
           </nav>
 
-          <button
-            onClick={() => router.push("/")}
-            className="mx-auto mb-2 flex w-full max-w-xs items-center justify-center rounded-md px-4 py-2 text-gray-300 hover:text-white"
-          >
-            Logout
-          </button>
+          <div className="border-t border-gray-700 p-4">
+            <Link href="/dashboard/account" className="flex items-center text-gray-400 hover:text-white mb-4">
+              <User2Icon className="mr-3 h-5 w-5" />
+              My Account
+            </Link>
+            <button
+              onClick={() => router.push("/")}
+              className="flex w-full items-center justify-start rounded-md text-gray-400 hover:text-white"
+            >
+              <LogOutIcon className="mr-3 h-5 w-5" />
+              Logout
+            </button>
+          </div>
         </div>
       </aside>
     </>

@@ -1,10 +1,11 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import Unauthenticated from "@/components/unauth";
-import { Sidebar } from "@/components/sidebar";
+import Unauthenticated from "@/components/Unauth";
+import { Sidebar } from "@/components/Sidebar";
 import { useTokenStore } from "@/stores/session.store";
 import { useUploadsStore } from "@/stores/uploads.store";
+import { formatFileSize } from "@/lib/utils";
 import { AlertCircle, CopyIcon, Eye, Trash2 } from "lucide-react";
 import Link from "next/link";
 import type React from "react";
@@ -30,16 +31,6 @@ interface Upload {
 interface ApiResponse {
   uploads: Upload[];
 }
-
-const formatFileSize = (size: number): string => {
-  if (size >= 1e9) {
-    return (size / 1e9).toFixed(2) + " GB";
-  } else if (size >= 1e6) {
-    return (size / 1e6).toFixed(2) + " MB";
-  } else {
-    return (size / 1e3).toFixed(2) + " KB";
-  }
-};
 
 const fetchImages = async (
   apiToken: string,

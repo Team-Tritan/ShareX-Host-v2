@@ -1,7 +1,7 @@
 "use client";
 
-import Unauthenticated from "@/components/unauth";
-import { Sidebar } from "@/components/sidebar";
+import Unauthenticated from "@/components/Unauth";
+import { Sidebar } from "@/components/Sidebar";
 import { useTokenStore } from "@/stores/session.store";
 import { FileUp, Upload } from "lucide-react";
 import React, { useState, useRef, DragEvent } from "react";
@@ -16,9 +16,9 @@ const UploadPage: React.FC = () => {
 
   const handleDrop = async (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
-    if (e.dataTransfer.files.length > 0) 
+    if (e.dataTransfer.files.length > 0)
       await uploadFile(e.dataTransfer.files[0]);
-    
+
   };
 
   const handleClick = () => {
@@ -27,10 +27,10 @@ const UploadPage: React.FC = () => {
     fileInput.style.display = "none";
 
     fileInput.onchange = async () => {
-      if (fileInput.files && fileInput.files.length > 0) 
+      if (fileInput.files && fileInput.files.length > 0)
         await uploadFile(fileInput.files[0]);
     };
-    
+
     fileInput.click();
   };
 
@@ -65,9 +65,8 @@ const UploadPage: React.FC = () => {
     <div className="flex h-screen bg-[#0d0c0e] text-gray-100">
       <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
       <main
-        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${
-          sidebarOpen ? "ml-64" : "ml-0"
-        }`}
+        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"
+          }`}
       >
         <h1 className="mb-2 text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-600 text-transparent bg-clip-text">
           Upload Files

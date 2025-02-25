@@ -1,7 +1,7 @@
 "use client";
 
-import Unauthenticated from "@/components/unauth";
-import { Sidebar } from "@/components/sidebar";
+import Unauthenticated from "@/components/Unauth";
+import { Sidebar } from "@/components/Sidebar";
 import { useTokenStore } from "@/stores/session.store";
 import { useUrlsStore } from "@/stores/urls.store";
 import {
