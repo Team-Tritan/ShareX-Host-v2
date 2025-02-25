@@ -5,7 +5,7 @@ import { Sidebar } from "@/components/Sidebar";
 import { useTokenStore } from "@/stores/session.store";
 import { FileUp, Upload } from "lucide-react";
 import React, { useState, useRef, DragEvent } from "react";
-import { toast } from 'react-hot-toast';
+import { toast } from "react-hot-toast";
 
 const UploadPage: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
@@ -18,7 +18,6 @@ const UploadPage: React.FC = () => {
     e.preventDefault();
     if (e.dataTransfer.files.length > 0)
       await uploadFile(e.dataTransfer.files[0]);
-
   };
 
   const handleClick = () => {
@@ -65,8 +64,9 @@ const UploadPage: React.FC = () => {
     <div className="flex h-screen bg-[#0d0c0e] text-gray-100">
       <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
       <main
-        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"
-          }`}
+        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${
+          sidebarOpen ? "ml-64" : "ml-0"
+        }`}
       >
         <h1 className="mb-2 text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-600 text-transparent bg-clip-text">
           Upload Files

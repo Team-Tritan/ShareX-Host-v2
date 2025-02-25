@@ -14,8 +14,8 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { toast } from 'react-hot-toast';
-
+import { toast } from "react-hot-toast";
+import Prompter from "@/components/Popup";
 
 interface Url {
   Key: string;
@@ -31,63 +31,97 @@ interface ApiResponse {
   urls: Url[];
 }
 
+const fetchUrls = async (
+  apiToken: string,
+  setUrls: (urls: Url[]) => void,
+  setLoading: (loading: boolean) => void
+): Promise<void> => {
+  try {
+    const response = await fetch("/api/urls", {
+      headers: {
+        key: apiToken,
+      },
+      method: "GET",
+    });
+
+    const data: ApiResponse = await response.json();
+    setUrls(data.urls || []);
+  } catch (error) {
+    console.error("Error fetching URLs:", error);
+    toast.error("Failed to fetch URLs");
+  } finally {
+    setLoading(false);
+  }
+};
+
+const handleDelete = async (
+  apiToken: string,
+  slug: string,
+  removeUrl: (slug: string) => void
+): Promise<void> => {
+  try {
+    const response = await fetch(`/api/delete-url/${slug}`, {
+      headers: {
+        key: apiToken,
+      },
+      method: "DELETE",
+    });
+
+    if (response.ok) {
+      removeUrl(slug);
+      toast.success("URL deleted successfully!");
+    } else {
+      const errorData = await response.json();
+      console.error("Failed to delete URL", errorData);
+      toast.error(
+        "Failed to delete URL: " + (errorData.message || "Unknown error")
+      );
+    }
+  } catch (error) {
+    console.error("Error deleting URL:", error);
+    toast.error("Error deleting URL");
+  }
+};
+
 const Urls: React.FC = () => {
   const { urls, setUrls, removeUrl, updateUrl, setLoading, loading } =
     useUrlsStore();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const userStore = useTokenStore();
+  const [editUrl, setEditUrl] = useState<Url | null>(null);
+  const [createUrlOpen, setCreateUrlOpen] = useState<boolean>(false);
 
   if (!userStore.apiToken) return <Unauthenticated />;
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
-    const fetchUrls = async () => {
-      setLoading(true);
-      try {
-        const response = await fetch("/api/urls", {
-          headers: { key: userStore.apiToken },
-          method: "GET",
-        });
-
-        const data: ApiResponse = await response.json();
-        setUrls(data.urls || []);
-      } catch (error) {
-        console.error("Error fetching URLs:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUrls();
-    const intervalId = setInterval(fetchUrls, 10000);
+    fetchUrls(userStore.apiToken, setUrls, setLoading);
+    const intervalId = setInterval(
+      () => fetchUrls(userStore.apiToken, setUrls, setLoading),
+      10000
+    );
     return () => clearInterval(intervalId);
   }, [userStore.apiToken, setUrls, setLoading]);
 
-  const handleDelete = async (slug: string) => {
-    try {
-      const response = await fetch(`/api/delete-url/${slug}`, {
-        headers: { key: userStore.apiToken },
-        method: "DELETE",
-      });
-
-      if (response.ok) {
-        removeUrl(slug);
-        toast.success("URL deleted successfully!");
-      } else {
-        toast.error("Failed to delete URL");
-      }
-    } catch (error) {
-      console.error("Error deleting URL:", error);
-      toast.error("Error deleting URL");
-    }
+  const handleEdit = async (Key: string, currentSlug: string) => {
+    setEditUrl({
+      Key: Key,
+      URL: "",
+      CreatedAt: "",
+      IP: "",
+      Slug: currentSlug,
+      Clicks: 0,
+    });
   };
 
-  const handleEdit = async (Key: string, currentSlug: string) => {
-    const newSlug = prompt("Enter new slug:", currentSlug);
-    if (!newSlug || newSlug === currentSlug) return;
+  const handleUpdateSlug = async (newSlug: string) => {
+    if (!editUrl || newSlug === editUrl.Slug) {
+      setEditUrl(null);
+      return;
+    }
 
     try {
-      const response = await fetch(`/api/url/${currentSlug}`, {
+      const response = await fetch(`/api/url/${editUrl.Slug}`, {
         headers: {
           key: userStore.apiToken,
           "Content-Type": "application/json",
@@ -97,7 +131,7 @@ const Urls: React.FC = () => {
       });
 
       if (response.status === 200) {
-        updateUrl(Key, newSlug);
+        updateUrl(editUrl.Key, newSlug);
         toast.success("Slug updated successfully!");
       } else if (response.status === 409) {
         toast.error("Slug is already taken. Please enter a new slug.");
@@ -106,11 +140,17 @@ const Urls: React.FC = () => {
       }
     } catch {
       toast.error("Error updating slug.");
+    } finally {
+      setEditUrl(null);
     }
   };
 
   const handleCreateUrl = async () => {
-    const newUrl = prompt("Enter the URL to shorten:");
+    setCreateUrlOpen(true);
+  };
+
+  const handleShortenUrl = async (newUrl: string) => {
+    setCreateUrlOpen(false);
     if (!newUrl) return toast.error("URL cannot be empty.");
 
     if (!newUrl.startsWith("http://") && !newUrl.startsWith("https://"))
@@ -143,8 +183,9 @@ const Urls: React.FC = () => {
     <div className="flex h-screen bg-[#0d0c0e] text-gray-100">
       <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
       <main
-        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"
-          }`}
+        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${
+          sidebarOpen ? "ml-64" : "ml-0"
+        }`}
       >
         <h1 className="mb-2 text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-600 text-transparent bg-clip-text">
           Welcome, {userStore.displayName}!
@@ -201,7 +242,7 @@ const Urls: React.FC = () => {
             ) : (
               urls.map((url) => (
                 <div
-                  key={url.Key}
+                  key={url.Slug}
                   className="relative overflow-hidden rounded-lg bg-[#121114] group shadow-2xl shadow-indigo-500/20 transition-all duration-300 hover:shadow-indigo-500/40 hover:scale-105"
                 >
                   <div className="p-4">
@@ -229,10 +270,15 @@ const Urls: React.FC = () => {
                       </Link>
 
                       <button className="flex items-center rounded bg-purple-500 px-3 py-2 text-sm font-semibold text-white hover:bg-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-800 mr-2 transition-colors duration-300">
-                        <CopyIcon className="h-4 w-4" onClick={() => {
-                          navigator.clipboard.writeText(`${userStore.domain}/u/${url.Slug}`)
-                          toast.success("Copied URL to clipboard!")
-                        }} />
+                        <CopyIcon
+                          className="h-4 w-4"
+                          onClick={() => {
+                            navigator.clipboard.writeText(
+                              `${userStore.domain}/u/${url.Slug}`
+                            );
+                            toast.success("Copied URL to clipboard!");
+                          }}
+                        />
                       </button>
 
                       <button
@@ -243,7 +289,9 @@ const Urls: React.FC = () => {
                       </button>
                       <button
                         className="flex items-center rounded bg-pink-500 px-3 py-2 text-sm font-semibold text-white hover:bg-pink-600 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-colors duration-300"
-                        onClick={() => handleDelete(url.Slug)}
+                        onClick={() =>
+                          handleDelete(userStore.apiToken, url.Slug, removeUrl)
+                        }
                       >
                         <Trash2 className="h-4 w-4" />
                       </button>
@@ -255,6 +303,22 @@ const Urls: React.FC = () => {
           </div>
         )}
       </main>
+      {editUrl && (
+        <Prompter
+          title="Edit Slug"
+          message="Enter new slug:"
+          onConfirm={handleUpdateSlug}
+          onCancel={() => setEditUrl(null)}
+        />
+      )}
+      {createUrlOpen && (
+        <Prompter
+          title="Shorten URL"
+          message="Enter the URL to shorten:"
+          onConfirm={handleShortenUrl}
+          onCancel={() => setCreateUrlOpen(false)}
+        />
+      )}
     </div>
   );
 };

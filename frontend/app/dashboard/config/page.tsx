@@ -7,7 +7,7 @@ import { useTokenStore } from "@/stores/session.store";
 import { motion } from "framer-motion";
 import { Download, Image, Link, PencilIcon } from "lucide-react";
 import * as React from "react";
-import { toast } from 'react-hot-toast';
+import { toast } from "react-hot-toast";
 
 type ConfigType = "upload" | "url" | "text";
 
@@ -39,8 +39,8 @@ const Config: React.FC = () => {
         type === "upload"
           ? "sharex-img-config.sxcu"
           : type === "url"
-            ? "sharex-shortener-config.sxcu"
-            : "sharex-text-config.sxcu";
+          ? "sharex-shortener-config.sxcu"
+          : "sharex-text-config.sxcu";
 
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
@@ -65,10 +65,10 @@ const Config: React.FC = () => {
     <div className="flex h-screen bg-[#0d0c0e] text-gray-100">
       <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
       <main
-        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"
-          }`}
+        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${
+          sidebarOpen ? "ml-64" : "ml-0"
+        }`}
       >
-
         <motion.h1
           className="mb-2 text-4xl font-bold bg-gradient-to-r from-violet-400 to-fuchsia-400 text-transparent bg-clip-text"
           initial={{ opacity: 0, y: 50 }}
@@ -165,7 +165,5 @@ const ConfigCard: React.FC<ConfigCardProps> = ({
     </div>
   </motion.div>
 );
-
-
 
 export default Config;

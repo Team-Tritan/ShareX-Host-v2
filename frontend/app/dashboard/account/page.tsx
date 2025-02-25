@@ -7,7 +7,7 @@ import Unauthenticated from "@/components/Unauth";
 import { useTokenStore } from "@/stores/session.store";
 import { Sidebar } from "@/components/Sidebar";
 import { useRouter } from "next/navigation";
-import { toast } from 'react-hot-toast';
+import { toast } from "react-hot-toast";
 
 const domains = [
   "https://i.tritan.gg",
@@ -18,18 +18,19 @@ const domains = [
   "https://big.cockz.me",
   "https://cdn.cockz.me",
   "https://pics.cock-measuring-contest.com",
-  "https://pajeet.indiainternet.cam"
+  "https://pajeet.indiainternet.cam",
 ];
 
 const AccountSettings: React.FC = () => {
-  const { apiToken, displayName, setToken, setDisplayName, domain, setDomain } = useTokenStore();
+  const { apiToken, displayName, setToken, setDisplayName, domain, setDomain } =
+    useTokenStore();
   const [sidebarOpen, setSidebarOpen] = React.useState(true);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = React.useState(false);
   const [loadingStates, setLoadingStates] = React.useState({
     displayName: false,
     apiToken: false,
     domain: false,
-    deleteAccount: false
+    deleteAccount: false,
   });
   const router = useRouter();
 
@@ -53,7 +54,7 @@ const AccountSettings: React.FC = () => {
   };
 
   const handleDisplayNameChange = async () => {
-    setLoadingStates(prev => ({ ...prev, displayName: true }));
+    setLoadingStates((prev) => ({ ...prev, displayName: true }));
     const response = await handleApiRequest("/api/account/name", "PUT", {
       display_name: displayName,
     });
@@ -62,11 +63,11 @@ const AccountSettings: React.FC = () => {
       ? toast.success("Display name updated successfully")
       : toast.error("Failed to update display name");
 
-    setLoadingStates(prev => ({ ...prev, displayName: false }));
+    setLoadingStates((prev) => ({ ...prev, displayName: false }));
   };
 
   const handleRegenerateToken = async () => {
-    setLoadingStates(prev => ({ ...prev, apiToken: true }));
+    setLoadingStates((prev) => ({ ...prev, apiToken: true }));
     const response = await handleApiRequest("/api/account/token", "PUT");
     if (response?.ok) {
       const data = await response.json();
@@ -74,12 +75,12 @@ const AccountSettings: React.FC = () => {
       toast.success("Token regenerated successfully.");
     } else {
       toast.error("Failed to regenerate token");
-    };
-    setLoadingStates(prev => ({ ...prev, apiToken: false }));
+    }
+    setLoadingStates((prev) => ({ ...prev, apiToken: false }));
   };
 
   const handleDeleteAccount = async () => {
-    setLoadingStates(prev => ({ ...prev, deleteAccount: true }));
+    setLoadingStates((prev) => ({ ...prev, deleteAccount: true }));
     const response = await handleApiRequest("/api/account/delete", "PUT");
     if (response?.ok) {
       toast.success("Account deleted successfully.");
@@ -88,18 +89,21 @@ const AccountSettings: React.FC = () => {
     } else {
       toast.error("Failed to delete account");
     }
-    setLoadingStates(prev => ({ ...prev, deleteAccount: false }));
+    setLoadingStates((prev) => ({ ...prev, deleteAccount: false }));
   };
 
   const handleDomainChange = async () => {
-    setLoadingStates(prev => ({ ...prev, domain: true }));
-    const response = await handleApiRequest(`/api/account/domain?value=${domain}`, "PUT");
+    setLoadingStates((prev) => ({ ...prev, domain: true }));
+    const response = await handleApiRequest(
+      `/api/account/domain?value=${domain}`,
+      "PUT"
+    );
     if (response?.ok) {
       toast.success("Domain chnaged successfully.");
     } else {
       toast.error("Failed to change domain.");
     }
-    setLoadingStates(prev => ({ ...prev, domain: false }));
+    setLoadingStates((prev) => ({ ...prev, domain: false }));
   };
 
   const copyToClipboard = () => {
@@ -114,8 +118,9 @@ const AccountSettings: React.FC = () => {
         toggleSidebar={() => setSidebarOpen(!sidebarOpen)}
       />
       <main
-        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"
-          }`}
+        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${
+          sidebarOpen ? "ml-64" : "ml-0"
+        }`}
       >
         <motion.h1
           className="mb-2 text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-600 text-transparent bg-clip-text"
@@ -181,7 +186,6 @@ const AccountSettings: React.FC = () => {
                   </option>
                 ))}
               </select>
-
 
               <button
                 onClick={handleDomainChange}
