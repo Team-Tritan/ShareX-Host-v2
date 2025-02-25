@@ -213,7 +213,7 @@ func LoadUploadsFromDB(key string) ([]UploadEntry, error) {
 	defer cancel()
 
 	filter := bson.M{"api_key": key}
-	opts := options.Find().SetSort(bson.D{{Key: "_id", Value: -1}}).SetProjection(bson.M{"ip": 0})
+	opts := options.Find().SetSort(bson.D{{Key: "_id", Value: -1}}).SetProjection(bson.M{"ip": 0}).SetProjection(bson.M{"api_key": 0})
 
 	err := findMany(ctx, "uploads", filter, opts, &logs)
 	if err != nil {
@@ -278,7 +278,7 @@ func LoadURLsFromDBByKey(key string) ([]URL, error) {
 	defer cancel()
 
 	filter := bson.M{"api_key": key}
-	opts := options.Find().SetSort(bson.D{{Key: "_id", Value: -1}}).SetProjection(bson.M{"ip": 0})
+	opts := options.Find().SetSort(bson.D{{Key: "_id", Value: -1}}).SetProjection(bson.M{"ip": 0}).SetProjection(bson.M{"api_key": 0})
 
 	err := findMany(ctx, "urls", filter, opts, &urls)
 	if err != nil {
