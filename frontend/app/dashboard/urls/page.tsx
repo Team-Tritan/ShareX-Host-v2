@@ -10,7 +10,6 @@ import {
   CopyIcon,
   Edit3,
   Eye,
-  InfoIcon,
   Trash2,
 } from "lucide-react";
 import Link from "next/link";
