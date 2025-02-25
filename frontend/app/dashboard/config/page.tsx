@@ -8,33 +8,19 @@ import { motion } from "framer-motion";
 import { Download, Image, Link, PencilIcon } from "lucide-react";
 import * as React from "react";
 import { toast } from 'react-hot-toast';
-import { Input } from "@/components/select";
 
 type ConfigType = "upload" | "url" | "text";
-
-const domains = [
-  "https://i.tritan.gg",
-  "https://i.cockz.me",
-  "https://footjobs.today",
-  "https://giving.footjobs.today",
-  "https://fakyuu.tritan.gg",
-  "https://big.cockz.me",
-  "https://cdn.cockz.me",
-  "https://pics.cock-measuring-contest.com",
-  "https://pajeet.indiainternet.cam"
-];
 
 const Config: React.FC = () => {
   const userStore = useTokenStore();
   const [sidebarOpen, setSidebarOpen] = React.useState(true);
-  const [selectedDomain, setSelectedDomain] = React.useState<string>("");
 
   if (!userStore.apiToken) return <Unauthenticated />;
 
   const generateConfig = async (type: ConfigType) => {
     try {
       const response = await fetch(
-        `/api/config?type=${type}&domain=${selectedDomain}`,
+        `/api/config?type=${type}&domain=${userStore.domain}`,
         {
           headers: {
             key: userStore.apiToken,
@@ -110,29 +96,26 @@ const Config: React.FC = () => {
             title="Images/Files"
             icon={<Image className="w-6 h-6 text-violet-400" />}
             domainId="domain-upload"
-            selectedDomain={selectedDomain}
-            setSelectedDomain={setSelectedDomain}
             generateConfig={() => generateConfig("upload")}
             buttonColor="bg-violet-500 hover:bg-violet-600"
+            desc="Upload images, videos, and files through ShareX."
           />
           <ConfigCard
             title="URL Shortener"
             icon={<Link className="w-6 h-6 text-fuchsia-400" />}
             domainId="domain-url"
-            selectedDomain={selectedDomain}
-            setSelectedDomain={setSelectedDomain}
             generateConfig={() => generateConfig("url")}
             buttonColor="bg-fuchsia-500 hover:bg-fuchsia-600"
+            desc="Shorten URLs through ShareX."
           />
 
           <ConfigCard
             title="Pastebin (Text Uploader)"
             icon={<PencilIcon className="w-6 h-6 text-indigo-400" />}
             domainId="domain-text"
-            selectedDomain={selectedDomain}
-            setSelectedDomain={setSelectedDomain}
             generateConfig={() => generateConfig("text")}
             buttonColor="bg-indigo-500 hover:bg-indigo-600"
+            desc="Upload text to our Pastebin service."
           />
         </motion.div>
       </main>
@@ -144,20 +127,17 @@ type ConfigCardProps = {
   title: string;
   icon: React.ReactNode;
   domainId: string;
-  selectedDomain: string;
-  setSelectedDomain: React.Dispatch<React.SetStateAction<string>>;
   generateConfig: () => void;
   buttonColor: string;
+  desc?: string;
 };
 
 const ConfigCard: React.FC<ConfigCardProps> = ({
   title,
   icon,
-  domainId,
-  selectedDomain,
-  setSelectedDomain,
   generateConfig,
   buttonColor,
+  desc,
 }) => (
   <motion.div
     className="rounded-xl w-full max-w-sm bg-gradient-to-b from-violet-500/10 to-violet-500/5 border border-violet-500/10 backdrop-blur-sm"
@@ -171,37 +151,9 @@ const ConfigCard: React.FC<ConfigCardProps> = ({
       </div>
 
       <h2 className="text-xl font-semibold text-white mb-4">{title}</h2>
+      {desc && <p className="text-gray-400 text-sm mb-4">{desc}</p>}
 
       <div className="space-y-4">
-        <div>
-          <label
-            htmlFor={domainId}
-            className="block text-sm font-medium text-zinc-400 mb-2"
-          >
-            Select Domain
-          </label>
-          {/* <select
-            id={domainId}
-            className="w-full rounded-lg bg-[#0d0c0e] border border-zinc-800 px-3 py-2 text-sm text-gray-200 focus:outline-none focus:ring-2 focus:ring-violet-500/50 transition-colors"
-            value={selectedDomain}
-            onChange={(e) => setSelectedDomain(e.target.value)}
-          >
-            <option value="">Default</option>
-            {domains.map((domain) => (
-              <option key={domain} value={domain}>
-                {domain}
-              </option>
-            ))}
-          </select> */}
-          <Input
-            id={domainId}
-            value={selectedDomain}
-            onChange={(e) => setSelectedDomain(e.target.value)}
-            choices={domains.map((domain) => `${domain}`)}
-            placeholder="Select Domain"
-          />
-        </div>
-
         <button
           onClick={generateConfig}
           className={`w-full inline-flex items-center justify-center rounded-lg ${buttonColor} text-white px-4 py-2.5 text-sm font-medium transition-colors`}

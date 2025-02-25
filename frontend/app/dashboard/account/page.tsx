@@ -9,13 +9,28 @@ import { Sidebar } from "@/components/sidebar";
 import { useRouter } from "next/navigation";
 import { toast } from 'react-hot-toast';
 
+const domains = [
+  "https://i.tritan.gg",
+  "https://i.cockz.me",
+  "https://footjobs.today",
+  "https://giving.footjobs.today",
+  "https://fakyuu.tritan.gg",
+  "https://big.cockz.me",
+  "https://cdn.cockz.me",
+  "https://pics.cock-measuring-contest.com",
+  "https://pajeet.indiainternet.cam"
+];
+
 const AccountSettings: React.FC = () => {
-  const { apiToken, displayName, setToken, setDisplayName } = useTokenStore();
+  const { apiToken, displayName, setToken, setDisplayName, domain, setDomain } = useTokenStore();
   const [sidebarOpen, setSidebarOpen] = React.useState(true);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = React.useState(false);
-  const [isDisplayNameSaving, setIsDisplayNameSaving] = React.useState(false);
-  const [isDeleting, setIsDeleting] = React.useState(false);
-  const [isApiTokenSaving, setIsApiTokenSaving] = React.useState(false);
+  const [loadingStates, setLoadingStates] = React.useState({
+    displayName: false,
+    apiToken: false,
+    domain: false,
+    deleteAccount: false
+  });
   const router = useRouter();
 
   if (!apiToken) return <Unauthenticated />;
@@ -38,42 +53,53 @@ const AccountSettings: React.FC = () => {
   };
 
   const handleDisplayNameChange = async () => {
-    const response = await handleApiRequest("/api/account", "PUT", {
+    setLoadingStates(prev => ({ ...prev, displayName: true }));
+    const response = await handleApiRequest("/api/account/name", "PUT", {
       display_name: displayName,
     });
-    setIsDisplayNameSaving(true);
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     response?.ok
       ? toast.success("Display name updated successfully")
       : toast.error("Failed to update display name");
 
-    setIsDisplayNameSaving(false);
+    setLoadingStates(prev => ({ ...prev, displayName: false }));
   };
 
   const handleRegenerateToken = async () => {
-    setIsApiTokenSaving(true);
-    const response = await handleApiRequest("/api/account/regen", "PUT");
+    setLoadingStates(prev => ({ ...prev, apiToken: true }));
+    const response = await handleApiRequest("/api/account/token", "PUT");
     if (response?.ok) {
       const data = await response.json();
       setToken(data.key);
       toast.success("Token regenerated successfully.");
-      setIsApiTokenSaving(false);
     } else {
       toast.error("Failed to regenerate token");
     };
+    setLoadingStates(prev => ({ ...prev, apiToken: false }));
   };
 
   const handleDeleteAccount = async () => {
-    const response = await handleApiRequest("/api/account", "DELETE");
-    setIsDeleting(true);
+    setLoadingStates(prev => ({ ...prev, deleteAccount: true }));
+    const response = await handleApiRequest("/api/account/delete", "PUT");
     if (response?.ok) {
       toast.success("Account deleted successfully.");
       setIsDeleteModalOpen(false);
-      setIsDeleting(false);
       router.push("/");
     } else {
       toast.error("Failed to delete account");
     }
+    setLoadingStates(prev => ({ ...prev, deleteAccount: false }));
+  };
+
+  const handleDomainChange = async () => {
+    setLoadingStates(prev => ({ ...prev, domain: true }));
+    const response = await handleApiRequest(`/api/account/domain?value=${domain}`, "PUT");
+    if (response?.ok) {
+      toast.success("Domain chnaged successfully.");
+    } else {
+      toast.error("Failed to change domain.");
+    }
+    setLoadingStates(prev => ({ ...prev, domain: false }));
   };
 
   const copyToClipboard = () => {
@@ -127,12 +153,45 @@ const AccountSettings: React.FC = () => {
             />
             <button
               onClick={handleDisplayNameChange}
-              disabled={isDisplayNameSaving}
+              disabled={loadingStates.displayName}
               className="px-4 py-2 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 rounded-lg text-white font-medium hover:opacity-90 transition-opacity disabled:opacity-50"
             >
-              {isDisplayNameSaving ? "Saving..." : "Save Changes"}
+              {loadingStates.displayName ? "Saving..." : "Save Changes"}
             </button>
           </AccountSection>
+
+          <motion.div
+            className="space-y-8"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4, duration: 0.5 }}
+          >
+            <AccountSection
+              title="Domain"
+              description="This is the domain that your media will be uploaded to."
+            >
+              <select
+                value={domain}
+                onChange={(e) => setDomain(e.target.value)}
+                className="w-full px-4 py-2 bg-[#171619] border border-zinc-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-white"
+              >
+                {domains.map((domain) => (
+                  <option key={domain} value={domain}>
+                    {domain}
+                  </option>
+                ))}
+              </select>
+
+
+              <button
+                onClick={handleDomainChange}
+                disabled={loadingStates.domain}
+                className="px-4 py-2 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 rounded-lg text-white font-medium hover:opacity-90 transition-opacity disabled:opacity-50"
+              >
+                {loadingStates.domain ? "Saving..." : "Save Changes"}
+              </button>
+            </AccountSection>
+          </motion.div>
 
           <AccountSection
             title="API Token"
@@ -154,11 +213,11 @@ const AccountSettings: React.FC = () => {
             </div>
             <button
               onClick={handleRegenerateToken}
-              disabled={isApiTokenSaving}
+              disabled={loadingStates.apiToken}
               className="inline-flex items-center px-4 py-2 bg-[#171619] rounded-lg border border-zinc-800 text-white"
             >
               <RefreshCw className="w-5 h-5 mr-2" />
-              {isApiTokenSaving ? "Regenerating..." : "Regenerate Token"}
+              {loadingStates.apiToken ? "Regenerating..." : "Regenerate Token"}
             </button>
           </AccountSection>
 
@@ -182,7 +241,7 @@ const AccountSettings: React.FC = () => {
           <DeleteModal
             onCancel={() => setIsDeleteModalOpen(false)}
             onDelete={handleDeleteAccount}
-            isSaving={isDeleting}
+            isSaving={loadingStates.deleteAccount}
           />
         )}
       </main>

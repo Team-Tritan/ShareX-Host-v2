@@ -223,13 +223,13 @@ const Dashboard: React.FC = () => {
 
                     <button className="flex items-center rounded bg-purple-500 px-3 py-2 text-sm font-semibold text-white hover:bg-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-800 mr-2 transition-colors duration-300">
                       <CopyIcon className="h-4 w-4" onClick={() => {
-                        navigator.clipboard.writeText(`https://tritan.gg/i/${image.FileName.split(".").slice(0, -1).join(".")}`)
+                        navigator.clipboard.writeText(`${userStore.domain}/i/${image.FileName.split(".").slice(0, -1).join(".")}`)
                         toast.success("Copied URL to clipboard!")
                       }} />
                     </button>
 
                     <Link
-                      href={`/i/${image.FileName.split(".")
+                      href={`${userStore.domain}/i/${image.FileName.split(".")
                         .slice(0, -1)
                         .join(".")}`}
                     >

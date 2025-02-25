@@ -11,12 +11,14 @@ import { toast } from 'react-hot-toast';
 interface AccountResponse {
   DisplayName: string;
   key?: string;
+  Domain: string;
 }
 
 const LoginPage: React.FC = () => {
   const router = useRouter();
   const apiToken = useTokenStore((state) => state.apiToken);
   const setToken = useTokenStore((state) => state.setToken);
+  const setDomain = useTokenStore((state) => state.setDomain);
   const setDisplayName = useTokenStore((state) => state.setDisplayName);
   const [apiKey, setApiKey] = useState<string>(apiToken);
 
@@ -39,6 +41,7 @@ const LoginPage: React.FC = () => {
 
       setToken(apiKey);
       setDisplayName(data.DisplayName);
+      setDomain(data.Domain);
 
       router.push("/dashboard");
     } catch (error: any) {

@@ -6,6 +6,8 @@ interface TokenState {
   setToken: (token: string) => void;
   displayName: string;
   setDisplayName: (name: string) => void;
+  domain: string;
+  setDomain: (domain: string) => void;
 }
 
 const encodeBase64 = (str: string): string => btoa(str);
@@ -40,5 +42,10 @@ export const useTokenStore = create<TokenState>((set) => ({
   setDisplayName: (name: string) => {
     setCookie("display_name", name);
     set({ displayName: name });
+  },
+  domain: getCookie("domain"),
+  setDomain: (domain: string) => {
+    setCookie("domain", domain);
+    set({ domain });
   },
 }));

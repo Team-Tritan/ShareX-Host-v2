@@ -9,33 +9,49 @@ import (
 	"tritan.dev/image-uploader/functions"
 )
 
+const (
+	StatusUnauthorized        = fiber.StatusUnauthorized
+	StatusBadRequest          = fiber.StatusBadRequest
+	StatusInternalServerError = fiber.StatusInternalServerError
+	StatusNotFound            = fiber.StatusNotFound
+	StatusNoContent           = fiber.StatusNoContent
+
+	MessageAPIKeyRequired     = "API key is required"
+	MessageInvalidPayload     = "Invalid request payload"
+	MessageFailedUpdateName   = "Failed to update display name"
+	MessageFailedDelete       = "Failed to delete account"
+	MessageFailedCreateUser   = "Failed to create user."
+	MessageFailedRegenToken   = "Failed to regenerate token"
+	MessageFailedUpdateDomain = "Failed to update domain"
+	MessageInvalidRequestType = "Invalid request type"
+	MessageUserNotFound       = "User not found"
+	MessageUserCreated        = "User created successfully."
+)
+
+func errorResponse(c *fiber.Ctx, status int, message string) error {
+	return c.Status(status).JSON(fiber.Map{
+		"status":  status,
+		"message": message,
+	})
+}
+
 func GetAccountDataByKey(c *fiber.Ctx) error {
 	apiKey := c.Get("key")
 	if apiKey == "" {
-		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-			"status":  fiber.StatusUnauthorized,
-			"message": "API key is required",
-		})
+		return errorResponse(c, StatusUnauthorized, MessageAPIKeyRequired)
 	}
 
 	user, err := database.GetUserByKey(apiKey)
 	if err != nil {
-		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
-			"status":  fiber.StatusNotFound,
-			"message": "User not found",
-		})
+		return errorResponse(c, StatusNotFound, MessageUserNotFound)
 	}
 
 	return c.JSON(user)
 }
 
-func PutAccountDisplayNameByKey(c *fiber.Ctx) error {
-	apiKey := c.Get("key")
+func changeDisplayName(c *fiber.Ctx, apiKey string) error {
 	if apiKey == "" {
-		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-			"status":  fiber.StatusUnauthorized,
-			"message": "API key is required",
-		})
+		return errorResponse(c, StatusUnauthorized, MessageAPIKeyRequired)
 	}
 
 	var updateData struct {
@@ -43,41 +59,28 @@ func PutAccountDisplayNameByKey(c *fiber.Ctx) error {
 	}
 
 	if err := c.BodyParser(&updateData); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"status":  fiber.StatusBadRequest,
-			"message": "Invalid request payload",
-		})
+		return errorResponse(c, StatusBadRequest, MessageInvalidPayload)
 	}
 
 	err := database.UpdateUserDisplayName(apiKey, updateData.DisplayName)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"status":  fiber.StatusInternalServerError,
-			"message": "Failed to update display name",
-		})
+		return errorResponse(c, StatusInternalServerError, MessageFailedUpdateName)
 	}
 
-	return c.SendStatus(fiber.StatusNoContent)
+	return c.SendStatus(StatusNoContent)
 }
 
-func DeleteAccountByKey(c *fiber.Ctx) error {
-	apiKey := c.Get("key")
+func DeleteAccountByKey(c *fiber.Ctx, apiKey string) error {
 	if apiKey == "" {
-		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-			"status":  fiber.StatusUnauthorized,
-			"message": "API key is required",
-		})
+		return errorResponse(c, StatusUnauthorized, MessageAPIKeyRequired)
 	}
 
 	err := database.DeleteUserByKey(apiKey)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"status":  fiber.StatusInternalServerError,
-			"message": "Failed to delete account",
-		})
+		return errorResponse(c, StatusInternalServerError, MessageFailedDelete)
 	}
 
-	return c.SendStatus(fiber.StatusNoContent)
+	return c.SendStatus(StatusNoContent)
 }
 
 func CreateAccount(c *fiber.Ctx) error {
@@ -91,8 +94,8 @@ func CreateAccount(c *fiber.Ctx) error {
 	}
 
 	if err := c.BodyParser(&userRequest); err != nil {
-		return c.Status(400).JSON(fiber.Map{
-			"status":  400,
+		return c.Status(StatusBadRequest).JSON(fiber.Map{
+			"status":  StatusBadRequest,
 			"message": "Invalid request body",
 		})
 	}
@@ -102,44 +105,67 @@ func CreateAccount(c *fiber.Ctx) error {
 		DisplayName: userRequest.DisplayName,
 		CreatedAt:   time.Now().Format(time.RFC3339),
 		IP:          ip,
+		Domain:      "https://footjobs.today",
 	}
 
 	if err := database.SaveUserToDB(newUser); err != nil {
 		log.Printf("Failed to save user: %v\n", err)
-		return c.Status(500).JSON(fiber.Map{
-			"status":  500,
-			"message": "Failed to create user.",
+		return c.Status(StatusInternalServerError).JSON(fiber.Map{
+			"status":  StatusInternalServerError,
+			"message": MessageFailedCreateUser,
 			"error":   err.Error(),
 		})
 	}
 
 	return c.JSON(fiber.Map{
 		"status":  200,
-		"message": "User created successfully.",
+		"message": MessageUserCreated,
 		"key":     newUser.Key,
 	})
 }
 
-func RegenerateToken(c *fiber.Ctx) error {
-	apiKey := c.Get("key")
-	if apiKey == "" {
-		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-			"status":  fiber.StatusUnauthorized,
-			"message": "API key is required",
-		})
-	}
-
+func regenerateToken(c *fiber.Ctx, apiKey string) error {
 	newKey := functions.GenerateRandomKey(10)
 	err := database.UpdateUserKey(apiKey, newKey)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"status":  fiber.StatusInternalServerError,
-			"message": "Failed to regenerate token",
-		})
+		return errorResponse(c, StatusInternalServerError, MessageFailedRegenToken)
 	}
 
 	return c.JSON(fiber.Map{
 		"status": 200,
 		"key":    newKey,
 	})
+}
+
+func updateDomain(c *fiber.Ctx, apiKey string, domain string) error {
+	err := database.UpdateUserDomain(apiKey, domain)
+	if err != nil {
+		return errorResponse(c, StatusInternalServerError, MessageFailedUpdateDomain)
+	}
+
+	return c.SendStatus(StatusNoContent)
+}
+
+func UpdateAccountDetails(c *fiber.Ctx) error {
+	apiKey := c.Get("key")
+	queryType := c.Params("type")
+	value := c.Query("value")
+
+	if apiKey == "" {
+		return errorResponse(c, StatusUnauthorized, MessageAPIKeyRequired)
+	}
+
+	switch queryType {
+	case "token":
+		return regenerateToken(c, apiKey)
+	case "domain":
+		return updateDomain(c, apiKey, value)
+	case "name":
+		return changeDisplayName(c, apiKey)
+	case "delete":
+		return DeleteAccountByKey(c, apiKey)
+
+	default:
+		return errorResponse(c, StatusBadRequest, MessageInvalidRequestType)
+	}
 }

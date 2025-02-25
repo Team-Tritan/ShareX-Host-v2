@@ -29,6 +29,7 @@ type User struct {
 	DisplayName string `bson:"display_name"`
 	CreatedAt   string `bson:"created_at"`
 	IP          string `bson:"ip"`
+	Domain      string `bson:"domain"`
 }
 
 type URL struct {
@@ -107,7 +108,7 @@ func UpdateUserDisplayName(key, displayName string) error {
 	uploadUpdate := bson.M{"$set": bson.M{"display_name": displayName}}
 
 	uploadCollection.UpdateMany(ctx, uploadFilter, uploadUpdate)
-	
+
 	return nil
 }
 
@@ -344,5 +345,17 @@ func UpdateUserKey(oldKey, newKey string) error {
 	urlUpdate := bson.M{"$set": bson.M{"api_key": newKey}}
 
 	_, err = urlCollection.UpdateMany(ctx, urlFilter, urlUpdate)
+	return err
+}
+
+func UpdateUserDomain(key, domain string) error {
+	collection := db.Collection("users")
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	filter := bson.M{"api_key": key}
+	update := bson.M{"$set": bson.M{"domain": domain}}
+
+	_, err := collection.UpdateOne(ctx, filter, update)
 	return err
 }
