@@ -57,7 +57,5 @@ func GetImageBySlug(c *fiber.Ctx) error {
 		})
 	}
 
-	database.IncrementViewCount(upload.FileName)
-
 	return c.JSON(upload)
 }

@@ -55,8 +55,6 @@ export function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
             })}
           </nav>
 
-          <hr className="border-zinc-800" />
-
           <button
             onClick={() => router.push("/")}
             className="mx-auto mb-4 flex w-full max-w-xs items-center justify-center rounded-md px-4 py-2 text-gray-300 hover:text-white"

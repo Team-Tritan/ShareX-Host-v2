@@ -127,7 +127,7 @@ const AccountSettings: React.FC = () => {
         >
           <AccountSection
             title="Display Name"
-            description="This is the display name that shows on your uploads, this does not change retroactively for previous uploads."
+            description="This is the display name that shows on your uploads."
           >
             <input
               type="text"
