@@ -5,7 +5,7 @@ import Unauthenticated from "@/components/Unauth";
 import { Sidebar } from "@/components/Sidebar";
 import { useUser } from "@/stores/user";
 import { formatFileSize } from "@/lib/utils";
-import { AlertCircle, CopyIcon, Eye, Trash2 } from "lucide-react";
+import { AlertCircle, CopyIcon, Eye, Trash2, Search } from "lucide-react";
 import Link from "next/link";
 import type React from "react";
 import { useEffect, useState } from "react";
@@ -86,13 +86,19 @@ const handleDelete = async (
 const Dashboard: React.FC = () => {
   const user = useUser();
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
+  const [searchTerm, setSearchTerm] = useState<string>("");
 
   if (!user.apiToken) return <Unauthenticated />;
+
+  const filteredUploads = user.uploads.filter((upload) =>
+    upload.FileName.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const totalStorageUsed: number = user.uploads.reduce(
     (acc, image) => acc + image.Metadata.FileSize,
     0
   );
+
   const totalFilesUploaded: number = user.uploads.length;
   const totalViews: number = user.uploads.reduce(
     (acc, image) => acc + image.Metadata.Views,
@@ -151,6 +157,19 @@ const Dashboard: React.FC = () => {
           </div>
         </div>
 
+        {user.uploads.length > 6 && (
+          <div className="relative mb-8">
+            <input
+              type="text"
+              placeholder="Search by name..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-1/3 p-2 pl-10 rounded bg-[#121114] text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500"
+            />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+          </div>
+        )}
+
         <p className="text-gray-400 text-md mb-2 font-semibold">
           Your Uploads:
         </p>
@@ -173,7 +192,7 @@ const Dashboard: React.FC = () => {
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {user.uploads.length === 0 ? (
+            {filteredUploads.length === 0 ? (
               <>
                 <div className="col-span-full flex items-center justify-center text-gray-400 rounded-lg">
                   <AlertCircle className="h-6 w-6 mr-2" />
@@ -196,7 +215,7 @@ const Dashboard: React.FC = () => {
                 ))}
               </>
             ) : (
-              user.uploads.map((image: Upload) => (
+              filteredUploads.map((image: Upload) => (
                 <div
                   key={image.FileName}
                   className="relative overflow-hidden rounded-lg bg-[#121114] group shadow-2xl shadow-indigo-500/20 transition-all duration-300 hover:shadow-indigo-500/40 hover:scale-105"
