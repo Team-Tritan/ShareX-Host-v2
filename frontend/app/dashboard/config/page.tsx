@@ -92,7 +92,6 @@ const Config: React.FC = () => {
           Generate ShareX configurations for uploading files or shortening URLs.
         </motion.div>
 
-
         <div className="mb-12 mt-8">
           <button
             onClick={downloadAllConfigs}
