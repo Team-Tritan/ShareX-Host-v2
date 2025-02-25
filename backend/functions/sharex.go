@@ -23,9 +23,10 @@ func GenerateUploaderConfig(key string, domain string) ShareXConfig {
 	if domain == "" {
 		domain = "https://i.tritan.gg"
 	}
+
 	return ShareXConfig{
 		Version:         "15.0.0",
-		Name:            "Lazy Uploader - Uploader",
+		Name:            "Tritan Uploader - File Uploader",
 		DestinationType: "ImageUploader, TextUploader, FileUploader",
 		RequestMethod:   "POST",
 		RequestURL:      domain + "/api/upload",
@@ -47,7 +48,7 @@ func GenerateURLShortenerConfig(key string, domain string) ShareXConfig {
 	}
 	return ShareXConfig{
 		Version:         "15.0.0",
-		Name:            "Lazy Uploader - URL Shortener",
+		Name:            "Tritan Uploader - URL Shortener",
 		DestinationType: "URLShortener",
 		RequestMethod:   "POST",
 		RequestURL:      domain + "/api/url",
@@ -66,7 +67,7 @@ func GenerateURLShortenerConfig(key string, domain string) ShareXConfig {
 func GenerateTextUploaderConfig() ShareXConfig {
 	return ShareXConfig{
 		Version:         "15.0.0",
-		Name:            "Lazy Uploader - Text Uploader",
+		Name:            "Tritan Uploader - Pastebin",
 		DestinationType: "TextUploader",
 		RequestMethod:   "POST",
 		RequestURL:      "https://paste.tritan.gg/api/quick",
