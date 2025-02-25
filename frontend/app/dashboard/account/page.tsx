@@ -13,14 +13,15 @@ const AccountSettings: React.FC = () => {
   const { apiToken, displayName, setToken, setDisplayName } = useTokenStore();
   const [sidebarOpen, setSidebarOpen] = React.useState(true);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = React.useState(false);
-  const [isSaving, setIsSaving] = React.useState(false);
+  const [isDisplayNameSaving, setIsDisplayNameSaving] = React.useState(false);
+  const [isDeleting, setIsDeleting] = React.useState(false);
+  const [isApiTokenSaving, setIsApiTokenSaving] = React.useState(false);
   const router = useRouter();
 
   if (!apiToken) return <Unauthenticated />;
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleApiRequest = async (url: string, method: string, body?: any) => {
-    setIsSaving(true);
     try {
       const response = await fetch(url, {
         method,
@@ -33,8 +34,6 @@ const AccountSettings: React.FC = () => {
       return response;
     } catch {
       return null;
-    } finally {
-      setIsSaving(false);
     }
   };
 
@@ -42,31 +41,35 @@ const AccountSettings: React.FC = () => {
     const response = await handleApiRequest("/api/account", "PUT", {
       display_name: displayName,
     });
+    setIsDisplayNameSaving(true);
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     response?.ok
       ? toast.success("Display name updated successfully")
       : toast.error("Failed to update display name");
+
+    setIsDisplayNameSaving(false);
   };
 
   const handleRegenerateToken = async () => {
+    setIsApiTokenSaving(true);
     const response = await handleApiRequest("/api/account/regen", "PUT");
     if (response?.ok) {
       const data = await response.json();
       setToken(data.key);
       toast.success("Token regenerated successfully.");
-      alert(
-        `Your new api key is: ${data.key}, please save this key as it will not be shown again.`
-      );
+      setIsApiTokenSaving(false);
     } else {
       toast.error("Failed to regenerate token");
-    }
+    };
   };
 
   const handleDeleteAccount = async () => {
     const response = await handleApiRequest("/api/account", "DELETE");
+    setIsDeleting(true);
     if (response?.ok) {
       toast.success("Account deleted successfully.");
       setIsDeleteModalOpen(false);
+      setIsDeleting(false);
       router.push("/");
     } else {
       toast.error("Failed to delete account");
@@ -124,10 +127,10 @@ const AccountSettings: React.FC = () => {
             />
             <button
               onClick={handleDisplayNameChange}
-              disabled={isSaving}
+              disabled={isDisplayNameSaving}
               className="px-4 py-2 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 rounded-lg text-white font-medium hover:opacity-90 transition-opacity disabled:opacity-50"
             >
-              {isSaving ? "Saving..." : "Save Changes"}
+              {isDisplayNameSaving ? "Saving..." : "Save Changes"}
             </button>
           </AccountSection>
 
@@ -151,11 +154,11 @@ const AccountSettings: React.FC = () => {
             </div>
             <button
               onClick={handleRegenerateToken}
-              disabled={isSaving}
+              disabled={isApiTokenSaving}
               className="inline-flex items-center px-4 py-2 bg-[#171619] rounded-lg border border-zinc-800 text-white"
             >
               <RefreshCw className="w-5 h-5 mr-2" />
-              {isSaving ? "Regenerating..." : "Regenerate Token"}
+              {isApiTokenSaving ? "Regenerating..." : "Regenerate Token"}
             </button>
           </AccountSection>
 
@@ -179,7 +182,7 @@ const AccountSettings: React.FC = () => {
           <DeleteModal
             onCancel={() => setIsDeleteModalOpen(false)}
             onDelete={handleDeleteAccount}
-            isSaving={isSaving}
+            isSaving={isDeleting}
           />
         )}
       </main>
