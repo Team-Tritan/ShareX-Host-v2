@@ -100,8 +100,15 @@ func UpdateUserDisplayName(key, displayName string) error {
 	filter := bson.M{"api_key": key}
 	update := bson.M{"$set": bson.M{"display_name": displayName}}
 
-	_, err := collection.UpdateOne(ctx, filter, update)
-	return err
+	collection.UpdateOne(ctx, filter, update)
+
+	uploadCollection := db.Collection("uploads")
+	uploadFilter := bson.M{"api_key": key}
+	uploadUpdate := bson.M{"$set": bson.M{"display_name": displayName}}
+
+	uploadCollection.UpdateMany(ctx, uploadFilter, uploadUpdate)
+	
+	return nil
 }
 
 func DeleteUserByKey(key string) error {
