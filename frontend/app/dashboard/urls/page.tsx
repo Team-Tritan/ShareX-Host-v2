@@ -15,6 +15,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import Prompter from "@/components/Popup";
+import { motion } from "framer-motion";
 
 interface Url {
   Key: string;
@@ -183,12 +184,23 @@ const Urls: React.FC = () => {
         className={`flex-1 overflow-auto p-6 transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"
           }`}
       >
-        <h1 className="mb-2 text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-600 text-transparent bg-clip-text">
+        <motion.h1
+          className="mb-2 text-4xl font-bold bg-gradient-to-r from-violet-400 to-fuchsia-400 text-transparent bg-clip-text"
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
           Welcome, {user.displayName}!
-        </h1>
-        <div className="text-gray-400 mb-8 text-lg">
-          You can view and manage your URLs below.
-        </div>
+        </motion.h1>
+        <motion.div
+          className="text-gray-400 text-lg mb-8"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2, duration: 0.5 }}
+        >
+          You can view, edit, delete, and copy your shortened URLs here.
+        </motion.div>
+
         <button
           className="mb-12 px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600 transition-colors duration-300"
           onClick={handleCreateUrl}

@@ -6,6 +6,7 @@ import { useUser } from "@/stores/user";
 import { FileUp, Upload } from "lucide-react";
 import React, { useState, useRef, DragEvent } from "react";
 import { toast } from "react-hot-toast";
+import { motion } from "framer-motion";
 
 const UploadPage: React.FC = () => {
   const user = useUser();
@@ -67,12 +68,22 @@ const UploadPage: React.FC = () => {
         className={`flex-1 overflow-auto p-6 transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"
           }`}
       >
-        <h1 className="mb-2 text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-600 text-transparent bg-clip-text">
-          Upload Files
-        </h1>
-        <p className="text-gray-400 mb-12 text-lg">
-          Use the dropzone below to upload files to your account.
-        </p>
+        <motion.h1
+          className="mb-2 text-4xl font-bold bg-gradient-to-r from-violet-400 to-fuchsia-400 text-transparent bg-clip-text"
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          Upload Media
+        </motion.h1>
+        <motion.div
+          className="text-gray-400 text-lg mb-8"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2, duration: 0.5 }}
+        >
+          Upload your media files here
+        </motion.div>
 
         <div
           ref={dropzoneRef}

@@ -10,6 +10,7 @@ import Link from "next/link";
 import type React from "react";
 import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
+import { motion } from "framer-motion";
 
 interface Metadata {
   FileType: string;
@@ -126,12 +127,22 @@ const Dashboard: React.FC = () => {
         className={`flex-1 overflow-auto p-6 transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"
           }`}
       >
-        <h1 className="mb-2 text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-600 text-transparent bg-clip-text">
+        <motion.h1
+          className="mb-2 text-4xl font-bold bg-gradient-to-r from-violet-400 to-fuchsia-400 text-transparent bg-clip-text"
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
           Welcome, {user.displayName}!
-        </h1>
-        <div className="text-gray-400 mb-12 text-lg">
+        </motion.h1>
+        <motion.div
+          className="text-gray-400 text-lg mb-8"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2, duration: 0.5 }}
+        >
           You can view and manage your uploads below.
-        </div>
+        </motion.div>
 
         <p className="text-gray-400 text-md mb-2 font-semibold">Your Stats:</p>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 mb-12">
