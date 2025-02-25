@@ -85,7 +85,7 @@ const Dashboard: React.FC = () => {
     (acc, image) => acc + image.Metadata.FileSize,
     0
   );
-  
+
   useEffect(() => {
     fetchImages(user.apiToken, user.setUploads, user.setLoading);
 
@@ -93,7 +93,7 @@ const Dashboard: React.FC = () => {
       () => fetchImages(user.apiToken, user.setUploads, user.setLoading),
       10000
     );
-    
+
     return () => clearInterval(intervalId);
   }, [user.apiToken, user.setUploads, user.setLoading]);
 
@@ -105,9 +105,8 @@ const Dashboard: React.FC = () => {
     <div className="flex h-screen bg-[#0d0c0e] text-gray-100">
       <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
       <main
-        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${
-          sidebarOpen ? "ml-64" : "ml-0"
-        }`}
+        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"
+          }`}
       >
         <motion.h1
           className="mb-2 text-4xl font-bold bg-gradient-to-r from-violet-400 to-fuchsia-400 text-transparent bg-clip-text"
@@ -238,6 +237,7 @@ const Dashboard: React.FC = () => {
                       href={`${user.domain}/i/${image.FileName.split(".")
                         .slice(0, -1)
                         .join(".")}`}
+                      prefetch={false}
                     >
                       <button className="flex items-center rounded bg-purple-500 px-3 py-2 text-sm font-semibold text-white hover:bg-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-800 mr-2 transition-colors duration-300">
                         <Eye className="h-4 w-4" />
@@ -263,6 +263,7 @@ const Dashboard: React.FC = () => {
                         href={`/i/${image.FileName.split(".")
                           .slice(0, -1)
                           .join(".")}`}
+                        prefetch={false}
                       >
                         {image.FileName}
                       </Link>
