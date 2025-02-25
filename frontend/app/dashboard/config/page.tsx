@@ -57,6 +57,13 @@ const Config: React.FC = () => {
     }
   };
 
+  const downloadAllConfigs = async () => {
+    const configTypes: ConfigType[] = ["upload", "url", "text"];
+    for (const type of configTypes) {
+      await generateConfig(type);
+    }
+  };
+
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
@@ -77,13 +84,24 @@ const Config: React.FC = () => {
           ShareX Config Generator
         </motion.h1>
         <motion.div
-          className="text-gray-400 mb-12 text-lg"
+          className="text-gray-400 text-lg"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2, duration: 0.5 }}
         >
           Generate ShareX configurations for uploading files or shortening URLs.
         </motion.div>
+
+
+        <div className="mb-12 mt-8">
+          <button
+            onClick={downloadAllConfigs}
+            className="inline-flex items-center justify-center rounded-lg bg-purple-500 hover:bg-purple-600 text-white px-4 py-2.5 text-sm font-medium transition-colors"
+          >
+            <Download className="w-4 h-4 mr-2" />
+            Download All Configs
+          </button>
+        </div>
 
         <motion.div
           className="flex flex-wrap gap-8"
