@@ -1,4 +1,4 @@
-import { Image, LinkIcon, LogOutIcon, Menu, Settings, Upload, User2Icon } from "lucide-react";
+import { Image, LinkIcon, LogOutIcon, MailIcon, Menu, Settings, Upload, User2Icon } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 
@@ -18,6 +18,7 @@ interface SidebarProps {
 export function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
   const path = usePathname();
   const router = useRouter();
+
   return (
     <>
       <button
@@ -57,9 +58,9 @@ export function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
           </nav>
 
           <div className="border-t border-gray-700 p-4">
-            <Link href="/dashboard/account" className="flex items-center text-gray-400 hover:text-white mb-4">
-              <User2Icon className="mr-3 h-5 w-5" />
-              My Account
+            <Link href="https://tritan.gg/tickets/new?type=question_support" className="flex items-center text-gray-400 hover:text-white mb-4">
+              <MailIcon className="mr-3 h-5 w-5" />
+              Contact Us
             </Link>
             <button
               onClick={() => {
