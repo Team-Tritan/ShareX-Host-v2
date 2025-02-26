@@ -19,6 +19,12 @@ export const useUser = create<UserState>((set) => ({
     set({ domain });
   },
 
+  availableDomains: getCookie("available_domains")?.split(",") || [],
+  setAvailableDomains: (domains) => {
+    setCookie("available_domains", domains.join(","));
+    set({ availableDomains: domains });
+  },
+
   loading: true,
   setLoading: (loading) => set({ loading }),
 
