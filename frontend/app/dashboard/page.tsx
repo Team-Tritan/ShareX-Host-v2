@@ -224,7 +224,7 @@ const Dashboard: React.FC = () => {
                         className="h-4 w-4"
                         onClick={() => {
                           navigator.clipboard.writeText(
-                            `${user.domain}/i/${image.FileName.split(".")
+                            `https://${user.domain}/i/${image.FileName.split(".")
                               .slice(0, -1)
                               .join(".")}`
                           );
@@ -234,7 +234,7 @@ const Dashboard: React.FC = () => {
                     </button>
 
                     <Link
-                      href={`${user.domain}/i/${image.FileName.split(".")
+                      href={`https://${user.domain}/i/${image.FileName.split(".")
                         .slice(0, -1)
                         .join(".")}`}
                       prefetch={false}
@@ -260,7 +260,7 @@ const Dashboard: React.FC = () => {
                   <div className="p-4">
                     <h3 className="font-semibold text-purple-400 hover:text-purple-300 transition-colors duration-300">
                       <Link
-                        href={`/i/${image.FileName.split(".")
+                        href={`https:///i/${image.FileName.split(".")
                           .slice(0, -1)
                           .join(".")}`}
                         prefetch={false}
