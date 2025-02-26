@@ -60,6 +60,8 @@ const UserStateSchema = z.object({
   setUploads: z.function().args(z.array(UploadSchema)).returns(z.void()),
   addUpload: z.function().args(UploadSchema).returns(z.void()),
   removeUpload: z.function().args(z.string()).returns(z.void()),
+  availableDomains: z.array(z.string()),
+  setAvailableDomains: z.function().args(z.array(z.string())).returns(z.void()),
 });
 
 export type Metadata = z.infer<typeof MetadataSchema>;
