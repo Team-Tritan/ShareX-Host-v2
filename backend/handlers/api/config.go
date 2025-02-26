@@ -19,7 +19,7 @@ func GetShareXConfig(c *fiber.Ctx) error {
 	queryType := c.Query("type")
 
 	if !functions.IsValidKey(key, validUsers) {
-		return errorResponse(c, StatusUnauthorized, "Invalid key")
+		return errorResponse(c, StatusUnauthorized, MessageInvalidKey)
 	}
 
 	user, err := database.GetUserByKey(key)

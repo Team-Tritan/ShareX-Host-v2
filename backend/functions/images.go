@@ -2,8 +2,8 @@ package functions
 
 import (
 	"fmt"
-	"io/ioutil"
 	"net/http"
+	"os"
 	"path/filepath"
 	"strings"
 )
@@ -19,13 +19,12 @@ func RenderError(w http.ResponseWriter, status int, message string) {
 }
 
 func FindFileWithoutExtension(fileName string, dirPath string) (string, error) {
-	files, err := ioutil.ReadDir(dirPath)
+	files, err := os.ReadDir(dirPath)
 	if err != nil {
 		return "", err
 	}
 
 	fileWithoutExtension := strings.TrimSuffix(fileName, filepath.Ext(fileName))
-
 	for _, file := range files {
 		if strings.TrimSuffix(file.Name(), filepath.Ext(file.Name())) == fileWithoutExtension {
 			return file.Name(), nil
@@ -34,4 +33,3 @@ func FindFileWithoutExtension(fileName string, dirPath string) (string, error) {
 
 	return "", nil
 }
-

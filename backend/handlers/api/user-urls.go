@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"tritan.dev/image-uploader/constants"
 	"tritan.dev/image-uploader/database"
 	"tritan.dev/image-uploader/functions"
 )
@@ -9,16 +10,16 @@ import (
 func GetURLsByToken(c *fiber.Ctx) error {
 	key := c.Get("key")
 	if key == "" {
-		return errorResponse(c, StatusUnauthorized, MessageAPIKeyRequired)
+		return errorResponse(c, constants.StatusUnauthorized, constants.MessageAPIKeyRequired)
 	}
 
 	validUsers, err := database.LoadUsersFromDB()
 	if err != nil {
-		return errorResponse(c, StatusInternalServerError, "Failed to load users")
+		return errorResponse(c, constants.StatusInternalServerError, constants.MessageFailedLoadUsers)
 	}
 
 	if !functions.IsValidKey(key, validUsers) {
-		return errorResponse(c, StatusUnauthorized, "Invalid key")
+		return errorResponse(c, constants.StatusUnauthorized, constants.MessageInvalidKey)
 	}
 
 	var displayName string
@@ -30,12 +31,12 @@ func GetURLsByToken(c *fiber.Ctx) error {
 	}
 
 	if displayName == "" {
-		return errorResponse(c, StatusUnauthorized, "Invalid key")
+		return errorResponse(c, constants.StatusUnauthorized, constants.MessageInvalidKey)
 	}
 
 	urls, err := database.LoadURLsFromDBByKey(key)
 	if err != nil {
-		return errorResponse(c, StatusInternalServerError, "Failed to load URLs")
+		return errorResponse(c, constants.StatusInternalServerError, constants.MessageFailedLoadURLs)
 	}
 
 	for i := range urls {

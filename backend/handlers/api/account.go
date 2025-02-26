@@ -70,7 +70,7 @@ func changeDisplayName(c *fiber.Ctx, apiKey string) error {
 	return c.SendStatus(StatusNoContent)
 }
 
-func DeleteAccountByKey(c *fiber.Ctx, apiKey string) error {
+func deleteAccountByKey(c *fiber.Ctx, apiKey string) error {
 	if apiKey == "" {
 		return errorResponse(c, StatusUnauthorized, MessageAPIKeyRequired)
 	}
@@ -163,8 +163,7 @@ func UpdateAccountDetails(c *fiber.Ctx) error {
 	case "name":
 		return changeDisplayName(c, apiKey)
 	case "delete":
-		return DeleteAccountByKey(c, apiKey)
-
+		return deleteAccountByKey(c, apiKey)
 	default:
 		return errorResponse(c, StatusBadRequest, MessageInvalidRequestType)
 	}

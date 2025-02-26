@@ -18,12 +18,14 @@ import (
 )
 
 const (
-	MessageInvalidKey       = "Invalid key"
-	MessageNoFileUploaded   = "No file uploaded"
-	MessageFailedToLoadUser = "Failed to load user"
-	MessageUploadFailed     = "Failed to upload the file."
-	MessageVerifyFailed     = "Failed to verify the file upload to S3."
-	MessageFileUploaded     = "File uploaded successfully"
+	MessageInvalidKey            = "Invalid key"
+	MessageNoFileUploaded        = "No file uploaded"
+	MessageFailedToLoadUser      = "Failed to load user"
+	MessageUploadFailed          = "Failed to upload the file."
+	MessageVerifyFailed          = "Failed to verify the file upload to S3."
+	MessageFileUploaded          = "File uploaded successfully"
+	MessageFailedToCreateSession = "Failed to create S3 session"
+	MessageFailedToUploadToS3    = "Failed to upload to S3"
 )
 
 func Upload(c *fiber.Ctx) error {
@@ -59,9 +61,8 @@ func Upload(c *fiber.Ctx) error {
 	newSession, err := session.NewSession(s3Config)
 	if err != nil {
 		log.Printf("Error creating new session: %v\n", err)
-		return errorResponse(c, StatusInternalServerError, "Failed to create S3 session")
+		return errorResponse(c, StatusInternalServerError, MessageFailedToCreateSession)
 	}
-
 	s3Client := s3.New(newSession)
 
 	file, err := sharex.Open()
@@ -72,7 +73,6 @@ func Upload(c *fiber.Ctx) error {
 	defer file.Close()
 
 	fileSize := sharex.Size
-
 	_, err = s3Client.PutObject(&s3.PutObjectInput{
 		Body:   file,
 		Bucket: aws.String(config.AppConfigInstance.S3_BucketName),
@@ -81,7 +81,7 @@ func Upload(c *fiber.Ctx) error {
 	})
 	if err != nil {
 		log.Printf("Error uploading to S3: %v\n", err)
-		return errorResponse(c, StatusInternalServerError, "Failed to upload to S3")
+		return errorResponse(c, StatusInternalServerError, MessageFailedToUploadToS3)
 	}
 
 	// Verify upload
@@ -105,7 +105,6 @@ func Upload(c *fiber.Ctx) error {
 	}
 
 	log.Printf("%s just uploaded %s from %s.\n", apiKey, name+ext, ip)
-
 	logEntry := database.UploadEntry{
 		IP:          ip,
 		Key:         apiKey,

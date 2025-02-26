@@ -2,18 +2,19 @@ package handlers
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"tritan.dev/image-uploader/constants"
 	"tritan.dev/image-uploader/database"
 )
 
 func GetUploadsByToken(c *fiber.Ctx) error {
 	key := c.Get("key")
 	if key == "" {
-		return errorResponse(c, StatusUnauthorized, MessageAPIKeyRequired)
+		return errorResponse(c, constants.StatusUnauthorized, constants.MessageAPIKeyRequired)
 	}
 
 	validUsers, err := database.LoadUsersFromDB()
 	if err != nil {
-		return errorResponse(c, StatusInternalServerError, "Failed to load users")
+		return errorResponse(c, constants.StatusInternalServerError, "Failed to load users")
 	}
 
 	var displayName string
@@ -25,12 +26,12 @@ func GetUploadsByToken(c *fiber.Ctx) error {
 	}
 
 	if displayName == "" {
-		return errorResponse(c, StatusUnauthorized, "Invalid key")
+		return errorResponse(c, constants.StatusUnauthorized, constants.MessageInvalidKey)
 	}
 
 	matchingLogs, err := database.LoadUploadsFromDB(key)
 	if err != nil {
-		return errorResponse(c, StatusInternalServerError, "Error fetching uploads.")
+		return errorResponse(c, constants.StatusInternalServerError, "Error fetching uploads.")
 	}
 
 	for i := range matchingLogs {
@@ -39,6 +40,7 @@ func GetUploadsByToken(c *fiber.Ctx) error {
 	}
 
 	return c.JSON(fiber.Map{
+		"status":  fiber.StatusOK,
 		"uploads": matchingLogs,
 	})
 }

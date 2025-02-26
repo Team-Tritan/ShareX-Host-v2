@@ -28,7 +28,7 @@ func main() {
 
 	initSentry()
 
-	app := fiber.New()
+	app := fiber.New(fiber.Config{DisableStartupMessage: true})
 	port := config.AppConfigInstance.Port
 	address := fmt.Sprintf(":%d", port)
 

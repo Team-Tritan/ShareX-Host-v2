@@ -13,26 +13,8 @@ import (
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/gofiber/fiber/v2"
 	"tritan.dev/image-uploader/config"
+	"tritan.dev/image-uploader/constants"
 	"tritan.dev/image-uploader/database"
-)
-
-const (
-	StatusUnauthorized        = fiber.StatusUnauthorized
-	StatusBadRequest          = fiber.StatusBadRequest
-	StatusInternalServerError = fiber.StatusInternalServerError
-	StatusNotFound            = fiber.StatusNotFound
-	StatusNoContent           = fiber.StatusNoContent
-
-	MessageAPIKeyRequired     = "API key is required"
-	MessageInvalidPayload     = "Invalid request payload"
-	MessageFailedUpdateName   = "Failed to update display name"
-	MessageFailedDelete       = "Failed to delete account"
-	MessageFailedCreateUser   = "Failed to create user"
-	MessageFailedRegenToken   = "Failed to regenerate token"
-	MessageFailedUpdateDomain = "Failed to update domain"
-	MessageInvalidRequestType = "Invalid request type"
-	MessageUserNotFound       = "User not found"
-	MessageUserCreated        = "User created successfully"
 )
 
 func errorResponse(c *fiber.Ctx, status int, message string) error {
@@ -57,7 +39,7 @@ func DisplayImage(c *fiber.Ctx) error {
 	newSession, err := session.NewSession(s3Config)
 	if err != nil {
 		log.Printf("Error creating new session: %v\n", err)
-		return errorResponse(c, StatusInternalServerError, "Internal server error")
+		return errorResponse(c, constants.StatusInternalServerError, constants.MessageInternalError)
 	}
 
 	s3Client := s3.New(newSession)
@@ -75,7 +57,7 @@ func DisplayImage(c *fiber.Ctx) error {
 		uploadEntry, err := database.GetUploadEntryByFileName(fileWithExtension)
 		if err != nil {
 			log.Printf("Error fetching upload entry from DB: %v\n", err)
-			return errorResponse(c, StatusInternalServerError, "Internal server error")
+			return errorResponse(c, constants.StatusInternalServerError, constants.MessageInternalError)
 		}
 
 		database.IncrementViewCount(uploadEntry.FileName)
@@ -102,7 +84,7 @@ func DisplayImage(c *fiber.Ctx) error {
 	})
 	if err != nil {
 		log.Printf("Error listing objects in S3: %v\n", err)
-		return errorResponse(c, StatusInternalServerError, "Internal server error")
+		return errorResponse(c, constants.StatusInternalServerError, constants.MessageInternalError)
 	}
 
 	for _, obj := range resp.Contents {
@@ -114,7 +96,7 @@ func DisplayImage(c *fiber.Ctx) error {
 			uploadEntry, err := database.GetUploadEntryByFileName(*obj.Key)
 			if err != nil {
 				log.Printf("Error fetching upload entry from DB: %v\n", err)
-				return errorResponse(c, StatusInternalServerError, "Internal server error")
+				return errorResponse(c, constants.StatusInternalServerError, constants.MessageInternalError)
 			}
 
 			database.IncrementViewCount(uploadEntry.FileName)
@@ -136,5 +118,5 @@ func DisplayImage(c *fiber.Ctx) error {
 	}
 
 	log.Printf("Image not found: %s\n", fileWithExtension)
-	return errorResponse(c, StatusNotFound, "Content not found")
+	return errorResponse(c, constants.StatusNotFound, "Content not found")
 }

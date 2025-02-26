@@ -9,10 +9,12 @@ import (
 
 func GenerateRandomKey(length int) string {
 	const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-	rand.Seed(time.Now().UnixNano())
+	randomSource := rand.NewSource(time.Now().UnixNano())
+	random := rand.New(randomSource)
+
 	b := make([]byte, length)
 	for i := range b {
-		b[i] = charset[rand.Intn(len(charset))]
+		b[i] = charset[random.Intn(len(charset))]
 	}
 	return string(b)
 }
