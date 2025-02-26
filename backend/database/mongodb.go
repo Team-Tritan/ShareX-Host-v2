@@ -163,9 +163,11 @@ func SaveUserToDB(user User) error {
 	}
 
 	domainsCollection := getCollection("domains")
-	_, err = domainsCollection.InsertOne(ctx, Domain{Name: user.Domain, Allowed: []string{user.Key}})
+	filter := bson.M{"name": user.Domain}
+	update := bson.M{"$addToSet": bson.M{"allowed": user.Key}}
+	_, err = domainsCollection.UpdateOne(ctx, filter, update)
 	if err != nil {
-		log.Printf("Error inserting domain: %v", err)
+		log.Printf("Error updating domain: %v", err)
 		return err
 	}
 

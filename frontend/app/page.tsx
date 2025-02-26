@@ -9,7 +9,8 @@ import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { toast } from "react-hot-toast";
 
-interface AccountResponse {
+interface AccountResponses {
+  key: string;
   user: {
     DisplayName: string;
     key?: string;
@@ -47,7 +48,7 @@ const LoginPage: React.FC = () => {
         return setApiKey("");
       }
 
-      const data: AccountResponse = await response.json();
+      const data: AccountResponses = await response.json();
       setToken(apiKey);
       setDisplayName(data.user.DisplayName);
       setDomain(data.user.Domain);
@@ -55,6 +56,7 @@ const LoginPage: React.FC = () => {
 
       router.push("/dashboard");
     } catch (error: any) {
+      console.log(error)
       toast.error(error.message);
       setApiKey("");
     }
@@ -83,11 +85,11 @@ const LoginPage: React.FC = () => {
         if (!response.ok)
           return toast.error("Failed to create API key.");
 
-        const data: AccountResponse = await response.json();
-        setToken(data.user.key!);
+        const data: AccountResponses = await response.json();
+        setToken(data.key!);
         setDisplayName(displayName);
 
-        navigator.clipboard.writeText(data.user.key!);
+        navigator.clipboard.writeText(data.key!);
 
         toast.success(
           `Your API key has been copied to your clipboard, please keep it safe.`
