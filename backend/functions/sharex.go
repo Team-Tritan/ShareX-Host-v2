@@ -29,7 +29,7 @@ func GenerateUploaderConfig(key string, domain string) ShareXConfig {
 		Name:            "Tritan Uploader - File Uploader",
 		DestinationType: "ImageUploader, TextUploader, FileUploader",
 		RequestMethod:   "POST",
-		RequestURL:      domain + "/api/upload",
+		RequestURL:      "https://" + domain + "/api/upload",
 		Headers: map[string]string{
 			"key": key,
 		},
@@ -38,7 +38,7 @@ func GenerateUploaderConfig(key string, domain string) ShareXConfig {
 		Arguments: map[string]string{
 			"url": "{input}",
 		},
-		URL: domain + "/{json:url}",
+		URL: "{json:url}",
 	}
 }
 
@@ -53,8 +53,8 @@ func GenerateURLShortenerConfig(key string, domain string) ShareXConfig {
 		DestinationType: "URLShortener",
 		Body:            "MultipartFormData",
 		FileFormName:    "sharex",
-		RequestURL:      domain + "/api/url",
-		URL:             domain + "/u/{json:slug}",
+		RequestURL:      "https://" + domain + "/api/url",
+		URL:             "{json:fullUrl}",
 		Arguments: map[string]string{
 			"url": "{input}",
 		},
