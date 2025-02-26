@@ -28,6 +28,7 @@ const (
 	MessageFailedUpdateSlug      = "Failed to update the slug"
 	MessageFailedFetchUploads    = "Failed to fetch uploads"
 	MessageFileUploaded          = "File uploaded successfully"
+	MessageFailedGetDomains      = "Failed to get domains"
 	MessageInvalidKey            = "Invalid key"
 	MessageInvalidPayload        = "Invalid request payload"
 	MessageInvalidRequestType    = "Invalid request type"

@@ -133,6 +133,12 @@ type UploadEntry struct {
 	Metadata    Metadata `bson:"metadata"`
 }
 
+type Domain struct {
+	Name      string   `bson:"name"`
+	Allowed   []string `bson:"allowed"`
+	UsedCount int      `bson:"count"`
+}
+
 func LoadUsersFromDB() ([]User, error) {
 	var users []User
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
@@ -404,15 +410,56 @@ func UpdateUserKey(oldKey, newKey string) error {
 	urlUpdate := bson.M{"$set": bson.M{"api_key": newKey}}
 
 	err = updateMany(ctx, "urls", urlFilter, urlUpdate)
+	if err != nil {
+		return err
+	}
+
+	domainFilter := bson.M{"allowed": oldKey}
+	domainUpdate := bson.M{"$set": bson.M{"allowed.$": newKey}}
+
+	_, err = getCollection("domains").UpdateMany(ctx, domainFilter, domainUpdate)
 	return err
 }
 
-func UpdateUserDomain(key, domain string) error {
+func UpdateUserDomain(apiKey, domain string) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	filter := bson.M{"api_key": key}
-	update := bson.M{"$set": bson.M{"domain": domain}}
+	filter := bson.M{"name": domain}
+	update := bson.M{"$addToSet": bson.M{"allowed": apiKey}}
+	if err := updateOne(ctx, "domains", filter, update); err != nil {
+		return err
+	}
 
-	return updateOne(ctx, "users", filter, update)
+	userFilter := bson.M{"api_key": apiKey}
+	userUpdate := bson.M{"$set": bson.M{"domain": domain}}
+	return updateOne(ctx, "users", userFilter, userUpdate)
+}
+
+func contains(slice []string, key string) bool {
+	for _, v := range slice {
+		if v == key {
+			return true
+		}
+	}
+	return false
+}
+
+func GetEligibleDomainsFromDB(apiKey string) ([]string, error) {
+	var domains []Domain
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	err := findMany(ctx, "domains", bson.M{}, nil, &domains)
+	if err != nil {
+		return nil, err
+	}
+
+	eligible := []string{}
+	for _, d := range domains {
+		if contains(d.Allowed, "*") || contains(d.Allowed, apiKey) {
+			eligible = append(eligible, d.Name)
+		}
+	}
+	return eligible, nil
 }
