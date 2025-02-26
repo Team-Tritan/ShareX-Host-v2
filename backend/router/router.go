@@ -29,8 +29,8 @@ func SetupRoutes(app *fiber.App) error {
 
 	app.Use(func(c *fiber.Ctx) error {
 		return c.Status(constants.StatusNotFound).JSON(fiber.Map{
-			"status":  404,
-			"message": "Content not found.",
+			"status":  constants.StatusNotFound,
+			"message": constants.MessageMissingContent,
 		})
 	})
 

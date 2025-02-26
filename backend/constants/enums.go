@@ -55,4 +55,5 @@ const (
 	MessageUploadDeleted         = "Upload deleted successfully"
 	MessageMissingURLSlug        = "Missing URL slug"
 	MessageMissingURL            = "URL not found"
+	MessageMissingContent        = "Content not found"
 )
