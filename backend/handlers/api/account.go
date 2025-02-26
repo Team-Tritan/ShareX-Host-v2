@@ -28,7 +28,15 @@ func GetAccountDataByKey(c *fiber.Ctx) error {
 		return errorResponse(c, constants.StatusNotFound, constants.MessageUserNotFound)
 	}
 
-	return c.JSON(user)
+	domains, err := database.GetEligibleDomainsFromDB(apiKey)
+	if err != nil {
+		return errorResponse(c, constants.StatusInternalServerError, constants.MessageFailedGetDomains)
+	}
+
+	return c.JSON(fiber.Map{
+		"user":    user,
+		"domains": domains,
+	})
 }
 
 func changeDisplayName(c *fiber.Ctx, apiKey string) error {

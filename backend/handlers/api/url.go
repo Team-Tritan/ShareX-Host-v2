@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -21,6 +22,11 @@ func CreateURL(c *fiber.Ctx) error {
 	}
 
 	if !functions.IsValidKey(key, validUsers) {
+		return errorResponse(c, constants.StatusUnauthorized, constants.MessageInvalidKey)
+	}
+
+	user, err := database.GetUserByKey(key)
+	if err != nil {
 		return errorResponse(c, constants.StatusUnauthorized, constants.MessageInvalidKey)
 	}
 
@@ -47,6 +53,7 @@ func CreateURL(c *fiber.Ctx) error {
 		"message": "URL created successfully",
 		"url":     urlRequest.URL,
 		"slug":    urlRequest.Slug,
+		"fullUrl": fmt.Sprintf("https://%s/u/%s", user.Domain, urlRequest.Slug),
 	})
 }
 

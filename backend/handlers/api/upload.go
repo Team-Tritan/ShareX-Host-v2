@@ -111,7 +111,7 @@ func Upload(c *fiber.Ctx) error {
 		log.Printf("Error saving log entry: %v\n", err)
 	}
 
-	fullURL := fmt.Sprintf("i/%s", name)
+	fullURL := fmt.Sprintf("https://%s/i/%s", user.Domain, name)
 	log.Printf("File uploaded successfully: %s\n", fullURL)
 
 	return c.JSON(fiber.Map{
