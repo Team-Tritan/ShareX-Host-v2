@@ -10,9 +10,13 @@ import { ArrowRight } from "lucide-react";
 import { toast } from "react-hot-toast";
 
 interface AccountResponse {
-  DisplayName: string;
-  key?: string;
-  Domain: string;
+  user: {
+    DisplayName: string;
+    key?: string;
+    Domain: string;
+  },
+  domains: [string];
+
 }
 
 const LoginPage: React.FC = () => {
@@ -21,6 +25,7 @@ const LoginPage: React.FC = () => {
   const setToken = useUser((state) => state.setToken);
   const setDomain = useUser((state) => state.setDomain);
   const setDisplayName = useUser((state) => state.setDisplayName);
+  const setAvailableDomains = useUser((state) => state.setAvailableDomains);
   const [apiKey, setApiKey] = useState<string>(apiToken);
   const [isPrompterOpen, setIsPrompterOpen] = useState<boolean>(false);
 
@@ -44,15 +49,16 @@ const LoginPage: React.FC = () => {
 
       const data: AccountResponse = await response.json();
       setToken(apiKey);
-      setDisplayName(data.DisplayName);
-      setDomain(data.Domain);
+      setDisplayName(data.user.DisplayName);
+      setDomain(data.user.Domain);
+      setAvailableDomains(data.domains);
 
       router.push("/dashboard");
     } catch (error: any) {
       toast.error(error.message);
       setApiKey("");
     }
-  }, [apiKey, router, setDisplayName, setDomain, setToken]);
+  }, [apiKey, router, setDisplayName, setDomain, setToken, setAvailableDomains]);
 
   const handleCreateKey = useCallback(async () => {
     setIsPrompterOpen(true);
@@ -78,10 +84,10 @@ const LoginPage: React.FC = () => {
           return toast.error("Failed to create API key.");
 
         const data: AccountResponse = await response.json();
-        setToken(data.key!);
+        setToken(data.user.key!);
         setDisplayName(displayName);
 
-        navigator.clipboard.writeText(data.key!);
+        navigator.clipboard.writeText(data.user.key!);
 
         toast.success(
           `Your API key has been copied to your clipboard, please keep it safe.`
