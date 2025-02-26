@@ -10,18 +10,6 @@ import { motion } from "framer-motion";
 import { Copy, RefreshCw, Trash2 } from "lucide-react";
 import { toast } from "react-hot-toast";
 
-const domains = [
-  "https://i.tritan.gg",
-  "https://i.cockz.me",
-  "https://footjobs.today",
-  "https://giving.footjobs.today",
-  "https://fakyuu.tritan.gg",
-  "https://big.cockz.me",
-  "https://cdn.cockz.me",
-  "https://pics.cock-measuring-contest.com",
-  "https://pajeet.indiainternet.cam",
-];
-
 const AccountSettings: React.FC = () => {
   const user = useUser();
   const router = useRouter();
@@ -102,7 +90,7 @@ const AccountSettings: React.FC = () => {
 
   const handleDomainChange = async () => {
     setLoadingStates((prev) => ({ ...prev, domain: true }));
-    
+
     const response = await handleApiRequest(
       `/api/account/domain?value=${user.domain}`,
       "PUT"
@@ -110,7 +98,7 @@ const AccountSettings: React.FC = () => {
 
     if (response?.ok) {
       toast.success(
-        "Domain changed successfully, please redownload your ShareX configs."
+        "Domain changed successfully."
       );
     } else {
       toast.error("Failed to change domain.");
@@ -130,9 +118,8 @@ const AccountSettings: React.FC = () => {
         toggleSidebar={() => setSidebarOpen(!sidebarOpen)}
       />
       <main
-        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${
-          sidebarOpen ? "ml-64" : "ml-0"
-        }`}
+        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"
+          }`}
       >
         <motion.h1
           className="mb-2 text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-600 text-transparent bg-clip-text"
@@ -192,7 +179,7 @@ const AccountSettings: React.FC = () => {
                 onChange={(e) => user.setDomain(e.target.value)}
                 className="w-full px-4 py-2 bg-[#171619] border border-zinc-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-white"
               >
-                {domains.map((domain) => (
+                {user.availableDomains.map((domain) => (
                   <option key={domain} value={domain}>
                     {domain}
                   </option>
