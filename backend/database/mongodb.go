@@ -161,6 +161,14 @@ func SaveUserToDB(user User) error {
 		log.Printf("Error inserting user: %v", err)
 		return err
 	}
+
+	domainsCollection := getCollection("domains")
+	_, err = domainsCollection.InsertOne(ctx, Domain{Name: user.Domain, Allowed: []string{user.Key}})
+	if err != nil {
+		log.Printf("Error inserting domain: %v", err)
+		return err
+	}
+
 	return nil
 }
 
