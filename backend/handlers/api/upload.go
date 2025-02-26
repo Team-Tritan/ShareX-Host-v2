@@ -13,35 +13,25 @@ import (
 	"github.com/gofiber/fiber/v2"
 
 	"tritan.dev/image-uploader/config"
+	"tritan.dev/image-uploader/constants"
 	"tritan.dev/image-uploader/database"
 	"tritan.dev/image-uploader/functions"
-)
-
-const (
-	MessageInvalidKey            = "Invalid key"
-	MessageNoFileUploaded        = "No file uploaded"
-	MessageFailedToLoadUser      = "Failed to load user"
-	MessageUploadFailed          = "Failed to upload the file."
-	MessageVerifyFailed          = "Failed to verify the file upload to S3."
-	MessageFileUploaded          = "File uploaded successfully"
-	MessageFailedToCreateSession = "Failed to create S3 session"
-	MessageFailedToUploadToS3    = "Failed to upload to S3"
 )
 
 func Upload(c *fiber.Ctx) error {
 	apiKey := c.Get("key")
 	if apiKey == "" {
-		return errorResponse(c, StatusUnauthorized, MessageAPIKeyRequired)
+		return errorResponse(c, constants.StatusUnauthorized, constants.MessageAPIKeyRequired)
 	}
 
 	user, err := database.GetUserByKey(apiKey)
 	if err != nil {
-		return errorResponse(c, StatusUnauthorized, MessageInvalidKey)
+		return errorResponse(c, constants.StatusUnauthorized, constants.MessageInvalidKey)
 	}
 
 	sharex, err := c.FormFile("sharex")
 	if err != nil {
-		return errorResponse(c, StatusBadRequest, MessageNoFileUploaded)
+		return errorResponse(c, constants.StatusBadRequest, constants.MessageNoFileUploaded)
 	}
 
 	ext := path.Ext(sharex.Filename)
@@ -61,14 +51,14 @@ func Upload(c *fiber.Ctx) error {
 	newSession, err := session.NewSession(s3Config)
 	if err != nil {
 		log.Printf("Error creating new session: %v\n", err)
-		return errorResponse(c, StatusInternalServerError, MessageFailedToCreateSession)
+		return errorResponse(c, constants.StatusInternalServerError, constants.MessageFailedToCreateSession)
 	}
 	s3Client := s3.New(newSession)
 
 	file, err := sharex.Open()
 	if err != nil {
 		log.Printf("Error opening file: %v\n", err)
-		return errorResponse(c, StatusInternalServerError, MessageUploadFailed)
+		return errorResponse(c, constants.StatusInternalServerError, constants.MessageUploadFailed)
 	}
 	defer file.Close()
 
@@ -81,7 +71,7 @@ func Upload(c *fiber.Ctx) error {
 	})
 	if err != nil {
 		log.Printf("Error uploading to S3: %v\n", err)
-		return errorResponse(c, StatusInternalServerError, MessageFailedToUploadToS3)
+		return errorResponse(c, constants.StatusInternalServerError, constants.MessageFailedToUploadToS3)
 	}
 
 	// Verify upload
@@ -101,7 +91,7 @@ func Upload(c *fiber.Ctx) error {
 
 	if !verified {
 		log.Printf("Error verifying upload to S3: %v\n", err)
-		return errorResponse(c, StatusInternalServerError, MessageVerifyFailed)
+		return errorResponse(c, constants.StatusInternalServerError, constants.MessageVerifyFailed)
 	}
 
 	log.Printf("%s just uploaded %s from %s.\n", apiKey, name+ext, ip)
@@ -125,8 +115,8 @@ func Upload(c *fiber.Ctx) error {
 	log.Printf("File uploaded successfully: %s\n", fullURL)
 
 	return c.JSON(fiber.Map{
-		"status":  fiber.StatusOK,
-		"message": MessageFileUploaded,
+		"status":  constants.StatusOK,
+		"message": constants.MessageFileUploaded,
 		"url":     fullURL,
 	})
 }

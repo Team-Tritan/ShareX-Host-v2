@@ -47,20 +47,20 @@ func GenerateURLShortenerConfig(key string, domain string) ShareXConfig {
 		domain = "https://i.tritan.gg"
 	}
 	return ShareXConfig{
+		RequestMethod:   "POST",
 		Version:         "15.0.0",
 		Name:            "Tritan Uploader - URL Shortener",
 		DestinationType: "URLShortener",
-		RequestMethod:   "POST",
+		Body:            "MultipartFormData",
+		FileFormName:    "sharex",
 		RequestURL:      domain + "/api/url",
-		Headers: map[string]string{
-			"key": key,
-		},
-		Body:         "MultipartFormData",
-		FileFormName: "sharex",
+		URL:             domain + "/u/{json:slug}",
 		Arguments: map[string]string{
 			"url": "{input}",
 		},
-		URL: domain + "/u/{json:slug}",
+		Headers: map[string]string{
+			"key": key,
+		},
 	}
 }
 
@@ -71,8 +71,8 @@ func GenerateTextUploaderConfig() ShareXConfig {
 		DestinationType: "TextUploader",
 		RequestMethod:   "POST",
 		RequestURL:      "https://paste.tritan.gg/api/quick",
-		Body:            "Binary",
 		URL:             "https://paste.tritan.gg/{json:data.id}",
+		Body:            "Binary",
 	}
 }
 

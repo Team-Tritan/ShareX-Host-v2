@@ -5,27 +5,9 @@ import (
 	"time"
 
 	"github.com/gofiber/fiber/v2"
+	"tritan.dev/image-uploader/constants" // added import for enums
 	"tritan.dev/image-uploader/database"
 	"tritan.dev/image-uploader/functions"
-)
-
-const (
-	StatusUnauthorized        = fiber.StatusUnauthorized
-	StatusBadRequest          = fiber.StatusBadRequest
-	StatusInternalServerError = fiber.StatusInternalServerError
-	StatusNotFound            = fiber.StatusNotFound
-	StatusNoContent           = fiber.StatusNoContent
-
-	MessageAPIKeyRequired     = "API key is required"
-	MessageInvalidPayload     = "Invalid request payload"
-	MessageFailedUpdateName   = "Failed to update display name"
-	MessageFailedDelete       = "Failed to delete account"
-	MessageFailedCreateUser   = "Failed to create user"
-	MessageFailedRegenToken   = "Failed to regenerate token"
-	MessageFailedUpdateDomain = "Failed to update domain"
-	MessageInvalidRequestType = "Invalid request type"
-	MessageUserNotFound       = "User not found"
-	MessageUserCreated        = "User created successfully"
 )
 
 func errorResponse(c *fiber.Ctx, status int, message string) error {
@@ -38,12 +20,12 @@ func errorResponse(c *fiber.Ctx, status int, message string) error {
 func GetAccountDataByKey(c *fiber.Ctx) error {
 	apiKey := c.Get("key")
 	if apiKey == "" {
-		return errorResponse(c, StatusUnauthorized, MessageAPIKeyRequired)
+		return errorResponse(c, constants.StatusUnauthorized, constants.MessageAPIKeyRequired)
 	}
 
 	user, err := database.GetUserByKey(apiKey)
 	if err != nil {
-		return errorResponse(c, StatusNotFound, MessageUserNotFound)
+		return errorResponse(c, constants.StatusNotFound, constants.MessageUserNotFound)
 	}
 
 	return c.JSON(user)
@@ -51,7 +33,7 @@ func GetAccountDataByKey(c *fiber.Ctx) error {
 
 func changeDisplayName(c *fiber.Ctx, apiKey string) error {
 	if apiKey == "" {
-		return errorResponse(c, StatusUnauthorized, MessageAPIKeyRequired)
+		return errorResponse(c, constants.StatusUnauthorized, constants.MessageAPIKeyRequired)
 	}
 
 	var updateData struct {
@@ -59,28 +41,28 @@ func changeDisplayName(c *fiber.Ctx, apiKey string) error {
 	}
 
 	if err := c.BodyParser(&updateData); err != nil {
-		return errorResponse(c, StatusBadRequest, MessageInvalidPayload)
+		return errorResponse(c, constants.StatusBadRequest, constants.MessageInvalidPayload)
 	}
 
 	err := database.UpdateUserDisplayName(apiKey, updateData.DisplayName)
 	if err != nil {
-		return errorResponse(c, StatusInternalServerError, MessageFailedUpdateName)
+		return errorResponse(c, constants.StatusInternalServerError, constants.MessageFailedUpdateName)
 	}
 
-	return c.SendStatus(StatusNoContent)
+	return c.SendStatus(constants.StatusNoContent)
 }
 
 func deleteAccountByKey(c *fiber.Ctx, apiKey string) error {
 	if apiKey == "" {
-		return errorResponse(c, StatusUnauthorized, MessageAPIKeyRequired)
+		return errorResponse(c, constants.StatusUnauthorized, constants.MessageAPIKeyRequired)
 	}
 
 	err := database.DeleteUserByKey(apiKey)
 	if err != nil {
-		return errorResponse(c, StatusInternalServerError, MessageFailedDelete)
+		return errorResponse(c, constants.StatusInternalServerError, constants.MessageFailedDelete)
 	}
 
-	return c.SendStatus(StatusNoContent)
+	return c.SendStatus(constants.StatusNoContent)
 }
 
 func CreateAccount(c *fiber.Ctx) error {
@@ -94,8 +76,8 @@ func CreateAccount(c *fiber.Ctx) error {
 	}
 
 	if err := c.BodyParser(&userRequest); err != nil {
-		return c.Status(StatusBadRequest).JSON(fiber.Map{
-			"status":  StatusBadRequest,
+		return c.Status(constants.StatusBadRequest).JSON(fiber.Map{
+			"status":  constants.StatusBadRequest,
 			"message": "Invalid request body",
 		})
 	}
@@ -110,16 +92,16 @@ func CreateAccount(c *fiber.Ctx) error {
 
 	if err := database.SaveUserToDB(newUser); err != nil {
 		log.Printf("Failed to save user: %v\n", err)
-		return c.Status(StatusInternalServerError).JSON(fiber.Map{
-			"status":  StatusInternalServerError,
-			"message": MessageFailedCreateUser,
+		return c.Status(constants.StatusInternalServerError).JSON(fiber.Map{
+			"status":  constants.StatusInternalServerError,
+			"message": constants.MessageFailedCreateUser,
 			"error":   err.Error(),
 		})
 	}
 
 	return c.JSON(fiber.Map{
-		"status":  200,
-		"message": MessageUserCreated,
+		"status":  constants.StatusOK,
+		"message": constants.MessageUserCreated,
 		"key":     newUser.Key,
 	})
 }
@@ -128,11 +110,11 @@ func regenerateToken(c *fiber.Ctx, apiKey string) error {
 	newKey := functions.GenerateRandomKey(20)
 	err := database.UpdateUserKey(apiKey, newKey)
 	if err != nil {
-		return errorResponse(c, StatusInternalServerError, MessageFailedRegenToken)
+		return errorResponse(c, constants.StatusInternalServerError, constants.MessageFailedRegenToken)
 	}
 
 	return c.JSON(fiber.Map{
-		"status": 200,
+		"status": constants.StatusOK,
 		"key":    newKey,
 	})
 }
@@ -140,10 +122,10 @@ func regenerateToken(c *fiber.Ctx, apiKey string) error {
 func updateDomain(c *fiber.Ctx, apiKey string, domain string) error {
 	err := database.UpdateUserDomain(apiKey, domain)
 	if err != nil {
-		return errorResponse(c, StatusInternalServerError, MessageFailedUpdateDomain)
+		return errorResponse(c, constants.StatusInternalServerError, constants.MessageFailedUpdateDomain)
 	}
 
-	return c.SendStatus(StatusNoContent)
+	return c.SendStatus(constants.StatusNoContent)
 }
 
 func UpdateAccountDetails(c *fiber.Ctx) error {
@@ -152,7 +134,7 @@ func UpdateAccountDetails(c *fiber.Ctx) error {
 	value := c.Query("value")
 
 	if apiKey == "" {
-		return errorResponse(c, StatusUnauthorized, MessageAPIKeyRequired)
+		return errorResponse(c, constants.StatusUnauthorized, constants.MessageAPIKeyRequired)
 	}
 
 	switch queryType {
@@ -165,6 +147,6 @@ func UpdateAccountDetails(c *fiber.Ctx) error {
 	case "delete":
 		return deleteAccountByKey(c, apiKey)
 	default:
-		return errorResponse(c, StatusBadRequest, MessageInvalidRequestType)
+		return errorResponse(c, constants.StatusBadRequest, constants.MessageInvalidRequestType)
 	}
 }

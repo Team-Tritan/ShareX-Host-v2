@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"tritan.dev/image-uploader/constants"
 	"tritan.dev/image-uploader/database"
 	"tritan.dev/image-uploader/functions"
 )
@@ -9,27 +10,27 @@ import (
 func GetShareXConfig(c *fiber.Ctx) error {
 	key := c.Get("key")
 	if key == "" {
-		return errorResponse(c, StatusUnauthorized, MessageAPIKeyRequired)
+		return errorResponse(c, constants.StatusUnauthorized, constants.MessageAPIKeyRequired)
 	}
 
 	validUsers, err := database.LoadUsersFromDB()
 	if err != nil {
-		return errorResponse(c, StatusInternalServerError, "Failed to load users")
+		return errorResponse(c, constants.StatusInternalServerError, "Failed to load users")
 	}
 	queryType := c.Query("type")
 
 	if !functions.IsValidKey(key, validUsers) {
-		return errorResponse(c, StatusUnauthorized, MessageInvalidKey)
+		return errorResponse(c, constants.StatusUnauthorized, constants.MessageInvalidKey)
 	}
 
 	user, err := database.GetUserByKey(key)
 	if err != nil {
-		return errorResponse(c, StatusInternalServerError, "Failed to get user")
+		return errorResponse(c, constants.StatusInternalServerError, "Failed to get user")
 	}
 	domain := user.Domain
 
 	if queryType == "" || !(queryType == "upload" || queryType == "url" || queryType == "text") {
-		return errorResponse(c, StatusBadRequest, "The query type was invalid.")
+		return errorResponse(c, constants.StatusBadRequest, "The query type was invalid")
 	}
 
 	switch queryType {

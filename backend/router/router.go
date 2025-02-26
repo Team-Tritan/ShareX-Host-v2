@@ -3,6 +3,7 @@ package router
 import (
 	"github.com/gofiber/fiber/v2"
 
+	"tritan.dev/image-uploader/constants"
 	api "tritan.dev/image-uploader/handlers/api"
 	ui "tritan.dev/image-uploader/handlers/ui"
 )
@@ -27,7 +28,7 @@ func SetupRoutes(app *fiber.App) error {
 	app.Delete("/api/delete-url/:slug", api.DeleteURL)
 
 	app.Use(func(c *fiber.Ctx) error {
-		return c.Status(404).JSON(fiber.Map{
+		return c.Status(constants.StatusNotFound).JSON(fiber.Map{
 			"status":  404,
 			"message": "Content not found.",
 		})

@@ -9,6 +9,9 @@ const (
 	StatusNotFound            = fiber.StatusNotFound
 	StatusInternalServerError = fiber.StatusInternalServerError
 	StatusNoContent           = fiber.StatusNoContent
+	StatusForbidden           = fiber.StatusForbidden
+	StatusConflict            = fiber.StatusConflict
+	StatusRateLimitExceeded   = fiber.StatusTooManyRequests
 )
 
 const (
@@ -23,6 +26,7 @@ const (
 	MessageFailedUpdateDomain    = "Failed to update domain"
 	MessageFailedUpdateName      = "Failed to update display name"
 	MessageFailedUpdateSlug      = "Failed to update the slug"
+	MessageFailedFetchUploads    = "Failed to fetch uploads"
 	MessageFileUploaded          = "File uploaded successfully"
 	MessageInvalidKey            = "Invalid key"
 	MessageInvalidPayload        = "Invalid request payload"
@@ -36,7 +40,7 @@ const (
 	MessageURLNotFound           = "URL not found"
 	MessageURLRequired           = "URL is required"
 	MessageUploadError           = "Error deleting upload"
-	MessageUploadFailed          = "Failed to upload the file."
+	MessageUploadFailed          = "Failed to upload the fil."
 	MessageUploadNotFound        = "Upload not found"
 	MessageUploadUnauthorized    = "Unauthorized to delete this upload"
 	MessageFailedToCreateSession = "Failed to create S3 session"
@@ -44,8 +48,11 @@ const (
 	MessageVerifyFailed          = "Failed to verify the file upload to S3"
 	MessageUserCreated           = "User created successfully"
 	MessageUserNotFound          = "User not found"
-	MessageMissingURLSlug        = "Missing URL slug"
-	MessageMissingURL            = "URL not found"
 	MessageInternalError         = "Internal server error"
 	MessageForbidden             = "Forbidden"
+	MessageInvalidRequestBody    = "Invalid request body"
+	MessageMissingUploadID       = "Missing upload ID"
+	MessageUploadDeleted         = "Upload deleted successfully"
+	MessageMissingURLSlug        = "Missing URL slug"
+	MessageMissingURL            = "URL not found"
 )

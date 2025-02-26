@@ -14,7 +14,7 @@ func GetUploadsByToken(c *fiber.Ctx) error {
 
 	validUsers, err := database.LoadUsersFromDB()
 	if err != nil {
-		return errorResponse(c, constants.StatusInternalServerError, "Failed to load users")
+		return errorResponse(c, constants.StatusInternalServerError, constants.MessageFailedLoadUsers)
 	}
 
 	var displayName string
@@ -31,7 +31,7 @@ func GetUploadsByToken(c *fiber.Ctx) error {
 
 	matchingLogs, err := database.LoadUploadsFromDB(key)
 	if err != nil {
-		return errorResponse(c, constants.StatusInternalServerError, "Error fetching uploads.")
+		return errorResponse(c, constants.StatusInternalServerError, constants.MessageFailedFetchUploads)
 	}
 
 	for i := range matchingLogs {
@@ -40,7 +40,7 @@ func GetUploadsByToken(c *fiber.Ctx) error {
 	}
 
 	return c.JSON(fiber.Map{
-		"status":  fiber.StatusOK,
+		"status":  constants.StatusOK,
 		"uploads": matchingLogs,
 	})
 }

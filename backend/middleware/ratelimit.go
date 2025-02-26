@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/gofiber/fiber/v2"
+	"tritan.dev/image-uploader/constants"
 )
 
 type RateLimiter struct {
@@ -32,8 +33,8 @@ func (rl *RateLimiter) Limit(next fiber.Handler) fiber.Handler {
 				rl.uploads[ip] = 0
 				rl.timestamp[ip] = time.Now()
 			} else if count >= 5 {
-				return c.Status(429).JSON(fiber.Map{
-					"status":  429,
+				return c.Status(constants.StatusRateLimitExceeded).JSON(fiber.Map{
+					"status":  constants.StatusRateLimitExceeded,
 					"message": "Rate limit exceeded. Please wait 30 seconds before uploading again.",
 				})
 			}

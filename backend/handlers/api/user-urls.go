@@ -44,8 +44,8 @@ func GetURLsByToken(c *fiber.Ctx) error {
 		urls[i].Key = "[Redacted]"
 	}
 
-	return c.Status(fiber.StatusOK).JSON(fiber.Map{
-		"status": fiber.StatusOK,
+	return c.JSON(fiber.Map{
+		"status": constants.StatusOK,
 		"urls":   urls,
 	})
 }
