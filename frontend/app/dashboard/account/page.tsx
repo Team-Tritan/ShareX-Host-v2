@@ -1,7 +1,8 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useUser } from "@/stores/user";
 import Unauthenticated from "@/components/Unauth";
@@ -21,6 +22,10 @@ const AccountSettings: React.FC = () => {
     domain: false,
     deleteAccount: false,
   });
+
+  useEffect(() => {
+    fetchEligibleDomains();
+  }, []);
 
   if (!user.apiToken) return <Unauthenticated />;
 
@@ -43,6 +48,14 @@ const AccountSettings: React.FC = () => {
       return null;
     }
   };
+
+  const fetchEligibleDomains = async () => {
+    const response = await handleApiRequest("/api/domains", "GET");
+    if (response?.ok) {
+      const data = await response.json();
+      user.setAvailableDomains(data.domains);
+    }
+  }
 
   const handleDisplayNameChange = async () => {
     setLoadingStates((prev) => ({ ...prev, displayName: true }));
