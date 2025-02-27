@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/gofiber/fiber/v2"
-	"tritan.dev/image-uploader/constants" // added import for enums
+	"tritan.dev/image-uploader/constants"
 	"tritan.dev/image-uploader/database"
 	"tritan.dev/image-uploader/functions"
 )
@@ -59,7 +59,19 @@ func deleteAccountByKey(c *fiber.Ctx, apiKey string) error {
 		return errorResponse(c, constants.StatusUnauthorized, constants.MessageAPIKeyRequired)
 	}
 
-	err := database.DeleteUserByKey(apiKey)
+	uploads, err := database.LoadUploadsFromDB(apiKey)
+	if err != nil {
+		return errorResponse(c, constants.StatusInternalServerError, constants.MessageFailedFetchUploads)
+	}
+
+	for _, upload := range uploads {
+		if err := functions.DeleteFileFromS3(upload.FileName); err != nil {
+			log.Printf("Error deleting file from S3: %v", err)
+			return errorResponse(c, constants.StatusInternalServerError, constants.MessageFailedDelete)
+		}
+	}
+
+	err = database.DeleteUserByKey(apiKey)
 	if err != nil {
 		return errorResponse(c, constants.StatusInternalServerError, constants.MessageFailedDelete)
 	}
@@ -67,7 +79,7 @@ func deleteAccountByKey(c *fiber.Ctx, apiKey string) error {
 	return c.SendStatus(constants.StatusNoContent)
 }
 
-func CreateAccount(c *fiber.Ctx) error {
+func PostNewAccount(c *fiber.Ctx) error {
 	ip := c.Get("x-forwarded-for")
 	if ip == "" {
 		ip = c.IP()
@@ -130,7 +142,7 @@ func updateDomain(c *fiber.Ctx, apiKey string, domain string) error {
 	return c.SendStatus(constants.StatusNoContent)
 }
 
-func UpdateAccountDetails(c *fiber.Ctx) error {
+func PutAccountDetailsByKey(c *fiber.Ctx) error {
 	apiKey := c.Get("key")
 	queryType := c.Params("type")
 	value := c.Query("value")

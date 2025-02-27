@@ -10,7 +10,7 @@ import (
 	"tritan.dev/image-uploader/functions"
 )
 
-func CreateURL(c *fiber.Ctx) error {
+func PostNewURL(c *fiber.Ctx) error {
 	key := c.Get("key")
 	if key == "" {
 		return errorResponse(c, constants.StatusUnauthorized, constants.MessageAPIKeyRequired)
@@ -57,7 +57,7 @@ func CreateURL(c *fiber.Ctx) error {
 	})
 }
 
-func UpdateSlug(c *fiber.Ctx) error {
+func PutUpdatedURLSlug(c *fiber.Ctx) error {
 	key := c.Get("key")
 	if key == "" {
 		return errorResponse(c, constants.StatusUnauthorized, constants.MessageAPIKeyRequired)

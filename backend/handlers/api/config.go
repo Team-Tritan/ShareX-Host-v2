@@ -7,7 +7,7 @@ import (
 	"tritan.dev/image-uploader/functions"
 )
 
-func GetShareXConfig(c *fiber.Ctx) error {
+func PostShareXConfig(c *fiber.Ctx) error {
 	key := c.Get("key")
 	if key == "" {
 		return errorResponse(c, constants.StatusUnauthorized, constants.MessageAPIKeyRequired)

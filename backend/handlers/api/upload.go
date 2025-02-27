@@ -6,19 +6,13 @@ import (
 	"path"
 	"time"
 
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/credentials"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/gofiber/fiber/v2"
-
-	"tritan.dev/image-uploader/config"
 	"tritan.dev/image-uploader/constants"
 	"tritan.dev/image-uploader/database"
 	"tritan.dev/image-uploader/functions"
 )
 
-func Upload(c *fiber.Ctx) error {
+func PostUpload(c *fiber.Ctx) error {
 	apiKey := c.Get("key")
 	if apiKey == "" {
 		return errorResponse(c, constants.StatusUnauthorized, constants.MessageAPIKeyRequired)
@@ -42,18 +36,7 @@ func Upload(c *fiber.Ctx) error {
 		ip = c.IP()
 	}
 
-	s3Config := &aws.Config{
-		Credentials:      credentials.NewStaticCredentials(config.AppConfigInstance.S3_KeyID, config.AppConfigInstance.S3_AppKey, ""),
-		Endpoint:         aws.String("http://" + config.AppConfigInstance.S3_RegionURL),
-		Region:           aws.String(config.AppConfigInstance.S3_RegionName),
-		S3ForcePathStyle: aws.Bool(true),
-	}
-	newSession, err := session.NewSession(s3Config)
-	if err != nil {
-		log.Printf("Error creating new session: %v\n", err)
-		return errorResponse(c, constants.StatusInternalServerError, constants.MessageFailedToCreateSession)
-	}
-	s3Client := s3.New(newSession)
+	s3FileName := name + ext
 
 	file, err := sharex.Open()
 	if err != nil {
@@ -63,33 +46,12 @@ func Upload(c *fiber.Ctx) error {
 	defer file.Close()
 
 	fileSize := sharex.Size
-	_, err = s3Client.PutObject(&s3.PutObjectInput{
-		Body:   file,
-		Bucket: aws.String(config.AppConfigInstance.S3_BucketName),
-		Key:    aws.String(name + ext),
-		ACL:    aws.String("public-read"),
-	})
+	err = functions.UploadFileToS3(file, s3FileName)
 	if err != nil {
-		log.Printf("Error uploading to S3: %v\n", err)
 		return errorResponse(c, constants.StatusInternalServerError, constants.MessageFailedToUploadToS3)
 	}
 
-	// Verify upload
-	verified := false
-	for i := 0; i < 5; i++ {
-		_, err = s3Client.HeadObject(&s3.HeadObjectInput{
-			Bucket: aws.String(config.AppConfigInstance.S3_BucketName),
-			Key:    aws.String(name + ext),
-		})
-		if err == nil {
-			verified = true
-			break
-		}
-		log.Printf("Retrying to verify upload to S3: attempt %d\n", i+1)
-		time.Sleep(2 * time.Second)
-	}
-
-	if !verified {
+	if !functions.VerifyUploadToS3(s3FileName) {
 		log.Printf("Error verifying upload to S3: %v\n", err)
 		return errorResponse(c, constants.StatusInternalServerError, constants.MessageVerifyFailed)
 	}

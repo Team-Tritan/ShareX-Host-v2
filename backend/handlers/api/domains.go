@@ -29,7 +29,7 @@ func GetEligableDomains(c *fiber.Ctx) error {
 	})
 }
 
-func AddDomainWithAPIKeyHandler(c *fiber.Ctx) error {
+func PutDomainWithAPIKey(c *fiber.Ctx) error {
 	apiKey := c.Get("key")
 	domain := c.Query("i")
 	isPublic := c.Query("p")
