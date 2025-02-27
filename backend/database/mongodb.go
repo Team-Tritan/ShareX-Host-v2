@@ -207,7 +207,24 @@ func DeleteUserByKey(key string) error {
 	defer cancel()
 
 	filter := bson.M{"api_key": key}
-	return deleteOne(ctx, "users", filter)
+	if err := deleteOne(ctx, "users", filter); err != nil {
+		return err
+	}
+
+	uploadFilter := bson.M{"api_key": key}
+	if _, err := getCollection("uploads").DeleteMany(ctx, uploadFilter); err != nil {
+		log.Printf("Error deleting uploads for user: %v", err)
+		return err
+	}
+
+	domainFilter := bson.M{"allowed": key}
+	domainUpdate := bson.M{"$pull": bson.M{"allowed": key}}
+	if _, err := getCollection("domains").UpdateMany(ctx, domainFilter, domainUpdate); err != nil {
+		log.Printf("Error removing user key from domains: %v", err)
+		return err
+	}
+
+	return nil
 }
 
 func SaveURLToDB(url URL) error {
