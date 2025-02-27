@@ -473,3 +473,36 @@ func GetEligibleDomainsFromDB(apiKey string) ([]string, error) {
 	}
 	return eligible, nil
 }
+
+func AddDomainWithAPIKey(domainName, apiKey string, isPublic bool) error {
+	if domainName == "" || apiKey == "" {
+		return fmt.Errorf("missing fields")
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	collection := getCollection("domains")
+
+	filter := bson.M{"name": domainName}
+	update := bson.M{
+		"$addToSet": bson.M{"allowed": apiKey},
+		"$setOnInsert": bson.M{
+			"name":  domainName,
+			"count": 0,
+		},
+	}
+
+	if isPublic {
+		update["$addToSet"] = bson.M{"allowed": "*"}
+	}
+
+	opts := options.Update().SetUpsert(true)
+
+	_, err := collection.UpdateOne(ctx, filter, update, opts)
+	if err != nil {
+		log.Printf("Error adding domain with API key: %v", err)
+		return err
+	}
+	return nil
+}
