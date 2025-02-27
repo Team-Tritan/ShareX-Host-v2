@@ -10,7 +10,7 @@ import { ArrowRight } from "lucide-react";
 import { toast } from "react-hot-toast";
 
 interface AccountResponses {
-  key: string;
+  key?: string;
   user: {
     DisplayName: string;
     key?: string;

@@ -19,6 +19,18 @@ services:
       - backend
     restart: unless-stopped
 
+  proxy:
+    build:
+      context: ./proxy
+    ports:
+      - "80:80"
+    networks:
+      - app-network
+    depends_on:
+      - frontend
+      - backend
+    restart: unless-stopped
+
 networks:
   app-network:
     driver: bridge
