@@ -21,10 +21,10 @@ func SetupRoutes(app *fiber.App) error {
 	app.Post("/api/upload", api.Upload)
 	app.Post("/api/config", api.GetShareXConfig)
 	app.Post("/api/url", api.CreateURL)
-	app.Post("/api/domain", api.AddDomainWithAPIKeyHandler)
 
 	app.Put("/api/url/:slug", api.UpdateSlug)
 	app.Put("/api/account/:type", api.UpdateAccountDetails)
+	app.Put("/api/domain", api.AddDomainWithAPIKeyHandler)
 
 	app.Delete("/api/delete-upload/:id", api.DeleteUpload)
 	app.Delete("/api/delete-url/:slug", api.DeleteURL)

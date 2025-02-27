@@ -31,8 +31,8 @@ func GetEligableDomains(c *fiber.Ctx) error {
 
 func AddDomainWithAPIKeyHandler(c *fiber.Ctx) error {
 	apiKey := c.Get("key")
-	domain := c.Query("domain")
-	isPublic := c.Query("public")
+	domain := c.Query("i")
+	isPublic := c.Query("p")
 
 	if apiKey == "" {
 		return errorResponse(c, constants.StatusUnauthorized, constants.MessageAPIKeyRequired)

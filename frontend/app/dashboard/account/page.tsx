@@ -16,6 +16,9 @@ const AccountSettings: React.FC = () => {
   const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isAddDomainModalOpen, setIsAddDomainModalOpen] = useState(false);
+  const [newDomain, setNewDomain] = useState("");
+  const [isPublic, setIsPublic] = useState(false);
   const [loadingStates, setLoadingStates] = useState({
     displayName: false,
     apiToken: false,
@@ -119,6 +122,24 @@ const AccountSettings: React.FC = () => {
     setLoadingStates((prev) => ({ ...prev, domain: false }));
   };
 
+  const handleAddDomain = async () => {
+    setLoadingStates((prev) => ({ ...prev, domain: true }));
+
+    const response = await handleApiRequest(
+      `/api/domains?d=${newDomain}&p=${isPublic}`,
+      "PUT"
+    );
+
+    if (response?.ok) {
+      toast.success("Domain added successfully.");
+      fetchEligibleDomains();
+      setIsAddDomainModalOpen(false);
+    } else {
+      toast.error("Failed to add domain.");
+    }
+    setLoadingStates((prev) => ({ ...prev, domain: false }));
+  };
+
   const copyToClipboard = () => {
     navigator.clipboard.writeText(user.apiToken);
     toast.success("API token copied to clipboard");
@@ -206,6 +227,14 @@ const AccountSettings: React.FC = () => {
               >
                 {loadingStates.domain ? "Saving..." : "Save Changes"}
               </button>
+
+              <button
+                onClick={() => setIsAddDomainModalOpen(true)}
+                disabled={loadingStates.domain}
+                className="px-4 py-2 ml-3 bg-[#171619] border border-zinc-800 rounded-lg text-white font-medium hover:opacity-90 transition-opacity disabled:opacity-50"
+              >
+                Add Domain
+              </button>
             </AccountSection>
           </motion.div>
 
@@ -258,6 +287,18 @@ const AccountSettings: React.FC = () => {
             onCancel={() => setIsDeleteModalOpen(false)}
             onDelete={handleDeleteAccount}
             isSaving={loadingStates.deleteAccount}
+          />
+        )}
+
+        {isAddDomainModalOpen && (
+          <AddDomainModal
+            onCancel={() => setIsAddDomainModalOpen(false)}
+            onSave={handleAddDomain}
+            isSaving={loadingStates.domain}
+            newDomain={newDomain}
+            setNewDomain={setNewDomain}
+            isPublic={isPublic}
+            setIsPublic={setIsPublic}
           />
         )}
       </main>
@@ -333,6 +374,76 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
           className="flex-1 px-4 py-2 bg-red-500/10 hover:bg-red-500/20 border border-red-500/50 rounded-lg text-red-500"
         >
           {isSaving ? "Deleting..." : "Delete Account"}
+        </button>
+      </div>
+    </motion.div>
+  </motion.div>
+);
+
+interface AddDomainModalProps {
+  onCancel: () => void;
+  onSave: () => void;
+  isSaving: boolean;
+  newDomain: string;
+  setNewDomain: (value: string) => void;
+  isPublic: boolean;
+  setIsPublic: (value: boolean) => void;
+}
+
+const AddDomainModal: React.FC<AddDomainModalProps> = ({
+  onCancel,
+  onSave,
+  isSaving,
+  newDomain,
+  setNewDomain,
+  isPublic,
+  setIsPublic,
+}) => (
+  <motion.div
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    className="fixed inset-0 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4"
+  >
+    <motion.div
+      initial={{ scale: 0.95 }}
+      animate={{ scale: 1 }}
+      className="bg-[#171619] rounded-xl p-6 max-w-md w-full border border-gray-800"
+    >
+      <h3 className="text-xl font-semibold text-white">Add Custom Domain</h3>
+      <p className="mt-2 text-gray-400">
+        To add a custom domain, point the domain to the IP address: 23.142.248.43.
+      </p>
+      <p className="mt-2 text-gray-400">
+        If you{"'"}re using Cloudflare, make sure to enable proxying (orange cloud) with flexible SSL.
+      </p>
+      <input
+        type="text"
+        value={newDomain}
+        onChange={(e) => setNewDomain(e.target.value)}
+        className="w-full px-4 py-2 mt-4 bg-[#171619] border border-zinc-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-white"
+        placeholder="Enter your domain"
+      />
+      <select
+        value={isPublic ? "public" : "private"}
+        onChange={(e) => setIsPublic(e.target.value === "public")}
+        className="w-full px-4 py-2 mt-4 bg-[#171619] border border-zinc-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-white"
+      >
+        <option value="private">Private Domain</option>
+        <option value="public">Public Domain</option>
+      </select>
+      <div className="mt-6 flex gap-3">
+        <button
+          onClick={onCancel}
+          className="flex-1 px-4 py-2 bg-zinc-800 border border-zinc-600 rounded-lg text-white"
+        >
+          Cancel
+        </button>
+        <button
+          onClick={onSave}
+          disabled={isSaving}
+          className="flex-1 px-4 py-2 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 rounded-lg text-white font-medium hover:opacity-90 transition-opacity disabled:opacity-50"
+        >
+          {isSaving ? "Saving..." : "Save"}
         </button>
       </div>
     </motion.div>
