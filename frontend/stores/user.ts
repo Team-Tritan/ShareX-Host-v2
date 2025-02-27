@@ -36,12 +36,12 @@ export const useUser = create<UserState>((set) => ({
     })),
   removeUrl: (slug) =>
     set((state) => ({
-      urls: state.urls.filter((url) => url.Slug !== slug),
+      urls: state.urls.filter((url) => url.slug !== slug),
     })),
   updateUrl: (key, newSlug) =>
     set((state) => ({
       urls: state.urls.map((url) =>
-        url.Key === key ? { ...url, Slug: newSlug } : url
+        url.key === key ? { ...url, slug: newSlug } : url
       ),
     })),
 
@@ -53,6 +53,6 @@ export const useUser = create<UserState>((set) => ({
     })),
   removeUpload: (fileName) =>
     set((state) => ({
-      uploads: state.uploads.filter((upload) => upload.FileName !== fileName),
+      uploads: state.uploads.filter((upload) => upload.fileName !== fileName),
     })),
 }));
