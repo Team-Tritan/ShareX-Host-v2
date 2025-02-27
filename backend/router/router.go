@@ -24,7 +24,7 @@ func SetupRoutes(app *fiber.App) error {
 
 	app.Put("/api/url/:slug", api.UpdateSlug)
 	app.Put("/api/account/:type", api.UpdateAccountDetails)
-	app.Put("/api/domain", api.AddDomainWithAPIKeyHandler)
+	app.Put("/api/domains", api.AddDomainWithAPIKeyHandler)
 
 	app.Delete("/api/delete-upload/:id", api.DeleteUpload)
 	app.Delete("/api/delete-url/:slug", api.DeleteURL)
