@@ -1,19 +1,19 @@
 import { z } from "zod";
 
 const MetadataSchema = z.object({
-  FileType: z.string(),
-  FileSize: z.number(),
-  UploadDate: z.string(),
-  Views: z.number(),
+  fileType: z.string(),
+  fileSize: z.number(),
+  uploadDate: z.string(),
+  views: z.number(),
 });
 
 const UploadSchema = z.object({
   _id: z.string(),
-  IP: z.string(),
-  Key: z.string(),
-  DisplayName: z.string(),
-  FileName: z.string(),
-  Metadata: MetadataSchema,
+  ip: z.string(),
+  key: z.string(),
+  displayName: z.string(),
+  fileName: z.string(),
+  metadata: MetadataSchema,
 });
 
 const ApiResponseSchema = z.object({
@@ -21,18 +21,18 @@ const ApiResponseSchema = z.object({
 });
 
 const NewAccountSchema = z.object({
-  DisplayName: z.string(),
+  displayName: z.string(),
   key: z.string(),
-  Domain: z.string(),
+  domain: z.string(),
 });
 
 const UrlSchema = z.object({
-  Key: z.string(),
-  URL: z.string(),
-  CreatedAt: z.string(),
-  IP: z.string(),
-  Slug: z.string(),
-  Clicks: z.number(),
+  key: z.string(),
+  url: z.string(),
+  createdAt: z.string(),
+  ip: z.string(),
+  slug: z.string(),
+  clicks: z.number(),
 });
 
 const ApiResponseUrlSchema = z.object({

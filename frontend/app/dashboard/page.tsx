@@ -4,7 +4,7 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import type { Upload, ApiResponse } from "@/typings";
+import type { Upload, ApiResponse, UserState } from "@/typings";
 import { useUser } from "@/stores/user";
 import Unauthenticated from "@/components/Unauth";
 import { Sidebar } from "@/components/Sidebar";
@@ -39,11 +39,12 @@ const fetchImages = async (
 
 const handleDelete = async (
   apiToken: string,
-  FileName: string,
-  removeUpload: (FileName: string) => void
+  fileName: string,
+  removeUpload: (FileName: string) => void,
+  user: UserState
 ): Promise<void> => {
   try {
-    const response = await fetch(`/api/delete-upload/${FileName}`, {
+    const response = await fetch(`/api/delete-upload/${fileName}`, {
       headers: {
         key: apiToken,
       },
@@ -51,8 +52,9 @@ const handleDelete = async (
     });
 
     if (response.ok) {
-      removeUpload(FileName);
+      removeUpload(fileName);
       toast.success("File deleted successfully!");
+      fetchImages(user.apiToken, user.setUploads, user.setLoading);
     } else {
       const errorData = await response.json();
 
@@ -73,16 +75,16 @@ const Dashboard: React.FC = () => {
   if (!user.apiToken) return <Unauthenticated />;
 
   const filteredUploads = user.uploads.filter((upload) =>
-    upload.FileName.toLowerCase().includes(searchTerm.toLowerCase())
+    upload.fileName.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const totalFilesUploaded: number = user.uploads.length;
   const totalViews: number = user.uploads.reduce(
-    (acc, image) => acc + image.Metadata.Views,
+    (acc, image) => acc + image.metadata.views,
     0
   );
   const totalStorageUsed: number = user.uploads.reduce(
-    (acc, image) => acc + image.Metadata.FileSize,
+    (acc, image) => acc + image.metadata.fileSize,
     0
   );
 
@@ -209,12 +211,12 @@ const Dashboard: React.FC = () => {
             ) : (
               filteredUploads.map((image: Upload) => (
                 <div
-                  key={image.FileName}
+                  key={image.fileName}
                   className="relative overflow-hidden rounded-lg bg-[#121114] group shadow-2xl shadow-indigo-500/20 transition-all duration-300 hover:shadow-indigo-500/40 hover:scale-105"
                 >
                   <img
-                    src={`https://s3.tritan.gg/images/${image.FileName}`}
-                    alt={image.FileName}
+                    src={`https://s3.tritan.gg/images/${image.fileName}`}
+                    alt={image.fileName}
                     className="h-48 w-full object-cover"
                   />
 
@@ -224,7 +226,7 @@ const Dashboard: React.FC = () => {
                         className="h-4 w-4"
                         onClick={() => {
                           navigator.clipboard.writeText(
-                            `https://${user.domain}/i/${image.FileName.split(".")
+                            `https://${user.domain}/i/${image.fileName.split(".")
                               .slice(0, -1)
                               .join(".")}`
                           );
@@ -234,7 +236,7 @@ const Dashboard: React.FC = () => {
                     </button>
 
                     <Link
-                      href={`https://${user.domain}/i/${image.FileName.split(".")
+                      href={`https://${user.domain}/i/${image.fileName.split(".")
                         .slice(0, -1)
                         .join(".")}`}
                       prefetch={false}
@@ -249,8 +251,9 @@ const Dashboard: React.FC = () => {
                       onClick={() =>
                         handleDelete(
                           user.apiToken,
-                          `${image.FileName.split(".").slice(0, -1).join(".")}`,
-                          user.removeUpload
+                          `${image.fileName.split(".").slice(0, -1).join(".")}`,
+                          user.removeUpload,
+                          user
                         )
                       }
                     >
@@ -260,27 +263,27 @@ const Dashboard: React.FC = () => {
                   <div className="p-4">
                     <h3 className="font-semibold text-purple-400 hover:text-purple-300 transition-colors duration-300">
                       <Link
-                        href={`https:///i/${image.FileName.split(".")
+                        href={`https:///i/${image.fileName.split(".")
                           .slice(0, -1)
                           .join(".")}`}
                         prefetch={false}
                       >
-                        {image.FileName}
+                        {image.fileName}
                       </Link>
                     </h3>
                     <p className="text-sm text-gray-400 mt-2">
                       Uploaded on{" "}
-                      {new Date(image.Metadata.UploadDate).toLocaleString()}
+                      {new Date(image.metadata.uploadDate).toLocaleString()}
                     </p>
                     <p className="text-sm text-gray-400 mt-1">
                       <span className="text-pink-400">
-                        {image.Metadata.Views}
+                        {image.metadata.views}
                       </span>{" "}
                       Views
                     </p>
                     <p className="text-sm text-gray-400 mt-1">
                       <span className="text-green-400">
-                        {formatFileSize(image.Metadata.FileSize)}
+                        {formatFileSize(image.metadata.fileSize)}
                       </span>
                     </p>
                   </div>

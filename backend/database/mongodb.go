@@ -102,41 +102,41 @@ func deleteOne(ctx context.Context, collectionName string, filter bson.M) error 
 }
 
 type User struct {
-	Key         string `bson:"api_key"`
-	DisplayName string `bson:"display_name"`
-	CreatedAt   string `bson:"created_at"`
-	IP          string `bson:"ip"`
-	Domain      string `bson:"domain"`
+	Key         string `bson:"api_key" json:"key"`
+	DisplayName string `bson:"display_name" json:"displayName"`
+	CreatedAt   string `bson:"created_at" json:"createdAt"`
+	IP          string `bson:"ip" json:"ip"`
+	Domain      string `bson:"domain" json:"domain"`
 }
 
 type URL struct {
-	Key       string `bson:"api_key"`
-	URL       string `bson:"url"`
-	CreatedAt string `bson:"created_at"`
-	IP        string `bson:"ip"`
-	Slug      string `bson:"slug"`
-	Clicks    int    `bson:"clicks"`
+	Key       string `bson:"api_key" json:"key"`
+	URL       string `bson:"url" json:"url"`
+	CreatedAt string `bson:"created_at" json:"createdAt"`
+	IP        string `bson:"ip" json:"ip"`
+	Slug      string `bson:"slug" json:"slug"`
+	Clicks    int    `bson:"clicks" json:"clicks"`
 }
 
 type Metadata struct {
-	FileType   string    `bson:"file_type"`
-	FileSize   int64     `bson:"file_size"`
-	UploadDate time.Time `bson:"upload_date"`
-	Views      int       `bson:"views"`
+	FileType   string    `bson:"file_type" json:"fileType"`
+	FileSize   int64     `bson:"file_size" json:"fileSize"`
+	UploadDate time.Time `bson:"upload_date" json:"uploadDate"`
+	Views      int       `bson:"views" json:"views"`
 }
 
 type UploadEntry struct {
-	IP          string   `bson:"ip"`
-	Key         string   `bson:"api_key"`
-	DisplayName string   `bson:"display_name"`
-	FileName    string   `bson:"file_name"`
-	Metadata    Metadata `bson:"metadata"`
+	IP          string   `bson:"ip" json:"ip"`
+	Key         string   `bson:"api_key" json:"key"`
+	DisplayName string   `bson:"display_name" json:"displayName"`
+	FileName    string   `bson:"file_name" json:"fileName"`
+	Metadata    Metadata `bson:"metadata" json:"metadata"`
 }
 
 type Domain struct {
-	Name      string   `bson:"name"`
-	Allowed   []string `bson:"allowed"`
-	UsedCount int      `bson:"count"`
+	Name      string   `bson:"name" json:"name"`
+	Allowed   []string `bson:"allowed" json:"allowed"`
+	UsedCount int      `bson:"count" json:"count"`
 }
 
 func LoadUsersFromDB() ([]User, error) {

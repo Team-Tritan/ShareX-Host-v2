@@ -92,20 +92,20 @@ const Urls: React.FC = () => {
 
   const handleEdit = async (Key: string, currentSlug: string) => {
     setEditUrl({
-      Key: Key,
-      URL: "",
-      CreatedAt: "",
-      IP: "",
-      Slug: currentSlug,
-      Clicks: 0,
+      key: Key,
+      url: "",
+      createdAt: "",
+      ip: "",
+      slug: currentSlug,
+      clicks: 0,
     });
   };
 
   const handleUpdateSlug = async (newSlug: string) => {
-    if (!editUrl || newSlug === editUrl.Slug) return setEditUrl(null);
+    if (!editUrl || newSlug === editUrl.slug) return setEditUrl(null);
 
     try {
-      const response = await fetch(`/api/url/${editUrl.Slug}`, {
+      const response = await fetch(`/api/url/${editUrl.slug}`, {
         headers: {
           key: user.apiToken,
           "Content-Type": "application/json",
@@ -115,7 +115,7 @@ const Urls: React.FC = () => {
       });
 
       if (response.status === 200) {
-        user.updateUrl(editUrl.Key, newSlug);
+        user.updateUrl(editUrl.key, newSlug);
         toast.success("Slug updated successfully!");
       } else if (response.status === 409) {
         toast.error("Slug is already taken. Please enter a new slug.");
@@ -236,29 +236,29 @@ const Urls: React.FC = () => {
             ) : (
               user.urls.map((url) => (
                 <div
-                  key={url.Slug}
+                  key={url.slug}
                   className="relative overflow-hidden rounded-lg bg-[#121114] group shadow-2xl shadow-indigo-500/20 transition-all duration-300 hover:shadow-indigo-500/40 hover:scale-105"
                 >
                   <div className="p-4">
                     <h3 className="font-semibold text-purple-400 hover:text-purple-300 transition-colors duration-300">
-                      <Link prefetch={false} href={`/u/${url.Slug}`}>
-                        /u/{url.Slug}
+                      <Link prefetch={false} href={`/u/${url.slug}`}>
+                        /u/{url.slug}
                       </Link>
                       <ChevronRight className="inline mx-2 text-white font-semibold" />
-                      <Link prefetch={false} href={url.URL}>
-                        {url.URL}
+                      <Link prefetch={false} href={url.url}>
+                        {url.url}
                       </Link>
                     </h3>
                     <p className="text-sm text-gray-400 mt-2">
-                      Created on {new Date(url.CreatedAt).toLocaleString()}
+                      Created on {new Date(url.createdAt).toLocaleString()}
                     </p>
                     <p className="text-sm text-gray-400 mt-1">
-                      <span className="text-pink-400">{url.Clicks}</span> Clicks
+                      <span className="text-pink-400">{url.clicks}</span> Clicks
                     </p>
 
                     <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                       <Link prefetch={false}
-                        href={`https://${user.domain}/u/${url.Slug}`}>
+                        href={`https://${user.domain}/u/${url.slug}`}>
                         <button className="flex items-center rounded bg-purple-500 px-3 py-2 text-sm font-semibold text-white hover:bg-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-800 mr-2 transition-colors duration-300">
                           <Eye className="h-4 w-4" />
                         </button>
@@ -269,7 +269,7 @@ const Urls: React.FC = () => {
                           className="h-4 w-4"
                           onClick={() => {
                             navigator.clipboard.writeText(
-                              `https://${user.domain}/u/${url.Slug}`
+                              `https://${user.domain}/u/${url.slug}`
                             );
                             toast.success("Copied URL to clipboard!");
                           }}
@@ -278,14 +278,14 @@ const Urls: React.FC = () => {
 
                       <button
                         className="flex items-center rounded bg-pink-500 px-3 py-2 text-sm font-semibold text-white hover:bg-pink-600 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2 focus:ring-offset-gray-800 mr-2 transition-colors duration-300"
-                        onClick={() => handleEdit(url.Key, url.Slug)}
+                        onClick={() => handleEdit(url.key, url.slug)}
                       >
                         <Edit3 className="h-4 w-4" />
                       </button>
                       <button
                         className="flex items-center rounded bg-pink-500 px-3 py-2 text-sm font-semibold text-white hover:bg-pink-600 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-colors duration-300"
                         onClick={() =>
-                          handleDelete(user.apiToken, url.Slug, user.removeUrl)
+                          handleDelete(user.apiToken, url.slug, user.removeUrl)
                         }
                       >
                         <Trash2 className="h-4 w-4" />

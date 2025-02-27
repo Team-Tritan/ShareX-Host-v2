@@ -10,9 +10,9 @@ import { ArrowRight } from "lucide-react";
 import { toast } from "react-hot-toast";
 
 interface AccountResponses {
-  DisplayName: string;
-  Key: string;
-  Domain: string;
+  displayName: string;
+  key: string;
+  domain: string;
 
 }
 
@@ -45,8 +45,8 @@ const LoginPage: React.FC = () => {
 
       const data: AccountResponses = await response.json();
       setToken(apiKey);
-      setDisplayName(data.DisplayName);
-      setDomain(data.Domain);
+      setDisplayName(data.displayName);
+      setDomain(data.domain);
       router.push("/dashboard");
     } catch (error: any) {
       console.log(error)
@@ -79,11 +79,9 @@ const LoginPage: React.FC = () => {
           return toast.error("Failed to create API key.");
 
         const data: AccountResponses = await response.json();
-        setToken(data.Key!);
+        setToken(data.key!);
         setDisplayName(displayName);
-
-        navigator.clipboard.writeText(data.Key!);
-
+        navigator.clipboard.writeText(data.key!);
         toast.success(
           `Your API key has been copied to your clipboard, please keep it safe.`
         );
