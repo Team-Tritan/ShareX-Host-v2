@@ -101,7 +101,7 @@ func PostNewAccount(c *fiber.Ctx) error {
 		DisplayName: userRequest.DisplayName,
 		CreatedAt:   time.Now().Format(time.RFC3339),
 		IP:          ip,
-		Domain:      "footjobs.today",
+		Domain:      "i.tritan.gg",
 	}
 
 	if err := database.SaveUserToDB(newUser); err != nil {
