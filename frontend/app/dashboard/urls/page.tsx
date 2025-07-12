@@ -185,7 +185,6 @@ const Urls: React.FC = () => {
           sidebarOpen ? "ml-64" : "ml-0"
         }`}
       >
-        {/* Header Section */}
         <motion.div
           className="mb-8"
           initial={{ opacity: 0, y: -20 }}
@@ -210,7 +209,6 @@ const Urls: React.FC = () => {
           </motion.div>
         </motion.div>
 
-        {/* Stats Cards */}
         <motion.div
           className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 mb-8"
           initial={{ opacity: 0, y: 20 }}
@@ -267,7 +265,6 @@ const Urls: React.FC = () => {
           </div>
         </motion.div>
 
-        {/* Action Bar */}
         <motion.div
           className="flex flex-col sm:flex-row gap-4 mb-8"
           initial={{ opacity: 0 }}
@@ -284,7 +281,6 @@ const Urls: React.FC = () => {
             Create Short URL
           </motion.button>
 
-          {/* Search Bar */}
           {user.urls.length > 0 && (
             <div className="relative flex-1 max-w-md">
               <input
@@ -299,7 +295,6 @@ const Urls: React.FC = () => {
           )}
         </motion.div>
 
-        {/* URLs Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -364,7 +359,6 @@ const Urls: React.FC = () => {
                     whileHover={{ y: -5 }}
                   >
                     <div className="p-6 space-y-4">
-                      {/* URL Header */}
                       <div className="flex items-start justify-between">
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center space-x-2 mb-2">
@@ -418,7 +412,6 @@ const Urls: React.FC = () => {
                         </div>
                       </div>
 
-                      {/* Target URL */}
                       <div className="space-y-2">
                         <div className="flex items-center space-x-2">
                           <ChevronRight className="w-4 h-4 text-gray-500" />
@@ -433,7 +426,6 @@ const Urls: React.FC = () => {
                         </Link>
                       </div>
 
-                      {/* Stats */}
                       <div className="flex items-center justify-between pt-4 border-t border-zinc-800/50">
                         <div className="flex items-center space-x-4">
                           <div className="flex items-center space-x-2">
