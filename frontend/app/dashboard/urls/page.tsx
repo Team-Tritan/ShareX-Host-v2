@@ -191,22 +191,184 @@ const Urls: React.FC = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <motion.h1
-            className="mb-2 text-4xl font-bold bg-gradient-to-r from-violet-400 to-fuchsia-400 text-transparent bg-clip-text"
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            URL Shortener
-          </motion.h1>
-          <motion.div
-            className="text-gray-400 text-lg mb-8"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2, duration: 0.5 }}
-          >
-            Create, manage, and track your shortened URLs with detailed analytics.
-          </motion.div>
+          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#171619]/90 via-[#1a1a1d]/80 to-[#171619]/70 backdrop-blur-xl border border-zinc-800/50 p-8 shadow-2xl">
+            <div className="absolute inset-0 overflow-hidden">
+              <div className="absolute -top-40 -left-40 w-80 h-80 bg-purple-500/20 rounded-full blur-3xl animate-pulse"></div>
+              <div className="absolute -top-20 -right-20 w-60 h-60 bg-pink-500/15 rounded-full blur-2xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+              <div className="absolute -bottom-20 -left-20 w-60 h-60 bg-indigo-500/15 rounded-full blur-2xl animate-pulse" style={{ animationDelay: '2s' }}></div>
+              <div className="absolute bottom-0 right-0 w-40 h-40 bg-cyan-500/10 rounded-full blur-xl animate-pulse" style={{ animationDelay: '3s' }}></div>
+
+              <div className="absolute top-10 right-20 w-4 h-4 bg-purple-400/30 rounded-full animate-bounce" style={{ animationDelay: '0.5s' }}></div>
+              <div className="absolute top-20 left-32 w-3 h-3 bg-pink-400/30 rounded-full animate-bounce" style={{ animationDelay: '1.5s' }}></div>
+              <div className="absolute bottom-20 right-32 w-5 h-5 bg-indigo-400/30 rounded-full animate-bounce" style={{ animationDelay: '2.5s' }}></div>
+            </div>
+
+            <div className="relative z-10">
+              <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
+                <div className="flex-1">
+                  <motion.div
+                    className="flex items-center space-x-4 mb-6"
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.2, duration: 0.5 }}
+                  >
+                    <div>
+                      <div className="flex items-center space-x-2">
+                        <span className="text-sm text-gray-400">URL Shortener:</span>
+                        <div className="flex items-center space-x-1">
+                          <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                          <span className="text-sm font-medium text-green-400">Active</span>
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+
+                  <motion.div
+                    className="space-y-4"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3, duration: 0.6 }}
+                  >
+                    <h1 className="text-4xl lg:text-6xl font-bold">
+                      <span className="bg-gradient-to-r from-violet-400 via-purple-400 to-fuchsia-400 bg-clip-text text-transparent">
+                        URL Shortener
+                      </span>
+                    </h1>
+
+                    <p className="text-gray-300 text-lg leading-relaxed max-w-2xl">
+                      Create, manage, and track your shortened URLs with detailed analytics and custom slugs.
+                    </p>
+                  </motion.div>
+                </div>
+
+                <motion.div
+                  className="grid grid-cols-2 gap-4 min-w-[300px]"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.4, duration: 0.5 }}
+                >
+                  <motion.div
+                    className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-purple-500/30 to-purple-600/20 backdrop-blur-sm border border-purple-500/40 p-4 shadow-xl group"
+                    whileHover={{ scale: 1.05, rotate: 1 }}
+                    transition={{ type: "spring", stiffness: 300 }}
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div className="relative">
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="p-2 bg-purple-500/30 rounded-lg">
+                          <LinkIcon className="w-5 h-5 text-purple-300" />
+                        </div>
+                        <div className="text-right">
+                          <div className="text-xs text-purple-300 font-medium">Total URLs</div>
+                          <div className="text-lg font-bold text-white">
+                            {user.urls.length}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+
+                  <motion.div
+                    className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-pink-500/30 to-pink-600/20 backdrop-blur-sm border border-pink-500/40 p-4 shadow-xl group"
+                    whileHover={{ scale: 1.05, rotate: -1 }}
+                    transition={{ type: "spring", stiffness: 300 }}
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-br from-pink-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div className="relative">
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="p-2 bg-pink-500/30 rounded-lg">
+                          <BarChart3 className="w-5 h-5 text-pink-300" />
+                        </div>
+                        <div className="text-right">
+                          <div className="text-xs text-pink-300 font-medium">Total Clicks</div>
+                          <div className="text-lg font-bold text-white">
+                            {totalClicks}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+
+                  <motion.div
+                    className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-500/30 to-indigo-600/20 backdrop-blur-sm border border-indigo-500/40 p-4 shadow-xl group"
+                    whileHover={{ scale: 1.05, rotate: 1 }}
+                    transition={{ type: "spring", stiffness: 300 }}
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div className="relative">
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="p-2 bg-indigo-500/30 rounded-lg">
+                          <Eye className="w-5 h-5 text-indigo-300" />
+                        </div>
+                        <div className="text-right">
+                          <div className="text-xs text-indigo-300 font-medium">Avg. Clicks</div>
+                          <div className="text-lg font-bold text-white">
+                            {user.urls.length > 0 ? Math.round(totalClicks / user.urls.length) : 0}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+
+                  <motion.div
+                    className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-500/30 to-emerald-600/20 backdrop-blur-sm border border-emerald-500/40 p-4 shadow-xl group"
+                    whileHover={{ scale: 1.05, rotate: -1 }}
+                    transition={{ type: "spring", stiffness: 300 }}
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div className="relative">
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="p-2 bg-emerald-500/30 rounded-lg">
+                          <Calendar className="w-5 h-5 text-emerald-300" />
+                        </div>
+                        <div className="text-right">
+                          <div className="text-xs text-emerald-300 font-medium">This Month</div>
+                          <div className="text-lg font-bold text-white">
+                            {user.urls.filter(url => {
+                              const urlDate = new Date(url.createdAt);
+                              const thisMonth = new Date();
+                              return urlDate.getMonth() === thisMonth.getMonth() && urlDate.getFullYear() === thisMonth.getFullYear();
+                            }).length}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                </motion.div>
+              </div>
+
+              <motion.div
+                className="mt-8 pt-6 border-t border-zinc-800/50"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.6, duration: 0.5 }}
+              >
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                  <div className="flex items-center space-x-6">
+                    <div className="flex items-center space-x-2">
+                      <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                      <span className="text-sm text-gray-400">Service Status: </span>
+                      <span className="text-sm font-medium text-green-400">All systems operational</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <LinkIcon className="w-4 h-4 text-gray-400" />
+                      <span className="text-sm text-gray-400">Domain: </span>
+                      <span className="text-sm font-medium text-white">{user.domain}</span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center space-x-4">
+                    <div className="flex items-center space-x-2 px-3 py-1 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full">
+                      <BarChart3 className="w-4 h-4 text-purple-400" />
+                      <span className="text-sm font-medium text-white">
+                        {totalClicks} total clicks
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          </div>
         </motion.div>
 
         <motion.div
