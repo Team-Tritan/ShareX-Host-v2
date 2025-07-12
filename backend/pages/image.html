@@ -15,7 +15,7 @@
     <meta property="og:image" content="{{.Data.fullURL}}" />
     <meta name="theme-color" content="#6366F1" />
     <meta property="og:title" content="{{.Data.Name}}" />
-    <meta property="og:author" content="Sussy File Uploader" />
+    <meta property="og:author" content="Tritan Uploader" />
     <meta name="twitter:title" content="{{.Data.Name}}" />
     <meta
       name="twitter:description"
@@ -26,52 +26,202 @@
       content="{{.Data.DisplayName}} uploaded a {{.Data.FileSizeMB}} file at {{.Data.UploadTime}}."
     />
     <link type="application/json+oembed" href="{{.Data.fullURL}}" />
+    <style>
+      @keyframes gradient-flow {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+      }
+      .animate-gradient-flow {
+        background-size: 200% 200%;
+        animation: gradient-flow 3s ease infinite;
+      }
+      .animate-pulse-slow {
+        animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+      }
+      .animate-bounce-slow {
+        animation: bounce 2s infinite;
+      }
+    </style>
   </head>
-  <body
-    class="bg-[#0d0c0e] text-[#171619] flex justify-center items-center h-screen"
-  >
-    <div
-      class="max-w-4xl w-full bg-[#171619] p-10 rounded-2xl shadow-xl border border-zinc-800"
-    >
-      <h1 class="text-4xl font-semibold text-center text-white mb-3">
-        {{.Data.Name}}
-      </h1>
+  <body class="min-h-screen bg-gradient-to-br from-[#0d0c0e] via-[#1a1a1d] to-[#0d0c0e] text-gray-100 p-4">
+    <!-- Background decorative elements -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none">
+      <div class="absolute -top-40 -right-40 w-80 h-80 bg-purple-500/10 rounded-full blur-3xl animate-pulse-slow"></div>
+      <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-pink-500/10 rounded-full blur-3xl animate-pulse-slow" style="animation-delay: 1s;"></div>
+      <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-indigo-500/5 rounded-full blur-3xl animate-pulse-slow" style="animation-delay: 2s;"></div>
+      
+      <!-- Floating dots -->
+      <div class="absolute top-10 right-20 w-4 h-4 bg-purple-400/30 rounded-full animate-bounce-slow" style="animation-delay: 0.5s;"></div>
+      <div class="absolute top-20 left-32 w-3 h-3 bg-pink-400/30 rounded-full animate-bounce-slow" style="animation-delay: 1.5s;"></div>
+      <div class="absolute bottom-20 right-32 w-5 h-5 bg-indigo-400/30 rounded-full animate-bounce-slow" style="animation-delay: 2.5s;"></div>
+    </div>
 
-      <div class="text-lg text-zinc-400 text-center mb-6">
-        <div>
-          Uploaded by
-          <span class="underline text-purple-300">{{.Data.DisplayName}}</span>
+    <!-- Main content -->
+    <div class="relative z-10 max-w-6xl mx-auto">
+      <!-- Header section -->
+      <div class="text-center mb-8">
+        <div class="flex items-center justify-center mb-4">
+          <div class="relative">
+            <div class="w-16 h-16 bg-gradient-to-br from-purple-500 via-pink-500 to-indigo-500 rounded-2xl flex items-center justify-center shadow-lg">
+              <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+              </svg>
+            </div>
+            <div class="absolute -top-1 -right-1 w-6 h-6 bg-green-500 rounded-full border-2 border-[#0d0c0e] flex items-center justify-center">
+              <div class="w-2 h-2 bg-white rounded-full"></div>
+            </div>
+          </div>
         </div>
+        <h1 class="text-3xl font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-indigo-400 bg-clip-text text-transparent mb-2">
+          Tritan Uploader
+        </h1>
+        <p class="text-gray-400 text-sm">
+          Shared content powered by Tritan Internet
+        </p>
       </div>
 
-      <a href="{{.Data.fullURL}}" target="_blank">
-        <img
-          class="max-h-[75vh] w-auto mx-auto rounded-lg mb-6"
-          src="{{.Data.fullURL}}"
-          alt="Cannot preview this file in the browser, click here to open."
-        />
-      </a>
+      <!-- Main content card -->
+      <div class="relative overflow-hidden rounded-3xl bg-[#171619]/90 backdrop-blur-xl border border-zinc-800/50 p-8 shadow-2xl">
+        <!-- Card background effects -->
+        <div class="absolute inset-0 overflow-hidden">
+          <div class="absolute -top-20 -left-20 w-60 h-60 bg-purple-500/15 rounded-full blur-2xl animate-pulse-slow"></div>
+          <div class="absolute -bottom-20 -right-20 w-60 h-60 bg-pink-500/15 rounded-full blur-2xl animate-pulse-slow" style="animation-delay: 1s;"></div>
+        </div>
 
-      <div class="text-sm text-zinc-400 text-center mb-6">
-        <div>({{.Data.FileSizeMB}})</div>
-        <div>{{.Data.UploadTime}}</div>
-        <div>{{.Data.Views}} Views</div>
+        <!-- Content -->
+        <div class="relative z-10">
+          <!-- File info header -->
+          <div class="text-center mb-8">
+            <h2 class="text-2xl lg:text-3xl font-bold text-white mb-4">
+              {{.Data.Name}}
+            </h2>
+            
+            <div class="flex items-center justify-center space-x-2 mb-4">
+              <div class="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full">
+                <svg class="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                </svg>
+                <span class="text-sm font-medium text-white">
+                  Uploaded by <span class="text-purple-300">{{.Data.DisplayName}}</span>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Image display -->
+          <div class="mb-8">
+            <a href="{{.Data.fullURL}}" target="_blank" class="block group">
+              <div class="relative overflow-hidden rounded-2xl bg-[#0d0c0e]/50 border border-zinc-800/50 transition-all duration-300 hover:border-purple-500/50 hover:shadow-2xl hover:shadow-purple-500/20">
+                <img
+                  class="max-h-[75vh] w-auto mx-auto rounded-2xl transition-transform duration-300 group-hover:scale-105"
+                  src="{{.Data.fullURL}}"
+                  alt="Cannot preview this file in the browser, click here to open."
+                />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl"></div>
+                
+                <!-- Overlay icon -->
+                <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <div class="bg-purple-500/90 backdrop-blur-sm rounded-full p-3">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </a>
+          </div>
+
+          <!-- File stats -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+            <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-purple-500/30 to-purple-600/20 backdrop-blur-sm border border-purple-500/40 p-4 shadow-xl">
+              <div class="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-transparent"></div>
+              <div class="relative">
+                <div class="flex items-center justify-between mb-2">
+                  <div class="p-2 bg-purple-500/30 rounded-lg">
+                    <svg class="w-5 h-5 text-purple-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                  </div>
+                  <div class="text-right">
+                    <div class="text-xs text-purple-300 font-medium">File Size</div>
+                    <div class="text-lg font-bold text-white">{{.Data.FileSizeMB}}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-pink-500/30 to-pink-600/20 backdrop-blur-sm border border-pink-500/40 p-4 shadow-xl">
+              <div class="absolute inset-0 bg-gradient-to-br from-pink-500/10 to-transparent"></div>
+              <div class="relative">
+                <div class="flex items-center justify-between mb-2">
+                  <div class="p-2 bg-pink-500/30 rounded-lg">
+                    <svg class="w-5 h-5 text-pink-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                    </svg>
+                  </div>
+                  <div class="text-right">
+                    <div class="text-xs text-pink-300 font-medium">Views</div>
+                    <div class="text-lg font-bold text-white">{{.Data.Views}}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-500/30 to-indigo-600/20 backdrop-blur-sm border border-indigo-500/40 p-4 shadow-xl">
+              <div class="absolute inset-0 bg-gradient-to-br from-indigo-500/10 to-transparent"></div>
+              <div class="relative">
+                <div class="flex items-center justify-between mb-2">
+                  <div class="p-2 bg-indigo-500/30 rounded-lg">
+                    <svg class="w-5 h-5 text-indigo-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                  </div>
+                  <div class="text-right">
+                    <div class="text-xs text-indigo-300 font-medium">Uploaded</div>
+                    <div class="text-sm font-bold text-white">{{.Data.UploadTime}}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Action buttons -->
+          <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a
+              href="{{.Data.fullURL}}"
+              download="{{.Data.Name}}"
+              class="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-purple-500 via-pink-500 to-indigo-500 text-white font-medium rounded-xl hover:from-purple-600 hover:via-pink-600 hover:to-indigo-600 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 group"
+            >
+              <svg class="w-5 h-5 mr-2 group-hover:animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+              </svg>
+              Download File
+            </a>
+            
+            <a
+              href="mailto:noc@tritan.gg?subject=REPORT: {{.Data.Name}}&body=Hi, I'd like to report {{.Data.Name}} which was uploaded onto your sharex image host."
+              class="inline-flex items-center justify-center px-6 py-3 bg-[#171619]/80 backdrop-blur-sm border border-zinc-800/50 rounded-xl text-white font-medium hover:bg-zinc-800/50 hover:border-red-500/50 hover:text-red-400 transition-all duration-200 group"
+            >
+              <svg class="w-5 h-5 mr-2 group-hover:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+              </svg>
+              Report Content
+            </a>
+          </div>
+        </div>
+
+        <!-- Decorative elements -->
+        <div class="absolute top-0 right-0 w-32 h-32 bg-purple-500/10 rounded-full blur-xl -translate-y-16 translate-x-16"></div>
+        <div class="absolute bottom-0 left-0 w-32 h-32 bg-pink-500/10 rounded-full blur-xl translate-y-16 -translate-x-16"></div>
       </div>
 
-      <div class="flex justify-center mt-6 space-x-4">
-        <a
-          class="inline-block px-4 py-2 rounded-md bg-red-500 text-white text-lg font-semibold hover:bg-red-600 transition duration-300 ease-in-out"
-          href="mailto:noc@tritan.gg?subject=REPORT: {{.Data.Name}}&body=Hi, I'd like to report {{.Data.Name}} which was uploaded onto your sharex image host."
-        >
-          Report Upload
-        </a>
-        <a
-          class="inline-block px-4 py-2 rounded-md bg-purple-500 text-white text-lg font-semibold hover:bg-purple-600 transition duration-300 ease-in-out"
-          href="{{.Data.fullURL}}"
-          download="{{.Data.Name}}"
-        >
-          Download
-        </a>
+      <!-- Footer -->
+      <div class="text-center mt-8 pt-4 border-t border-zinc-800/50">
+        <p class="text-xs text-gray-500">
+          Powered by Tritan Internet
+        </p>
       </div>
     </div>
   </body>
