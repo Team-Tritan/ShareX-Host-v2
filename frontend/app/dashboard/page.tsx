@@ -10,7 +10,7 @@ import Unauthenticated from "@/components/Unauth";
 import { Sidebar } from "@/components/Sidebar";
 import { formatFileSize } from "@/lib/utils";
 import { motion } from "framer-motion";
-import { AlertCircle, CopyIcon, Eye, Trash2, Search, TrendingUp, HardDrive, FileImage, Settings, User, Calendar, Clock, Sparkles, Activity } from "lucide-react";
+import { AlertCircle, CopyIcon, Eye, Trash2, Search, TrendingUp, HardDrive, FileImage, Calendar, Clock, Sparkles, Activity } from "lucide-react";
 import { toast } from "react-hot-toast";
 
 const fetchImages = async (
