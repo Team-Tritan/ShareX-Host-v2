@@ -17,6 +17,11 @@ import {
   Edit3,
   Eye,
   Trash2,
+  Plus,
+  LinkIcon,
+  BarChart3,
+  Calendar,
+  Search,
 } from "lucide-react";
 
 const fetchUrls = async (
@@ -76,6 +81,7 @@ const Urls: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [editUrl, setEditUrl] = useState<Url | null>(null);
   const [createUrlOpen, setCreateUrlOpen] = useState<boolean>(false);
+  const [searchTerm, setSearchTerm] = useState<string>("");
 
   if (!user.apiToken) return <Unauthenticated />;
 
@@ -161,143 +167,301 @@ const Urls: React.FC = () => {
     }
   };
 
+  const filteredUrls = user.urls.filter(
+    (url) =>
+      url.slug.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      url.url.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const totalClicks = user.urls.reduce((sum, url) => sum + url.clicks, 0);
+
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
 
   return (
-    <div className="flex h-screen bg-[#0d0c0e] text-gray-100">
+    <div className="flex h-screen bg-gradient-to-br from-[#0d0c0e] via-[#1a1a1d] to-[#0d0c0e] text-gray-100">
       <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
       <main
-        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"
-          }`}
+        className={`flex-1 overflow-auto p-6 transition-all duration-300 ${
+          sidebarOpen ? "ml-64" : "ml-0"
+        }`}
       >
-        <motion.h1
-          className="mb-2 text-4xl font-bold bg-gradient-to-r from-violet-400 to-fuchsia-400 text-transparent bg-clip-text"
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          Welcome, {user.displayName}!
-        </motion.h1>
+        {/* Header Section */}
         <motion.div
-          className="text-gray-400 text-lg mb-8"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.2, duration: 0.5 }}
+          className="mb-8"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
         >
-          You can view, edit, delete, and copy your shortened URLs here.
+          <motion.h1
+            className="mb-2 text-4xl font-bold bg-gradient-to-r from-violet-400 to-fuchsia-400 text-transparent bg-clip-text"
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            URL Shortener
+          </motion.h1>
+          <motion.div
+            className="text-gray-400 text-lg mb-8"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2, duration: 0.5 }}
+          >
+            Create, manage, and track your shortened URLs with detailed analytics.
+          </motion.div>
         </motion.div>
 
-        <button
-          className="mb-12 px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600 transition-colors duration-300"
-          onClick={handleCreateUrl}
+        {/* Stats Cards */}
+        <motion.div
+          className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 mb-8"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3, duration: 0.5 }}
         >
-          Shorten a URL
-        </button>
-        {user.loading ? (
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {Array.from({ length: 6 }).map((_, index) => (
-              <div
-                key={index}
-                className="overflow-hidden rounded-lg bg-[#121114] animate-pulse"
-              >
-                <div className="h-48 w-full bg-[#121114]"></div>
-                <div className="p-4">
-                  <div className="h-4 bg-zinc-800 mb-2"></div>
-                  <div className="h-4 bg-zinc-800 mb-2"></div>
-                  <div className="h-4 bg-zinc-800"></div>
-                </div>
+          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-purple-500/20 to-purple-600/20 backdrop-blur-sm border border-purple-500/20 p-6 shadow-2xl">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-semibold text-white mb-1">
+                  Total URLs
+                </h3>
+                <p className="text-3xl font-bold text-white">
+                  {user.urls.length}
+                </p>
               </div>
-            ))}
+              <div className="p-3 bg-purple-500/20 rounded-full">
+                <LinkIcon className="w-8 h-8 text-purple-400" />
+              </div>
+            </div>
+            <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/10 rounded-full blur-xl -translate-y-16 translate-x-16"></div>
           </div>
-        ) : (
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {user.urls.length === 0 ? (
-              <>
-                <div className="col-span-full flex items-center justify-center text-gray-400 rounded-lg">
-                  <AlertCircle className="h-6 w-6 mr-2" />
-                  <div className="col-span-full text-gray-400 rounded-lg">
-                    You do not have any shortened URLs.
-                  </div>
-                </div>
-                {Array.from({ length: 12 }).map((_, index) => (
-                  <div
-                    key={index}
-                    className="overflow-hidden rounded-lg bg-[#121114] animate-pulse"
-                  >
-                    <div className="h-12 w-full bg-[#121114]"></div>
-                    <div className="p-4">
-                      <div className="h-4 bg-zinc-800 mb-2"></div>
-                      <div className="h-4 bg-zinc-800 mb-2"></div>
-                      <div className="h-4 bg-zinc-800"></div>
-                    </div>
-                  </div>
-                ))}
-              </>
-            ) : (
-              user.urls.map((url) => (
-                <div
-                  key={url.slug}
-                  className="relative overflow-hidden rounded-lg bg-[#121114] group shadow-2xl shadow-indigo-500/20 transition-all duration-300 hover:shadow-indigo-500/40 hover:scale-105"
+
+          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-pink-500/20 to-pink-600/20 backdrop-blur-sm border border-pink-500/20 p-6 shadow-2xl">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-semibold text-white mb-1">
+                  Total Clicks
+                </h3>
+                <p className="text-3xl font-bold text-white">{totalClicks}</p>
+              </div>
+              <div className="p-3 bg-pink-500/20 rounded-full">
+                <BarChart3 className="w-8 h-8 text-pink-400" />
+              </div>
+            </div>
+            <div className="absolute top-0 right-0 w-32 h-32 bg-pink-500/10 rounded-full blur-xl -translate-y-16 translate-x-16"></div>
+          </div>
+
+          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-500/20 to-indigo-600/20 backdrop-blur-sm border border-indigo-500/20 p-6 shadow-2xl">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-semibold text-white mb-1">
+                  Avg. Clicks
+                </h3>
+                <p className="text-3xl font-bold text-white">
+                  {user.urls.length > 0 ? Math.round(totalClicks / user.urls.length) : 0}
+                </p>
+              </div>
+              <div className="p-3 bg-indigo-500/20 rounded-full">
+                <Eye className="w-8 h-8 text-indigo-400" />
+              </div>
+            </div>
+            <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/10 rounded-full blur-xl -translate-y-16 translate-x-16"></div>
+          </div>
+        </motion.div>
+
+        {/* Action Bar */}
+        <motion.div
+          className="flex flex-col sm:flex-row gap-4 mb-8"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.4, duration: 0.5 }}
+        >
+          <motion.button
+            onClick={handleCreateUrl}
+            className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-purple-500 via-pink-500 to-indigo-500 text-white font-medium rounded-xl hover:from-purple-600 hover:via-pink-600 hover:to-indigo-600 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <Plus className="w-5 h-5 mr-2" />
+            Create Short URL
+          </motion.button>
+
+          {/* Search Bar */}
+          {user.urls.length > 0 && (
+            <div className="relative flex-1 max-w-md">
+              <input
+                type="text"
+                placeholder="Search URLs..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full p-3 pl-12 pr-4 rounded-xl bg-[#171619]/80 backdrop-blur-sm border border-zinc-800/50 text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all duration-200"
+              />
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+            </div>
+          )}
+        </motion.div>
+
+        {/* URLs Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5, duration: 0.5 }}
+        >
+          <h2 className="text-xl font-semibold text-gray-300 mb-6 flex items-center">
+            <LinkIcon className="w-5 h-5 mr-2" />
+            Your URLs
+            <span className="ml-2 text-sm text-gray-500">
+              ({filteredUrls.length} of {user.urls.length})
+            </span>
+          </h2>
+
+          {user.loading ? (
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {Array.from({ length: 6 }).map((_, index) => (
+                <motion.div
+                  key={index}
+                  className="overflow-hidden rounded-2xl bg-[#171619]/60 backdrop-blur-sm border border-zinc-800/50 animate-pulse"
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: index * 0.1 }}
                 >
-                  <div className="p-4">
-                    <h3 className="font-semibold text-purple-400 hover:text-purple-300 transition-colors duration-300">
-                      <Link prefetch={false} href={`/u/${url.slug}`}>
-                        /u/{url.slug}
-                      </Link>
-                      <ChevronRight className="inline mx-2 text-white font-semibold" />
-                      <Link prefetch={false} href={url.url}>
-                        {url.url}
-                      </Link>
-                    </h3>
-                    <p className="text-sm text-gray-400 mt-2">
-                      Created on {new Date(url.createdAt).toLocaleString()}
-                    </p>
-                    <p className="text-sm text-gray-400 mt-1">
-                      <span className="text-pink-400">{url.clicks}</span> Clicks
-                    </p>
-
-                    <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <Link prefetch={false}
-                        href={`https://${user.domain}/u/${url.slug}`}>
-                        <button className="flex items-center rounded bg-purple-500 px-3 py-2 text-sm font-semibold text-white hover:bg-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-800 mr-2 transition-colors duration-300">
-                          <Eye className="h-4 w-4" />
-                        </button>
-                      </Link>
-
-                      <button className="flex items-center rounded bg-purple-500 px-3 py-2 text-sm font-semibold text-white hover:bg-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-800 mr-2 transition-colors duration-300">
-                        <CopyIcon
-                          className="h-4 w-4"
-                          onClick={() => {
-                            navigator.clipboard.writeText(
-                              `https://${user.domain}/u/${url.slug}`
-                            );
-                            toast.success("Copied URL to clipboard!");
-                          }}
-                        />
-                      </button>
-
-                      <button
-                        className="flex items-center rounded bg-pink-500 px-3 py-2 text-sm font-semibold text-white hover:bg-pink-600 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2 focus:ring-offset-gray-800 mr-2 transition-colors duration-300"
-                        onClick={() => handleEdit(url.key, url.slug)}
-                      >
-                        <Edit3 className="h-4 w-4" />
-                      </button>
-                      <button
-                        className="flex items-center rounded bg-pink-500 px-3 py-2 text-sm font-semibold text-white hover:bg-pink-600 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-colors duration-300"
-                        onClick={() =>
-                          handleDelete(user.apiToken, url.slug, user.removeUrl)
-                        }
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </button>
-                    </div>
+                  <div className="h-32 w-full bg-zinc-800/50"></div>
+                  <div className="p-4 space-y-3">
+                    <div className="h-4 bg-zinc-800/50 rounded"></div>
+                    <div className="h-3 bg-zinc-800/50 rounded w-3/4"></div>
+                    <div className="h-3 bg-zinc-800/50 rounded w-1/2"></div>
                   </div>
-                </div>
-              ))
-            )}
-          </div>
-        )}
+                </motion.div>
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {filteredUrls.length === 0 ? (
+                <motion.div
+                  className="col-span-full"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.2 }}
+                >
+                  <div className="flex flex-col items-center justify-center text-gray-400 rounded-2xl bg-[#171619]/60 backdrop-blur-sm border border-zinc-800/50 p-12">
+                    <AlertCircle className="h-12 w-12 mb-4 text-gray-500" />
+                    <h3 className="text-lg font-semibold mb-2">
+                      {user.urls.length === 0 ? "No URLs yet" : "No URLs found"}
+                    </h3>
+                    <p className="text-sm text-center">
+                      {user.urls.length === 0
+                        ? "Create your first short URL to get started"
+                        : "Try adjusting your search criteria"}
+                    </p>
+                  </div>
+                </motion.div>
+              ) : (
+                filteredUrls.map((url, index) => (
+                  <motion.div
+                    key={url.slug}
+                    className="group relative overflow-hidden rounded-2xl bg-[#171619]/60 backdrop-blur-sm border border-zinc-800/50 transition-all duration-300 hover:border-purple-500/50 hover:shadow-2xl hover:shadow-purple-500/20"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                    whileHover={{ y: -5 }}
+                  >
+                    <div className="p-6 space-y-4">
+                      {/* URL Header */}
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center space-x-2 mb-2">
+                            <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                            <span className="text-sm font-medium text-purple-400">
+                              Short URL
+                            </span>
+                          </div>
+                          <Link
+                            href={`https://${user.domain}/u/${url.slug}`}
+                            className="text-lg font-semibold text-white hover:text-purple-400 transition-colors duration-200 truncate block"
+                            prefetch={false}
+                          >
+                            /{url.slug}
+                          </Link>
+                        </div>
+                        <div className="flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                          <button
+                            onClick={() => {
+                              navigator.clipboard.writeText(
+                                `https://${user.domain}/u/${url.slug}`
+                              );
+                              toast.success("Copied URL to clipboard!");
+                            }}
+                            className="p-2 bg-purple-500/20 hover:bg-purple-500/30 rounded-lg text-purple-400 transition-all duration-200 hover:scale-110"
+                          >
+                            <CopyIcon className="h-4 w-4" />
+                          </button>
+                          <Link
+                            href={`https://${user.domain}/u/${url.slug}`}
+                            prefetch={false}
+                          >
+                            <button className="p-2 bg-indigo-500/20 hover:bg-indigo-500/30 rounded-lg text-indigo-400 transition-all duration-200 hover:scale-110">
+                              <Eye className="h-4 w-4" />
+                            </button>
+                          </Link>
+                          <button
+                            onClick={() => handleEdit(url.key, url.slug)}
+                            className="p-2 bg-pink-500/20 hover:bg-pink-500/30 rounded-lg text-pink-400 transition-all duration-200 hover:scale-110"
+                          >
+                            <Edit3 className="h-4 w-4" />
+                          </button>
+                          <button
+                            onClick={() =>
+                              handleDelete(user.apiToken, url.slug, user.removeUrl)
+                            }
+                            className="p-2 bg-red-500/20 hover:bg-red-500/30 rounded-lg text-red-400 transition-all duration-200 hover:scale-110"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Target URL */}
+                      <div className="space-y-2">
+                        <div className="flex items-center space-x-2">
+                          <ChevronRight className="w-4 h-4 text-gray-500" />
+                          <span className="text-sm text-gray-500">Redirects to</span>
+                        </div>
+                        <Link
+                          href={url.url}
+                          className="text-gray-300 hover:text-white transition-colors duration-200 text-sm truncate block pl-6"
+                          prefetch={false}
+                        >
+                          {url.url}
+                        </Link>
+                      </div>
+
+                      {/* Stats */}
+                      <div className="flex items-center justify-between pt-4 border-t border-zinc-800/50">
+                        <div className="flex items-center space-x-4">
+                          <div className="flex items-center space-x-2">
+                            <BarChart3 className="w-4 h-4 text-pink-400" />
+                            <span className="text-sm text-gray-400">
+                              <span className="text-pink-400 font-medium">
+                                {url.clicks}
+                              </span>{" "}
+                              clicks
+                            </span>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <Calendar className="w-4 h-4 text-indigo-400" />
+                            <span className="text-sm text-gray-400">
+                              {new Date(url.createdAt).toLocaleDateString()}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))
+              )}
+            </div>
+          )}
+        </motion.div>
       </main>
+      
       {editUrl && (
         <Prompter
           title="Edit Slug"
