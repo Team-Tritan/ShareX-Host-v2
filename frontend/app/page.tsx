@@ -205,7 +205,6 @@ const LoginPage: React.FC = () => {
               </button>
               <button
                 onClick={handleLogin}
-                disabled={isLoading || !apiKey.trim()}
                 className="absolute right-2 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed hover:from-purple-600 hover:to-pink-600 transition-all duration-200"
                 aria-label="Login"
               >
@@ -220,7 +219,6 @@ const LoginPage: React.FC = () => {
 
           <button
             onClick={handleLogin}
-            disabled={isLoading || !apiKey.trim()}
             className="w-full py-3 px-4 bg-gradient-to-r from-purple-500 via-pink-500 to-indigo-500 text-white font-medium rounded-xl hover:from-purple-600 hover:via-pink-600 hover:to-indigo-600 focus:outline-none focus:ring-2 focus:ring-purple-500/50 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98]"
           >
             {isLoading ? (
