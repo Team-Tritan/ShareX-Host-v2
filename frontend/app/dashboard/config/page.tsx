@@ -7,7 +7,7 @@ import { useUser } from "@/stores/user";
 import Unauthenticated from "@/components/Unauth";
 import { Sidebar } from "@/components/Sidebar";
 import { motion } from "framer-motion";
-import { Download, Image, Link, PencilIcon, Settings, FileText, Zap, CheckCircle, AlertCircle } from "lucide-react";
+import { Download, Image, Link, PencilIcon, Settings, Zap, CheckCircle, AlertCircle } from "lucide-react";
 import { toast } from "react-hot-toast";
 
 const Config: React.FC = () => {

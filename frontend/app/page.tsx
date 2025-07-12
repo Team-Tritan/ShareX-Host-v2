@@ -255,7 +255,7 @@ const LoginPage: React.FC = () => {
             onClick={handleCreateKey} 
             className="text-sm text-purple-400 hover:text-purple-300 transition-colors duration-200 underline decoration-dotted underline-offset-4"
           >
-            Don't have an account? Create an API Key
+            Don{"'"}t have an account? Create an API Key
           </button>
         </motion.div>
 
