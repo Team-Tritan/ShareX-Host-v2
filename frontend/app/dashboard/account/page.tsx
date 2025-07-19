@@ -634,7 +634,7 @@ const AddDomainModal: React.FC<AddDomainModalProps> = ({
             <strong>Setup Instructions:</strong>
           </p>
           <p className="text-blue-200 text-sm mt-1">
-            Point your domain to: <code className="bg-blue-500/20 px-1 rounded">23.142.248.43</code>
+            Point your domain to: <code className="bg-blue-500/20 px-1 rounded">23.142.248.42</code>
           </p>
           <p className="text-blue-200 text-sm mt-1">
             For Cloudflare users: Enable proxying (orange cloud) with flexible SSL.
