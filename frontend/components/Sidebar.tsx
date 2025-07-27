@@ -69,7 +69,7 @@ export function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
           </div>
 
           <nav className="flex-1 space-y-2 px-4 pb-4">
-            {menuItems.map((item, index) => {
+            {menuItems.map((item, _index) => {
               const active = path === item.href;
               return (
                 <div key={item.label}>
