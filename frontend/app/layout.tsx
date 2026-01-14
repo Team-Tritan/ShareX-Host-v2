@@ -27,7 +27,7 @@ export default function RootLayout({
   return (
      <PlausibleProvider
       domain="tritan.gg"
-      customDomain="https://analytics.tritan.gg"
+      customDomain="https://files.tritan.gg"
       selfHosted={true}
       trackLocalhost={true}
       trackOutboundLinks={true}
