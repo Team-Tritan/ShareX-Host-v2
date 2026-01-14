@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
+import PlausibleProvider from "next-plausible";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,6 +25,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
+     <PlausibleProvider
+      domain="tritan.gg"
+      customDomain="https://analytics.tritan.gg"
+      selfHosted={true}
+      trackLocalhost={true}
+      trackOutboundLinks={true}
+      enabled={true}
+    >
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
@@ -41,5 +50,6 @@ export default function RootLayout({
         {children}
       </body>
     </html>
+    </PlausibleProvider>
   );
 }
