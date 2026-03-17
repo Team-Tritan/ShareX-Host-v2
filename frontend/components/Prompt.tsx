@@ -1,6 +1,8 @@
+"use client";
+
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { AlertCircle, CheckCircle, X } from "lucide-react";
+import { AlertCircle, CheckCircle, X, Terminal } from "lucide-react";
 
 interface PrompterProps {
   title?: string;
@@ -18,11 +20,8 @@ const Prompter: React.FC<PrompterProps> = ({
   const [input, setInput] = useState("");
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      onConfirm(input);
-    } else if (e.key === 'Escape') {
-      onCancel();
-    }
+    if (e.key === "Enter") onConfirm(input);
+    else if (e.key === "Escape") onCancel();
   };
 
   return (
@@ -30,72 +29,163 @@ const Prompter: React.FC<PrompterProps> = ({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4 z-50"
+      className="fixed inset-0 flex items-center justify-center p-4 z-50"
+      style={{ backgroundColor: "rgba(6,6,14,0.85)", backdropFilter: "blur(4px)" }}
     >
       <motion.div
-        initial={{ scale: 0.95, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.95, opacity: 0 }}
-        transition={{ duration: 0.2 }}
-        className="relative bg-[#171619]/90 backdrop-blur-md rounded-2xl p-6 max-w-md w-full border border-zinc-800/50 shadow-2xl"
+        initial={{ scale: 0.97, opacity: 0, y: 8 }}
+        animate={{ scale: 1, opacity: 1, y: 0 }}
+        exit={{ scale: 0.97, opacity: 0, y: 8 }}
+        transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
+        className="relative w-full max-w-md rounded-sm overflow-hidden"
+        style={{
+          border: "1px solid rgba(139,92,246,0.25)",
+          backgroundColor: "#0a0a12",
+        }}
       >
-        <button
-          onClick={onCancel}
-          className="absolute top-4 right-4 p-2 text-gray-400 hover:text-white hover:bg-zinc-800/50 rounded-lg transition-all duration-200"
+        {/* Header bar */}
+        <div
+          className="flex items-center gap-3 px-5 py-3"
+          style={{
+            borderBottom: "1px solid rgba(139,92,246,0.15)",
+            backgroundColor: "#0f0f1a",
+          }}
         >
-          <X className="w-5 h-5" />
-        </button>
-
-        <div className="flex items-center space-x-3 mb-4">
-          <div className="p-2 bg-purple-500/20 rounded-full">
-            <AlertCircle className="w-6 h-6 text-purple-400" />
+          {/* Decorative dots */}
+          <div className="flex items-center gap-1.5">
+            <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: "rgba(239,68,68,0.5)" }} />
+            <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: "rgba(234,179,8,0.5)" }} />
+            <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: "rgba(74,222,128,0.5)" }} />
           </div>
-          <div className="flex-1">
-            <h2 className="text-xl font-semibold text-white">
+
+          <div className="flex items-center gap-2 ml-1 flex-1 min-w-0">
+            <Terminal className="w-3 h-3 flex-shrink-0 text-violet-400" />
+            <span className="font-mono text-xs truncate" style={{ color: "#52525b" }}>
+              {title ? title.toLowerCase().replace(/\s+/g, "-") : "input-required"}
+            </span>
+          </div>
+
+          <button
+            onClick={onCancel}
+            className="flex-shrink-0 w-6 h-6 rounded-sm flex items-center justify-center transition-colors"
+            style={{ color: "#52525b" }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.color = "#f4f4f5";
+              e.currentTarget.style.backgroundColor = "rgba(139,92,246,0.12)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.color = "#52525b";
+              e.currentTarget.style.backgroundColor = "transparent";
+            }}
+          >
+            <X className="w-3.5 h-3.5" />
+          </button>
+        </div>
+
+        {/* Body */}
+        <div className="p-6 space-y-5">
+          {/* Title + icon */}
+          <div className="flex items-center gap-3">
+            <div
+              className="w-8 h-8 rounded-sm flex items-center justify-center flex-shrink-0"
+              style={{
+                border: "1px solid rgba(139,92,246,0.25)",
+                backgroundColor: "rgba(139,92,246,0.1)",
+              }}
+            >
+              <AlertCircle className="w-4 h-4 text-violet-400" />
+            </div>
+            <h2 className="text-base font-semibold tracking-tight" style={{ color: "#f4f4f5" }}>
               {title || "Input Required"}
             </h2>
           </div>
-        </div>
 
-        {message && (
-          <p className="text-gray-400 mb-6 leading-relaxed">
-            {message}
-          </p>
-        )}
+          {/* Message */}
+          {message && (
+            <p className="text-sm leading-relaxed" style={{ color: "#71717a" }}>
+              {message}
+            </p>
+          )}
 
-        <div className="mb-6">
+          {/* Input */}
           <input
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            onKeyPress={handleKeyPress}
-            placeholder="Enter a value"
-            className="w-full px-4 py-3 bg-[#171619]/80 backdrop-blur-sm border border-zinc-800/50 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all duration-200"
+            onKeyDown={handleKeyPress}
+            placeholder="Enter a value..."
             autoFocus
+            className="w-full px-4 py-2.5 font-mono text-sm rounded-sm outline-none transition-all"
+            style={{
+              backgroundColor: "#06060e",
+              border: "1px solid rgba(139,92,246,0.2)",
+              color: "#f4f4f5",
+            }}
+            onFocus={(e) => (e.currentTarget.style.borderColor = "rgba(139,92,246,0.5)")}
+            onBlur={(e) => (e.currentTarget.style.borderColor = "rgba(139,92,246,0.2)")}
           />
+
+          {/* Actions */}
+          <div className="flex gap-3">
+            <button
+              onClick={onCancel}
+              className="flex-1 flex items-center justify-center py-2.5 rounded-sm text-sm font-medium transition-colors"
+              style={{
+                border: "1px solid rgba(139,92,246,0.15)",
+                backgroundColor: "transparent",
+                color: "#a1a1aa",
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "rgba(139,92,246,0.06)")}
+              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
+            >
+              Cancel
+            </button>
+            <button
+              onClick={() => onConfirm(input)}
+              className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-sm text-sm font-semibold transition-colors"
+              style={{
+                border: "1px solid rgba(139,92,246,0.35)",
+                backgroundColor: "rgba(139,92,246,0.2)",
+                color: "#ffffff",
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "rgba(139,92,246,0.28)")}
+              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "rgba(139,92,246,0.2)")}
+            >
+              <CheckCircle className="w-3.5 h-3.5" />
+              Confirm
+            </button>
+          </div>
         </div>
 
-        <div className="flex gap-3">
-          <motion.button
-            onClick={onCancel}
-            className="flex-1 px-4 py-3 bg-zinc-800/80 backdrop-blur-sm border border-zinc-600/50 rounded-xl text-white hover:bg-zinc-700/80 transition-all duration-200 font-medium"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            Cancel
-          </motion.button>
-          <motion.button
-            onClick={() => onConfirm(input)}
-            className="flex-1 inline-flex items-center justify-center px-4 py-3 bg-gradient-to-r from-purple-500 via-pink-500 to-indigo-500 rounded-xl text-white font-medium hover:from-purple-600 hover:via-pink-600 hover:to-indigo-600 transition-all duration-200 shadow-lg hover:shadow-xl"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            <CheckCircle className="w-4 h-4 mr-2" />
-            Confirm
-          </motion.button>
+        {/* Keyboard hint */}
+        <div
+          className="px-5 py-2.5 flex items-center gap-4"
+          style={{
+            borderTop: "1px solid rgba(139,92,246,0.1)",
+            backgroundColor: "#0f0f1a",
+          }}
+        >
+          {[
+            { key: "↵ Enter", label: "confirm" },
+            { key: "Esc", label: "cancel" },
+          ].map(({ key, label }) => (
+            <div key={key} className="flex items-center gap-1.5">
+              <kbd
+                className="font-mono text-[10px] px-1.5 py-0.5 rounded-sm"
+                style={{
+                  border: "1px solid rgba(139,92,246,0.2)",
+                  backgroundColor: "rgba(139,92,246,0.08)",
+                  color: "#8b5cf6",
+                }}
+              >
+                {key}
+              </kbd>
+              <span className="font-mono text-[10px]" style={{ color: "#3f3f46" }}>
+                {label}
+              </span>
+            </div>
+          ))}
         </div>
-
-        <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/5 rounded-full blur-xl -translate-y-16 translate-x-16"></div>
       </motion.div>
     </motion.div>
   );

@@ -19,6 +19,16 @@ func GenerateRandomKey(length int) string {
 	return string(b)
 }
 
+func GenerateAPIKey(totalLength int) string {
+	const prefix = "trtn_"
+	if totalLength <= len(prefix) {
+		return prefix
+	}
+
+	randomLength := totalLength - len(prefix)
+	return prefix + GenerateRandomKey(randomLength)
+}
+
 func IsValidKey(key string, validUsers []database.User) bool {
 	for _, user := range validUsers {
 		if user.Key == key {

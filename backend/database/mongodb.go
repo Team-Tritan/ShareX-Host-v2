@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"regexp"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -31,6 +32,7 @@ func init() {
 	}
 
 	db = client.Database("ShareX-Uploader")
+
 	log.Println("Successfully connected to MongoDB!")
 }
 
@@ -101,8 +103,13 @@ func deleteOne(ctx context.Context, collectionName string, filter bson.M) error 
 	return nil
 }
 
+func containsFilter(query string) bson.M {
+	return bson.M{"$regex": regexp.QuoteMeta(query), "$options": "i"}
+}
+
 type User struct {
 	Key         string `bson:"api_key" json:"key"`
+	Admin       bool   `bson:"admin" json:"admin"`
 	DisplayName string `bson:"display_name" json:"displayName"`
 	CreatedAt   string `bson:"created_at" json:"createdAt"`
 	IP          string `bson:"ip" json:"ip"`
@@ -149,6 +156,45 @@ func LoadUsersFromDB() ([]User, error) {
 		return nil, err
 	}
 	return users, nil
+}
+
+func LoadUsersPaginated(page, limit int64, query string) ([]User, int64, error) {
+	var users []User
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	if page < 1 {
+		page = 1
+	}
+	if limit < 1 {
+		limit = 25
+	}
+
+	filter := bson.M{}
+	if query != "" {
+		filter = bson.M{
+			"$or": []bson.M{
+				{"display_name": containsFilter(query)},
+				{"domain": containsFilter(query)},
+				{"api_key": containsFilter(query)},
+				{"ip": containsFilter(query)},
+			},
+		}
+	}
+
+	skip := (page - 1) * limit
+	opts := options.Find().SetSort(bson.D{{Key: "_id", Value: -1}}).SetSkip(skip).SetLimit(limit)
+	err := findMany(ctx, "users", filter, opts, &users)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	total, err := getCollection("users").CountDocuments(ctx, filter)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	return users, total, nil
 }
 
 func SaveUserToDB(user User) error {
@@ -255,6 +301,48 @@ func LoadUploadsFromDB(key string) ([]UploadEntry, error) {
 	return logs, nil
 }
 
+func LoadUploadsByKeyPaginated(key string, page, limit int64, query string) ([]UploadEntry, int64, error) {
+	var logs []UploadEntry
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	if page < 1 {
+		page = 1
+	}
+	if limit < 1 {
+		limit = 25
+	}
+
+	filter := bson.M{"api_key": key}
+	if query != "" {
+		filter = bson.M{
+			"$and": []bson.M{
+				{"api_key": key},
+				{
+					"$or": []bson.M{
+						{"file_name": containsFilter(query)},
+						{"display_name": containsFilter(query)},
+						{"ip": containsFilter(query)},
+					},
+				},
+			},
+		}
+	}
+	skip := (page - 1) * limit
+	opts := options.Find().SetSort(bson.D{{Key: "_id", Value: -1}}).SetSkip(skip).SetLimit(limit)
+	err := findMany(ctx, "uploads", filter, opts, &logs)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	total, err := getCollection("uploads").CountDocuments(ctx, filter)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	return logs, total, nil
+}
+
 func SaveUploadToDB(log UploadEntry) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
@@ -351,6 +439,86 @@ func GetUploadEntryByFileName(fileName string) (UploadEntry, error) {
 
 	err := findOne(ctx, "uploads", bson.M{"file_name": fileName}, &uploadEntry)
 	return uploadEntry, err
+}
+
+func LoadRecentUploadsFromDB(limit int64) ([]UploadEntry, error) {
+	var logs []UploadEntry
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	opts := options.Find().SetSort(bson.D{{Key: "_id", Value: -1}}).SetLimit(limit)
+	err := findMany(ctx, "uploads", bson.M{}, opts, &logs)
+	if err != nil {
+		return nil, err
+	}
+
+	return logs, nil
+}
+
+func LoadRecentUploadsPaginated(page, limit int64, query string) ([]UploadEntry, int64, error) {
+	var logs []UploadEntry
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	if page < 1 {
+		page = 1
+	}
+	if limit < 1 {
+		limit = 25
+	}
+
+	filter := bson.M{}
+	if query != "" {
+		filter = bson.M{
+			"$or": []bson.M{
+				{"file_name": containsFilter(query)},
+				{"display_name": containsFilter(query)},
+				{"api_key": containsFilter(query)},
+				{"ip": containsFilter(query)},
+			},
+		}
+	}
+
+	skip := (page - 1) * limit
+	opts := options.Find().SetSort(bson.D{{Key: "_id", Value: -1}}).SetSkip(skip).SetLimit(limit)
+	err := findMany(ctx, "uploads", filter, opts, &logs)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	total, err := getCollection("uploads").CountDocuments(ctx, filter)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	return logs, total, nil
+}
+
+func DeleteUploadByFileName(fileName string) (UploadEntry, error) {
+	var entry UploadEntry
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	filter := bson.M{"file_name": fileName}
+	err := findOne(ctx, "uploads", filter, &entry)
+	if err != nil {
+		return entry, err
+	}
+
+	err = getCollection("uploads").FindOneAndDelete(ctx, filter).Decode(&entry)
+	return entry, err
+}
+
+func DeleteUploadsByUserKey(key string) (int64, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	result, err := getCollection("uploads").DeleteMany(ctx, bson.M{"api_key": key})
+	if err != nil {
+		return 0, err
+	}
+
+	return result.DeletedCount, nil
 }
 
 func DeleteURLFromDB(key, slug string) (URL, error) {

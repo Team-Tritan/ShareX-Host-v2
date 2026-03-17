@@ -8,6 +8,11 @@ export const useUser = create<UserState>((set) => ({
     setCookie("api_key", token);
     set({ apiToken: token });
   },
+  isAdmin: getCookie("is_admin") === "true",
+  setIsAdmin: (isAdmin: boolean) => {
+    setCookie("is_admin", String(isAdmin));
+    set({ isAdmin });
+  },
   displayName: getCookie("display_name"),
   setDisplayName: (name: string) => {
     setCookie("display_name", name);

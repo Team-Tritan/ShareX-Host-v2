@@ -1,5 +1,7 @@
+"use client";
+
 import { forwardRef } from "react";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, AlertCircle } from "lucide-react";
 
 export type InputProps = React.InputHTMLAttributes<HTMLInputElement> & {
   choices?: string[];
@@ -11,55 +13,100 @@ export type InputProps = React.InputHTMLAttributes<HTMLInputElement> & {
 
 const Input = forwardRef<HTMLInputElement | HTMLSelectElement, InputProps>(
   ({ className = "", type, choices, inputClassName, label, error, icon, ...props }, ref) => {
-    const baseClasses =
-      "w-full px-4 py-3 bg-[#171619]/80 backdrop-blur-sm border border-zinc-800/50 rounded-xl text-white placeholder-gray-500 transition-all duration-200 font-medium focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 hover:border-zinc-700/50 disabled:opacity-50 disabled:cursor-not-allowed";
-    
-    const errorClasses = error 
-      ? "border-red-500/50 focus:ring-red-500/50 focus:border-red-500/50" 
-      : "";
-    
-    const iconClasses = icon ? "pl-12" : "";
-    
-    const combinedClasses = `${baseClasses} ${errorClasses} ${iconClasses} ${inputClassName || ""} ${className}`;
+    const base: React.CSSProperties = {
+      width: "100%",
+      paddingTop: "0.625rem",
+      paddingBottom: "0.625rem",
+      paddingLeft: icon ? "2.75rem" : "1rem",
+      paddingRight: choices && choices.length > 0 ? "2.75rem" : "1rem",
+      fontFamily: "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
+      fontSize: "0.875rem",
+      color: "#f4f4f5",
+      backgroundColor: "#06060e",
+      border: `1px solid ${error ? "rgba(239,68,68,0.4)" : "rgba(139,92,246,0.2)"}`,
+      borderRadius: "2px",
+      outline: "none",
+      transition: "border-color 0.15s ease",
+      appearance: choices && choices.length > 0 ? "none" : undefined,
+      cursor: choices && choices.length > 0 ? "pointer" : undefined,
+    };
 
-    const selectClasses = choices && choices.length > 0 
-      ? `${combinedClasses} pr-12 appearance-none cursor-pointer`
-      : combinedClasses;
+    const handleFocus = (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>) => {
+      e.currentTarget.style.borderColor = error
+        ? "rgba(239,68,68,0.7)"
+        : "rgba(139,92,246,0.5)";
+    };
+
+    const handleBlur = (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>) => {
+      e.currentTarget.style.borderColor = error
+        ? "rgba(239,68,68,0.4)"
+        : "rgba(139,92,246,0.2)";
+    };
+
+    const handleMouseEnter = (e: React.MouseEvent<HTMLInputElement | HTMLSelectElement>) => {
+      if (!(e.currentTarget as HTMLInputElement).disabled) {
+        e.currentTarget.style.borderColor = error
+          ? "rgba(239,68,68,0.6)"
+          : "rgba(139,92,246,0.35)";
+      }
+    };
+
+    const handleMouseLeave = (e: React.MouseEvent<HTMLInputElement | HTMLSelectElement>) => {
+      if (document.activeElement !== e.currentTarget) {
+        e.currentTarget.style.borderColor = error
+          ? "rgba(239,68,68,0.4)"
+          : "rgba(139,92,246,0.2)";
+      }
+    };
 
     return (
-      <div className="relative">
+      <div className={`relative ${className}`}>
+        {/* Label */}
         {label && (
-          <label className="block text-sm font-medium text-gray-300 mb-2">
+          <label
+            className="block font-mono text-[11px] uppercase tracking-widest mb-1.5"
+            style={{ color: error ? "#f87171" : "#71717a" }}
+          >
             {label}
           </label>
         )}
-        
+
         <div className="relative">
+          {/* Leading icon */}
           {icon && (
-            <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+            <div
+              className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
+              style={{ color: "#52525b" }}
+            >
               {icon}
             </div>
           )}
-          
+
           {choices && choices.length > 0 ? (
             <>
               <select
                 ref={ref as React.Ref<HTMLSelectElement>}
-                className={selectClasses}
+                style={base}
+                className={`disabled:opacity-50 disabled:cursor-not-allowed ${inputClassName ?? ""}`}
+                onFocus={handleFocus}
+                onBlur={handleBlur}
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
                 {...(props as React.SelectHTMLAttributes<HTMLSelectElement>)}
               >
                 {choices.map((choice, index) => (
-                  <option 
-                    key={index} 
+                  <option
+                    key={index}
                     value={choice}
-                    className="bg-[#171619] text-white py-2"
+                    style={{ backgroundColor: "#0a0a12", color: "#f4f4f5" }}
                   >
                     {choice}
                   </option>
                 ))}
               </select>
-              <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
-                <ChevronDown className="w-5 h-5 text-gray-400" />
+              {/* Trailing chevron */}
+              <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+                <ChevronDown className="w-4 h-4" style={{ color: "#52525b" }} />
               </div>
             </>
           ) : (
@@ -68,16 +115,25 @@ const Input = forwardRef<HTMLInputElement | HTMLSelectElement, InputProps>(
               autoComplete="off"
               data-lpignore="true"
               data-form-type="other"
-              className={combinedClasses}
+              style={base}
+              className={`disabled:opacity-50 disabled:cursor-not-allowed placeholder:text-[#3f3f46] ${inputClassName ?? ""}`}
               ref={ref as React.Ref<HTMLInputElement>}
+              onFocus={handleFocus}
+              onBlur={handleBlur}
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
               {...props}
             />
           )}
         </div>
-        
+
+        {/* Error message */}
         {error && (
-          <p className="mt-2 text-sm text-red-400 flex items-center">
-            <span className="w-1 h-1 bg-red-400 rounded-full mr-2"></span>
+          <p
+            className="mt-1.5 flex items-center gap-1.5 font-mono text-[11px]"
+            style={{ color: "#f87171" }}
+          >
+            <AlertCircle className="w-3 h-3 flex-shrink-0" />
             {error}
           </p>
         )}

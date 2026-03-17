@@ -45,6 +45,8 @@ const ConfigTypeSchema = z.enum(["upload", "url", "text"]);
 const UserStateSchema = z.object({
   apiToken: z.string(),
   setToken: z.function().args(z.string()).returns(z.void()),
+  isAdmin: z.boolean(),
+  setIsAdmin: z.function().args(z.boolean()).returns(z.void()),
   displayName: z.string(),
   setDisplayName: z.function().args(z.string()).returns(z.void()),
   domain: z.string(),

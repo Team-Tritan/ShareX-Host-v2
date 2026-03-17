@@ -1,125 +1,204 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Shield, ArrowRight, AlertTriangle } from "lucide-react";
+import { Shield, ArrowRight, AlertTriangle, Terminal, Zap, Lock } from "lucide-react";
 
 const NotAuthenticated: React.FC = () => {
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#0d0c0e] via-[#1a1a1d] to-[#0d0c0e] text-gray-100 p-4">
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500/10 rounded-full blur-3xl"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-pink-500/10 rounded-full blur-3xl"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-indigo-500/5 rounded-full blur-3xl"></div>
-      </div>
+    <div
+      className="flex items-center justify-center min-h-screen p-4"
+      style={{ backgroundColor: "#06060e" }}
+    >
+      {/* Grid background */}
+      <div
+        className="absolute inset-0 opacity-[0.025] pointer-events-none"
+        style={{
+          backgroundImage:
+            "linear-gradient(rgba(139,92,246,1) 1px, transparent 1px), linear-gradient(90deg, rgba(139,92,246,1) 1px, transparent 1px)",
+          backgroundSize: "48px 48px",
+        }}
+      />
+      {/* Radial glow */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            "radial-gradient(ellipse 55% 45% at 50% 50%, rgba(139,92,246,0.05) 0%, transparent 70%)",
+        }}
+      />
 
       <motion.div
-        className="relative max-w-md w-full space-y-8 p-8 bg-[#171619]/80 backdrop-blur-xl rounded-2xl shadow-2xl border border-zinc-800/50"
-        initial={{ opacity: 0, scale: 0.95, y: 20 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        transition={{ duration: 0.5, type: "spring", stiffness: 300 }}
+        className="relative w-full max-w-md"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
       >
-        <motion.div
-          className="text-center space-y-4"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.5 }}
+        <div
+          className="rounded-sm overflow-hidden"
+          style={{
+            border: "1px solid rgba(139,92,246,0.2)",
+            backgroundColor: "#0a0a12",
+          }}
         >
-          <div className="flex items-center justify-center mb-4">
-            <div className="relative">
-              <div className="w-16 h-16 bg-gradient-to-br from-purple-500 via-pink-500 to-indigo-500 rounded-2xl flex items-center justify-center shadow-lg">
-                <Shield className="w-8 h-8 text-white" />
-              </div>
-              <div className="absolute -top-1 -right-1 w-6 h-6 bg-red-500 rounded-full border-2 border-[#171619] flex items-center justify-center">
-                <AlertTriangle className="w-3 h-3 text-white" />
-              </div>
-            </div>
-          </div>
-          
-          <motion.h1
-            className="text-3xl font-bold bg-gradient-to-r from-violet-400 via-pink-500 to-fuchsia-400 bg-clip-text text-transparent"
-            whileHover={{ scale: 1.05 }}
-            transition={{ type: "spring", stiffness: 400, damping: 10 }}
+          {/* Terminal header bar */}
+          <div
+            className="flex items-center gap-3 px-5 py-3"
+            style={{
+              borderBottom: "1px solid rgba(139,92,246,0.15)",
+              backgroundColor: "#0f0f1a",
+            }}
           >
-            Tritan Uploader
-          </motion.h1>
-        </motion.div>
-
-        <motion.div
-          className="text-center space-y-3"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.4, duration: 0.5 }}
-        >
-          <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-xl">
-            <h2 className="text-lg font-semibold text-white mb-2">
-              Authentication Required
-            </h2>
-            <p className="text-gray-300 leading-relaxed">
-              You need to be authenticated to view this page. Please sign in with your API key to continue.
-            </p>
-          </div>
-        </motion.div>
-
-        <motion.div
-          className="grid grid-cols-3 gap-4"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6, duration: 0.5 }}
-        >
-          <div className="text-center">
-            <div className="w-10 h-10 bg-purple-500/20 rounded-lg flex items-center justify-center mx-auto mb-2">
-              <Shield className="w-5 h-5 text-purple-400" />
+            <div className="flex items-center gap-1.5">
+              <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: "rgba(239,68,68,0.5)" }} />
+              <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: "rgba(234,179,8,0.5)" }} />
+              <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: "rgba(74,222,128,0.5)" }} />
             </div>
-            <span className="text-xs text-gray-400">Secure</span>
-          </div>
-          <div className="text-center">
-            <div className="w-10 h-10 bg-pink-500/20 rounded-lg flex items-center justify-center mx-auto mb-2">
-              <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-              >
-                ⚡
-              </motion.div>
+            <span className="font-mono text-xs ml-1" style={{ color: "#52525b" }}>
+              tritan-uploader ~ 401
+            </span>
+            <div className="ml-auto flex items-center gap-1.5">
+              <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: "#ef4444" }} />
+              <span className="font-mono text-[10px] uppercase tracking-widest" style={{ color: "#f87171" }}>
+                unauthenticated
+              </span>
             </div>
-            <span className="text-xs text-gray-400">Fast</span>
           </div>
-          <div className="text-center">
-            <div className="w-10 h-10 bg-indigo-500/20 rounded-lg flex items-center justify-center mx-auto mb-2">
-              <span className="text-indigo-400">🎯</span>
-            </div>
-            <span className="text-xs text-gray-400">Reliable</span>
-          </div>
-        </motion.div>
 
-        <motion.div
-          className="flex justify-center"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.8, duration: 0.5 }}
-        >
-          <Link href="/" className="w-full">
-            <motion.button
-              className="w-full inline-flex items-center justify-center py-3 px-6 bg-gradient-to-r from-purple-500 via-pink-500 to-indigo-500 text-white font-medium rounded-xl hover:from-purple-600 hover:via-pink-600 hover:to-indigo-600 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+          <div className="p-8 space-y-7">
+            {/* Icon + title */}
+            <motion.div
+              className="space-y-4"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.1 }}
             >
-              <span>Sign In to Continue</span>
-              <ArrowRight className="w-5 h-5 ml-2" />
-            </motion.button>
-          </Link>
-        </motion.div>
+              <div className="flex items-center gap-3">
+                <div
+                  className="relative w-10 h-10 rounded-sm flex items-center justify-center flex-shrink-0"
+                  style={{
+                    border: "1px solid rgba(139,92,246,0.3)",
+                    backgroundColor: "rgba(139,92,246,0.1)",
+                  }}
+                >
+                  <Shield className="w-5 h-5 text-violet-400" />
+                  {/* Error badge */}
+                  <div
+                    className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-sm flex items-center justify-center"
+                    style={{
+                      border: "1px solid rgba(239,68,68,0.4)",
+                      backgroundColor: "rgba(239,68,68,0.15)",
+                    }}
+                  >
+                    <AlertTriangle className="w-2.5 h-2.5 text-red-400" />
+                  </div>
+                </div>
+                <div>
+                  <h1 className="text-base font-bold tracking-tight" style={{ color: "#f4f4f5" }}>
+                    Tritan Uploader
+                  </h1>
+                  <p className="font-mono text-[10px] uppercase tracking-widest" style={{ color: "#52525b" }}>
+                    Authentication Required
+                  </p>
+                </div>
+              </div>
+            </motion.div>
 
-        <motion.div
-          className="text-center pt-4 border-t border-zinc-800/50"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1, duration: 0.5 }}
-        >
-          <p className="text-xs text-gray-500">
-            Powered by Tritan Internet
-          </p>
-        </motion.div>
+            {/* Error card */}
+            <motion.div
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.15 }}
+            >
+              <div
+                className="rounded-sm p-4 space-y-2"
+                style={{
+                  border: "1px solid rgba(239,68,68,0.2)",
+                  backgroundColor: "rgba(239,68,68,0.06)",
+                }}
+              >
+                <div className="flex items-center gap-2">
+                  <Lock className="w-3.5 h-3.5 text-red-400 flex-shrink-0" />
+                  <p className="text-sm font-semibold" style={{ color: "#fca5a5" }}>
+                    Access Denied
+                  </p>
+                </div>
+                <p className="text-sm leading-relaxed" style={{ color: "#71717a" }}>
+                  You must be authenticated to view this page. Sign in with your API key to continue.
+                </p>
+              </div>
+            </motion.div>
 
-        <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/5 rounded-full blur-xl -translate-y-16 translate-x-16"></div>
+            {/* Feature pills */}
+            <motion.div
+              className="flex gap-2"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2 }}
+            >
+              {[
+                { icon: Shield, label: "Secure" },
+                { icon: Zap, label: "Fast" },
+                { icon: Terminal, label: "API-First" },
+              ].map(({ icon: Icon, label }) => (
+                <div
+                  key={label}
+                  className="flex items-center gap-1.5 px-2.5 py-1 rounded-sm"
+                  style={{
+                    border: "1px solid rgba(139,92,246,0.15)",
+                    backgroundColor: "rgba(139,92,246,0.06)",
+                  }}
+                >
+                  <Icon className="w-3 h-3 text-violet-400" />
+                  <span className="font-mono text-[10px] uppercase tracking-widest" style={{ color: "#a1a1aa" }}>
+                    {label}
+                  </span>
+                </div>
+              ))}
+            </motion.div>
+
+            {/* CTA */}
+            <motion.div
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.25 }}
+            >
+              <Link href="/" className="block">
+                <button
+                  className="group w-full flex items-center justify-center gap-2.5 font-semibold text-sm px-5 py-3 rounded-sm transition-colors"
+                  style={{
+                    border: "1px solid rgba(139,92,246,0.35)",
+                    backgroundColor: "rgba(139,92,246,0.2)",
+                    color: "#ffffff",
+                  }}
+                  onMouseEnter={(e) =>
+                    (e.currentTarget.style.backgroundColor = "rgba(139,92,246,0.28)")
+                  }
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.style.backgroundColor = "rgba(139,92,246,0.2)")
+                  }
+                >
+                  Sign In to Continue
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                </button>
+              </Link>
+            </motion.div>
+          </div>
+
+          {/* Footer strip */}
+          <div
+            className="px-5 py-2.5 flex items-center justify-between"
+            style={{
+              borderTop: "1px solid rgba(139,92,246,0.1)",
+              backgroundColor: "#0f0f1a",
+            }}
+          >
+            <span className="font-mono text-[9px]" style={{ color: "#27272a" }}>
+              Powered by Tritan Internet · AS393577
+            </span>
+            <span className="font-mono text-[9px]" style={{ color: "#27272a" }}>
+              401
+            </span>
+          </div>
+        </div>
       </motion.div>
     </div>
   );
