@@ -1,34 +1,74 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{{.Data.Name}} - Uploaded by {{.Data.DisplayName}}</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script defer data-domain="files.tritan.gg" src="https://analytics.tritan.gg/js/script.js"></script>
+    <script
+      defer
+      data-domain="files.tritan.gg"
+      src="https://analytics.tritan.gg/js/script.js"
+    ></script>
 
-    <!-- OG / Twitter meta -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:image" content="{{.Data.fullURL}}" />
-    <meta name="twitter:image:src" content="{{.Data.fullURL}}" />
-    <meta property="og:image" content="{{.Data.fullURL}}" />
-    <meta name="theme-color" content="#8b5cf6" />
+    <!-- Primary Meta -->
+    <meta name="title" content="{{.Data.Name}} — Tritan Uploader" />
+    <meta
+      name="description"
+      content="File shared by {{.Data.DisplayName}} · {{.Data.FileSizeMB}} · Uploaded {{.Data.UploadTime}}"
+    />
+    <meta name="theme-color" content="#0a0a12" />
+
+    <!-- Open Graph / Discord -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Tritan Uploader" />
     <meta property="og:title" content="{{.Data.Name}}" />
-    <meta property="og:author" content="Tritan Uploader" />
+    <meta
+      property="og:description"
+      content="Uploaded by {{.Data.DisplayName}} · {{.Data.FileSizeMB}} · {{.Data.UploadTime}}"
+    />
+    <meta property="og:image" content="{{.Data.fullURL}}" />
+    <meta property="og:image:secure_url" content="{{.Data.fullURL}}" />
+    <meta property="og:url" content="{{.Data.fullURL}}" />
+
+    <!-- Optional: better image embeds -->
+    <meta property="og:image:alt" content="{{.Data.Name}} preview" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="{{.Data.Name}}" />
-    <meta name="twitter:description" content="{{.Data.DisplayName}} uploaded a {{.Data.FileSizeMB}} file at {{.Data.UploadTime}}." />
-    <meta property="og:description" content="{{.Data.DisplayName}} uploaded a {{.Data.FileSizeMB}} file at {{.Data.UploadTime}}." />
+    <meta
+      name="twitter:description"
+      content="Uploaded by {{.Data.DisplayName}} · {{.Data.FileSizeMB}} · {{.Data.UploadTime}}"
+    />
+    <meta name="twitter:image" content="{{.Data.fullURL}}" />
+
+    <!-- Embed polish -->
+    <meta name="color-scheme" content="dark" />
+    <link rel="canonical" href="{{.Data.fullURL}}" />
+
+    <!-- OEmbed -->
     <link type="application/json+oembed" href="{{.Data.fullURL}}" />
 
     <style>
       /* ── Reset ── */
-      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
 
       /* ── Base ── */
       body {
         min-height: 100vh;
         background-color: #06060e;
         color: #f4f4f5;
-        font-family: ui-sans-serif, system-ui, -apple-system, sans-serif;
+        font-family:
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          sans-serif;
         padding: 1.5rem;
       }
 
@@ -38,17 +78,26 @@
         position: fixed;
         inset: 0;
         pointer-events: none;
-        background: radial-gradient(ellipse 60% 50% at 50% 30%, rgba(139,92,246,0.06) 0%, transparent 70%);
+        background: radial-gradient(
+          ellipse 60% 50% at 50% 30%,
+          rgba(139, 92, 246, 0.06) 0%,
+          transparent 70%
+        );
         z-index: 0;
       }
 
       /* ── Layout ── */
-      .page { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; }
+      .page {
+        position: relative;
+        z-index: 1;
+        max-width: 900px;
+        margin: 0 auto;
+      }
 
       /* ── Terminal card ── */
       .card {
         background-color: #0a0a12;
-        border: 1px solid rgba(139,92,246,0.2);
+        border: 1px solid rgba(139, 92, 246, 0.2);
         border-radius: 2px;
         overflow: hidden;
       }
@@ -60,16 +109,27 @@
         gap: 0.75rem;
         padding: 0.625rem 1.25rem;
         background-color: #0f0f1a;
-        border-bottom: 1px solid rgba(139,92,246,0.15);
+        border-bottom: 1px solid rgba(139, 92, 246, 0.15);
       }
 
-      .traffic-lights { display: flex; gap: 6px; }
-      .dot {
-        width: 10px; height: 10px; border-radius: 50%;
+      .traffic-lights {
+        display: flex;
+        gap: 6px;
       }
-      .dot-red   { background-color: rgba(239,68,68,0.55); }
-      .dot-yel   { background-color: rgba(234,179,8,0.55); }
-      .dot-grn   { background-color: rgba(74,222,128,0.55); }
+      .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+      }
+      .dot-red {
+        background-color: rgba(239, 68, 68, 0.55);
+      }
+      .dot-yel {
+        background-color: rgba(234, 179, 8, 0.55);
+      }
+      .dot-grn {
+        background-color: rgba(74, 222, 128, 0.55);
+      }
 
       .header-path {
         font-family: ui-monospace, Menlo, monospace;
@@ -79,46 +139,75 @@
       }
 
       .status-pill {
-        display: flex; align-items: center; gap: 6px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
         font-family: ui-monospace, Menlo, monospace;
         font-size: 10px;
         text-transform: uppercase;
         letter-spacing: 0.08em;
       }
       .status-dot {
-        width: 6px; height: 6px; border-radius: 50%;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
         background-color: #4ade80;
-        animation: pulse 2s cubic-bezier(0.4,0,0.6,1) infinite;
+        animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
       }
-      .status-text { color: #4ade80; }
+      .status-text {
+        color: #4ade80;
+      }
 
       @keyframes pulse {
-        0%, 100% { opacity: 1; }
-        50% { opacity: 0.4; }
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.4;
+        }
       }
 
       /* ── Card body ── */
-      .card-body { padding: 1.75rem; }
+      .card-body {
+        padding: 1.75rem;
+      }
 
       /* ── Brand row ── */
       .brand {
-        display: flex; align-items: center; gap: 10px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
         margin-bottom: 1.5rem;
       }
       .brand-icon {
-        width: 34px; height: 34px; border-radius: 2px;
-        display: flex; align-items: center; justify-content: center;
-        background-color: rgba(139,92,246,0.12);
-        border: 1px solid rgba(139,92,246,0.3);
+        width: 34px;
+        height: 34px;
+        border-radius: 2px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: rgba(139, 92, 246, 0.12);
+        border: 1px solid rgba(139, 92, 246, 0.3);
         flex-shrink: 0;
       }
-      .brand-icon svg { width: 16px; height: 16px; color: #a78bfa; }
+      .brand-icon svg {
+        width: 16px;
+        height: 16px;
+        color: #a78bfa;
+      }
       .brand-name {
-        font-size: 14px; font-weight: 700; letter-spacing: -0.01em; color: #f4f4f5;
+        font-size: 14px;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+        color: #f4f4f5;
       }
       .brand-sub {
         font-family: ui-monospace, Menlo, monospace;
-        font-size: 9px; text-transform: uppercase; letter-spacing: 0.1em; color: #3f3f46;
+        font-size: 9px;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: #3f3f46;
       }
 
       /* ── File title ── */
@@ -132,26 +221,42 @@
       }
 
       .uploader-row {
-        display: inline-flex; align-items: center; gap: 6px;
-        padding: 4px 10px; border-radius: 2px;
-        border: 1px solid rgba(139,92,246,0.18);
-        background-color: rgba(139,92,246,0.07);
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 10px;
+        border-radius: 2px;
+        border: 1px solid rgba(139, 92, 246, 0.18);
+        background-color: rgba(139, 92, 246, 0.07);
         margin-bottom: 1.5rem;
       }
-      .uploader-row svg { width: 12px; height: 12px; color: #8b5cf6; }
+      .uploader-row svg {
+        width: 12px;
+        height: 12px;
+        color: #8b5cf6;
+      }
       .uploader-label {
         font-family: ui-monospace, Menlo, monospace;
-        font-size: 11px; color: #71717a;
+        font-size: 11px;
+        color: #71717a;
       }
-      .uploader-name { font-family: ui-monospace, Menlo, monospace; font-size: 11px; color: #a78bfa; }
+      .uploader-name {
+        font-family: ui-monospace, Menlo, monospace;
+        font-size: 11px;
+        color: #a78bfa;
+      }
 
       /* ── Divider ── */
-      .divider { height: 1px; background-color: rgba(139,92,246,0.1); margin: 1.25rem 0; }
+      .divider {
+        height: 1px;
+        background-color: rgba(139, 92, 246, 0.1);
+        margin: 1.25rem 0;
+      }
 
       /* ── Image wrapper ── */
       .image-wrapper {
         display: block;
-        border: 1px solid rgba(139,92,246,0.18);
+        border: 1px solid rgba(139, 92, 246, 0.18);
         border-radius: 2px;
         overflow: hidden;
         background-color: #06060e;
@@ -160,7 +265,9 @@
         transition: border-color 0.15s ease;
         cursor: pointer;
       }
-      .image-wrapper:hover { border-color: rgba(139,92,246,0.45); }
+      .image-wrapper:hover {
+        border-color: rgba(139, 92, 246, 0.45);
+      }
 
       .image-wrapper img {
         display: block;
@@ -170,7 +277,9 @@
         margin: 0 auto;
         transition: opacity 0.2s ease;
       }
-      .image-wrapper:hover img { opacity: 0.92; }
+      .image-wrapper:hover img {
+        opacity: 0.92;
+      }
 
       /* Open-external overlay */
       .image-overlay {
@@ -181,18 +290,28 @@
         justify-content: center;
         opacity: 0;
         transition: opacity 0.15s ease;
-        background-color: rgba(6,6,14,0.35);
+        background-color: rgba(6, 6, 14, 0.35);
       }
-      .image-wrapper:hover .image-overlay { opacity: 1; }
+      .image-wrapper:hover .image-overlay {
+        opacity: 1;
+      }
       .overlay-badge {
-        display: flex; align-items: center; gap: 6px;
-        padding: 6px 12px; border-radius: 2px;
-        border: 1px solid rgba(139,92,246,0.4);
-        background-color: rgba(139,92,246,0.25);
-        font-size: 12px; font-weight: 600; color: #f4f4f5;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 12px;
+        border-radius: 2px;
+        border: 1px solid rgba(139, 92, 246, 0.4);
+        background-color: rgba(139, 92, 246, 0.25);
+        font-size: 12px;
+        font-weight: 600;
+        color: #f4f4f5;
         backdrop-filter: blur(4px);
       }
-      .overlay-badge svg { width: 14px; height: 14px; }
+      .overlay-badge svg {
+        width: 14px;
+        height: 14px;
+      }
 
       /* ── Stat cards ── */
       .stats-grid {
@@ -202,7 +321,9 @@
         margin-bottom: 1.5rem;
       }
       @media (max-width: 520px) {
-        .stats-grid { grid-template-columns: 1fr; }
+        .stats-grid {
+          grid-template-columns: 1fr;
+        }
       }
 
       .stat-card {
@@ -212,68 +333,108 @@
       }
       .stat-label {
         font-family: ui-monospace, Menlo, monospace;
-        font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em;
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
         margin-bottom: 4px;
       }
       .stat-value {
-        font-size: 1.1rem; font-weight: 700; letter-spacing: -0.01em; color: #f4f4f5;
+        font-size: 1.1rem;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+        color: #f4f4f5;
       }
       .stat-value-sm {
-        font-size: 0.85rem; font-weight: 700; color: #f4f4f5;
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: #f4f4f5;
       }
 
       /* Color variants */
-      .stat-violet { border-color: rgba(139,92,246,0.25); background-color: rgba(139,92,246,0.08); }
-      .stat-violet .stat-label { color: #a78bfa; }
+      .stat-violet {
+        border-color: rgba(139, 92, 246, 0.25);
+        background-color: rgba(139, 92, 246, 0.08);
+      }
+      .stat-violet .stat-label {
+        color: #a78bfa;
+      }
 
-      .stat-pink   { border-color: rgba(236,72,153,0.25); background-color: rgba(236,72,153,0.08); }
-      .stat-pink .stat-label { color: #f472b6; }
+      .stat-pink {
+        border-color: rgba(236, 72, 153, 0.25);
+        background-color: rgba(236, 72, 153, 0.08);
+      }
+      .stat-pink .stat-label {
+        color: #f472b6;
+      }
 
-      .stat-indigo { border-color: rgba(99,102,241,0.25); background-color: rgba(99,102,241,0.08); }
-      .stat-indigo .stat-label { color: #818cf8; }
+      .stat-indigo {
+        border-color: rgba(99, 102, 241, 0.25);
+        background-color: rgba(99, 102, 241, 0.08);
+      }
+      .stat-indigo .stat-label {
+        color: #818cf8;
+      }
 
       /* ── Actions ── */
-      .actions { display: flex; gap: 0.625rem; flex-wrap: wrap; }
+      .actions {
+        display: flex;
+        gap: 0.625rem;
+        flex-wrap: wrap;
+      }
 
       .btn {
-        display: inline-flex; align-items: center; gap: 8px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
         padding: 0.625rem 1.25rem;
         border-radius: 2px;
-        font-size: 13px; font-weight: 600;
+        font-size: 13px;
+        font-weight: 600;
         text-decoration: none;
-        transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+        transition:
+          background-color 0.15s ease,
+          border-color 0.15s ease,
+          color 0.15s ease;
         cursor: pointer;
       }
-      .btn svg { width: 15px; height: 15px; }
+      .btn svg {
+        width: 15px;
+        height: 15px;
+      }
 
       .btn-primary {
-        border: 1px solid rgba(139,92,246,0.35);
-        background-color: rgba(139,92,246,0.2);
+        border: 1px solid rgba(139, 92, 246, 0.35);
+        background-color: rgba(139, 92, 246, 0.2);
         color: #ffffff;
       }
-      .btn-primary:hover { background-color: rgba(139,92,246,0.28); }
+      .btn-primary:hover {
+        background-color: rgba(139, 92, 246, 0.28);
+      }
 
       .btn-ghost {
-        border: 1px solid rgba(139,92,246,0.15);
+        border: 1px solid rgba(139, 92, 246, 0.15);
         background-color: transparent;
         color: #a1a1aa;
       }
       .btn-ghost:hover {
-        border-color: rgba(239,68,68,0.3);
-        background-color: rgba(239,68,68,0.08);
+        border-color: rgba(239, 68, 68, 0.3);
+        background-color: rgba(239, 68, 68, 0.08);
         color: #f87171;
       }
 
       /* ── Footer strip ── */
       .card-footer {
-        display: flex; align-items: center; justify-content: space-between;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
         padding: 0.5rem 1.25rem;
         background-color: #0f0f1a;
-        border-top: 1px solid rgba(139,92,246,0.1);
+        border-top: 1px solid rgba(139, 92, 246, 0.1);
       }
       .footer-text {
         font-family: ui-monospace, Menlo, monospace;
-        font-size: 9px; color: #27272a;
+        font-size: 9px;
+        color: #27272a;
       }
     </style>
   </head>
@@ -281,7 +442,6 @@
   <body>
     <div class="page">
       <div class="card">
-
         <!-- Terminal header bar -->
         <div class="card-header">
           <div class="traffic-lights">
@@ -294,12 +454,20 @@
 
         <!-- Body -->
         <div class="card-body">
-
           <!-- Brand -->
           <div class="brand">
             <div class="brand-icon">
-              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+              <svg
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                stroke-width="2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                />
               </svg>
             </div>
             <div>
@@ -314,8 +482,17 @@
           <h1 class="file-title">{{.Data.Name}}</h1>
 
           <div class="uploader-row">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+            <svg
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              stroke-width="2"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+              />
             </svg>
             <span class="uploader-label">uploaded by</span>
             <span class="uploader-name">{{.Data.DisplayName}}</span>
@@ -329,8 +506,17 @@
             />
             <div class="image-overlay">
               <div class="overlay-badge">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                <svg
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  stroke-width="2"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                  />
                 </svg>
                 Open full size
               </div>
@@ -360,8 +546,17 @@
               href="{{.Data.fullURL}}"
               download="{{.Data.Name}}"
             >
-              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+              <svg
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                stroke-width="2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                />
               </svg>
               Download File
             </a>
@@ -369,13 +564,21 @@
               class="btn btn-ghost"
               href="mailto:noc@tritan.gg?subject=REPORT: {{.Data.Name}}&body=Hi, I'd like to report {{.Data.Name}} which was uploaded onto your sharex image host."
             >
-              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"/>
+              <svg
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                stroke-width="2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"
+                />
               </svg>
               Report Content
             </a>
           </div>
-
         </div>
 
         <!-- Footer strip -->
@@ -383,7 +586,6 @@
           <span class="footer-text">Powered by Tritan Internet · AS393577</span>
           <span class="footer-text">files.tritan.gg</span>
         </div>
-
       </div>
     </div>
   </body>
