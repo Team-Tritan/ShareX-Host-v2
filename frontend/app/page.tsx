@@ -6,7 +6,16 @@ import { useRouter } from "next/navigation";
 import Prompter from "@/components/Prompt";
 import { useUser } from "@/stores/user";
 import { motion } from "framer-motion";
-import { ArrowRight, Eye, EyeOff, Terminal, Zap, Upload, Link2, Shield } from "lucide-react";
+import {
+  ArrowRight,
+  Eye,
+  EyeOff,
+  Terminal,
+  Zap,
+  Upload,
+  Link2,
+  Shield,
+} from "lucide-react";
 import { toast } from "react-hot-toast";
 
 interface AccountResponses {
@@ -86,7 +95,7 @@ const LoginPage: React.FC = () => {
         toast.error(error.message);
       }
     },
-    [setDisplayName, setToken, setIsAdmin]
+    [setDisplayName, setToken, setIsAdmin],
   );
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -95,15 +104,6 @@ const LoginPage: React.FC = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#06060e] p-4">
-      {/* Radial glow */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background:
-            "radial-gradient(ellipse 60% 50% at 50% 50%, rgba(139,92,246,0.06) 0%, transparent 70%)",
-        }}
-      />
-
       <motion.div
         className="relative w-full max-w-md"
         initial={{ opacity: 0, y: 24 }}
@@ -127,11 +127,23 @@ const LoginPage: React.FC = () => {
             }}
           >
             <div className="flex items-center gap-1.5">
-              <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: "rgba(239,68,68,0.5)" }} />
-              <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: "rgba(234,179,8,0.5)" }} />
-              <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: "rgba(74,222,128,0.5)" }} />
+              <div
+                className="w-2.5 h-2.5 rounded-full"
+                style={{ backgroundColor: "rgba(239,68,68,0.5)" }}
+              />
+              <div
+                className="w-2.5 h-2.5 rounded-full"
+                style={{ backgroundColor: "rgba(234,179,8,0.5)" }}
+              />
+              <div
+                className="w-2.5 h-2.5 rounded-full"
+                style={{ backgroundColor: "rgba(74,222,128,0.5)" }}
+              />
             </div>
-            <span className="font-mono text-xs ml-1" style={{ color: "#52525b" }}>
+            <span
+              className="font-mono text-xs ml-1"
+              style={{ color: "#52525b" }}
+            >
               tritan-uploader ~ auth
             </span>
           </div>
@@ -150,16 +162,26 @@ const LoginPage: React.FC = () => {
                   <Terminal className="w-4 h-4 text-violet-400" />
                 </div>
                 <div>
-                  <h1 className="text-base font-bold tracking-tight" style={{ color: "#f4f4f5" }}>
+                  <h1
+                    className="text-base font-bold tracking-tight"
+                    style={{ color: "#f4f4f5" }}
+                  >
                     Tritan Uploader
                   </h1>
-                  <p className="font-mono text-[10px] uppercase tracking-widest" style={{ color: "#52525b" }}>
+                  <p
+                    className="font-mono text-[10px] uppercase tracking-widest"
+                    style={{ color: "#52525b" }}
+                  >
                     v2.0.0 / authenticated access
                   </p>
                 </div>
               </div>
-              <p className="text-sm leading-relaxed" style={{ color: "#71717a" }}>
-                A free ShareX host for screenshots, images, GIFs, and more. Enter your API key to continue.
+              <p
+                className="text-sm leading-relaxed"
+                style={{ color: "#71717a" }}
+              >
+                A free ShareX host for screenshots, images, GIFs, and more.
+                Enter your API key to continue.
               </p>
             </div>
 
@@ -180,7 +202,10 @@ const LoginPage: React.FC = () => {
                   }}
                 >
                   <Icon className="w-3 h-3 text-violet-400" />
-                  <span className="font-mono text-[10px] uppercase tracking-widest" style={{ color: "#a1a1aa" }}>
+                  <span
+                    className="font-mono text-[10px] uppercase tracking-widest"
+                    style={{ color: "#a1a1aa" }}
+                  >
                     {label}
                   </span>
                 </div>
@@ -210,8 +235,12 @@ const LoginPage: React.FC = () => {
                     color: "#f4f4f5",
                   }}
                   placeholder="trtn_••••••••••••••••"
-                  onFocus={(e) => (e.currentTarget.style.borderColor = "rgba(139,92,246,0.5)")}
-                  onBlur={(e) => (e.currentTarget.style.borderColor = "rgba(139,92,246,0.2)")}
+                  onFocus={(e) =>
+                    (e.currentTarget.style.borderColor = "rgba(139,92,246,0.5)")
+                  }
+                  onBlur={(e) =>
+                    (e.currentTarget.style.borderColor = "rgba(139,92,246,0.2)")
+                  }
                 />
                 <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
                   <button
@@ -219,10 +248,18 @@ const LoginPage: React.FC = () => {
                     onClick={() => setShowPassword(!showPassword)}
                     className="p-1.5 rounded-sm transition-colors"
                     style={{ color: "#52525b" }}
-                    onMouseEnter={(e) => (e.currentTarget.style.color = "#a1a1aa")}
-                    onMouseLeave={(e) => (e.currentTarget.style.color = "#52525b")}
+                    onMouseEnter={(e) =>
+                      (e.currentTarget.style.color = "#a1a1aa")
+                    }
+                    onMouseLeave={(e) =>
+                      (e.currentTarget.style.color = "#52525b")
+                    }
                   >
-                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    {showPassword ? (
+                      <EyeOff className="w-4 h-4" />
+                    ) : (
+                      <Eye className="w-4 h-4" />
+                    )}
                   </button>
                 </div>
               </div>
@@ -235,21 +272,30 @@ const LoginPage: React.FC = () => {
               className="group w-full flex items-center justify-center gap-2.5 font-semibold text-sm px-5 py-3 rounded-sm transition-colors"
               style={{
                 border: "1px solid rgba(139,92,246,0.35)",
-                backgroundColor: isLoading ? "rgba(139,92,246,0.1)" : "rgba(139,92,246,0.2)",
+                backgroundColor: isLoading
+                  ? "rgba(139,92,246,0.1)"
+                  : "rgba(139,92,246,0.2)",
                 color: "#ffffff",
               }}
               onMouseEnter={(e) => {
-                if (!isLoading) e.currentTarget.style.backgroundColor = "rgba(139,92,246,0.28)";
+                if (!isLoading)
+                  e.currentTarget.style.backgroundColor =
+                    "rgba(139,92,246,0.28)";
               }}
               onMouseLeave={(e) => {
-                if (!isLoading) e.currentTarget.style.backgroundColor = "rgba(139,92,246,0.2)";
+                if (!isLoading)
+                  e.currentTarget.style.backgroundColor =
+                    "rgba(139,92,246,0.2)";
               }}
             >
               {isLoading ? (
                 <>
                   <div
                     className="w-3.5 h-3.5 rounded-full border-2 animate-spin"
-                    style={{ borderColor: "rgba(139,92,246,0.3)", borderTopColor: "#8b5cf6" }}
+                    style={{
+                      borderColor: "rgba(139,92,246,0.3)",
+                      borderTopColor: "#8b5cf6",
+                    }}
                   />
                   <span>Authenticating...</span>
                 </>
@@ -263,11 +309,20 @@ const LoginPage: React.FC = () => {
 
             {/* Divider */}
             <div className="flex items-center gap-4">
-              <div className="flex-1 h-px" style={{ backgroundColor: "rgba(139,92,246,0.1)" }} />
-              <span className="font-mono text-[10px] uppercase tracking-widest" style={{ color: "#3f3f46" }}>
+              <div
+                className="flex-1 h-px"
+                style={{ backgroundColor: "rgba(139,92,246,0.1)" }}
+              />
+              <span
+                className="font-mono text-[10px] uppercase tracking-widest"
+                style={{ color: "#3f3f46" }}
+              >
                 or
               </span>
-              <div className="flex-1 h-px" style={{ backgroundColor: "rgba(139,92,246,0.1)" }} />
+              <div
+                className="flex-1 h-px"
+                style={{ backgroundColor: "rgba(139,92,246,0.1)" }}
+              />
             </div>
 
             {/* Create key */}
@@ -292,11 +347,17 @@ const LoginPage: React.FC = () => {
               backgroundColor: "#0f0f1a",
             }}
           >
-            <span className="font-mono text-[10px]" style={{ color: "#3f3f46" }}>
+            <span
+              className="font-mono text-[10px]"
+              style={{ color: "#3f3f46" }}
+            >
               Powered by Tritan Internet · AS393577
             </span>
             <div className="flex items-center gap-1.5">
-              <span className="font-mono text-[10px]" style={{ color: "#52525b" }}>
+              <span
+                className="font-mono text-[10px]"
+                style={{ color: "#52525b" }}
+              >
                 secure
               </span>
             </div>
