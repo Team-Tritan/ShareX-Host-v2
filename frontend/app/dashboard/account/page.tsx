@@ -271,7 +271,7 @@ const AddDomainModal: React.FC<{
       >
         <p className="font-semibold">DNS Setup</p>
         <p>
-          A record → <span style={{ color: "#f4f4f5" }}>23.142.248.42</span>
+          A record → <span style={{ color: "#f4f4f5" }}>167.253.78.23</span>
         </p>
         <p>Cloudflare: enable proxy + flexible SSL</p>
       </div>
